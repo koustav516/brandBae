@@ -175,7 +175,9 @@ function renderFeatured(creators) {
 
 fetch("/api/creators")
     .then((r) => r.json())
-    .then(renderFeatured)
+    .then((data) => {
+        renderFeatured(data);
+    })
     .catch(() => {
         const grid = document.getElementById("featuredGrid");
         if (grid) grid.innerHTML = "";
