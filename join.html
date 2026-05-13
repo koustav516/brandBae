@@ -28,72 +28,131 @@
 
                 <form id="joinForm" novalidate>
 
-                    <div class="section-label">Account</div>
+                    <!-- 01 ACCOUNT -->
+                    <div class="section-label">01 — Account</div>
                     <div class="field-row">
                         <div class="field">
-                            <label for="fullName">Full name</label>
+                            <label for="fullName">Full name <span class="req">*</span></label>
                             <input type="text" id="fullName" name="full_name" placeholder="Priya Sharma" autocomplete="name" />
                         </div>
                         <div class="field">
-                            <label for="email">Email address</label>
+                            <label for="email">Email address <span class="req">*</span></label>
                             <input type="email" id="email" name="email" placeholder="priya@email.com" autocomplete="email" />
                         </div>
                     </div>
                     <div class="field-row">
                         <div class="field">
-                            <label for="password">Password</label>
+                            <label for="password">Password <span class="req">*</span></label>
                             <input type="password" id="password" name="password" placeholder="Min. 8 characters" autocomplete="new-password" />
                         </div>
                         <div class="field">
-                            <label for="confirmPassword">Confirm password</label>
+                            <label for="confirmPassword">Confirm password <span class="req">*</span></label>
                             <input type="password" id="confirmPassword" placeholder="Repeat password" autocomplete="new-password" />
                         </div>
                     </div>
 
-                    <div class="section-label">Instagram</div>
-                    <div class="field-row">
-                        <div class="field">
-                            <label for="handle">Instagram handle</label>
-                            <div class="input-prefix-wrap">
-                                <span class="input-prefix">@</span>
-                                <input type="text" id="handle" name="instagram_handle" placeholder="yourhandle" />
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label for="followers">Follower count</label>
-                            <input type="number" id="followers" name="followers" placeholder="e.g. 8500" min="1000" />
+                    <!-- 02 BASIC INFO -->
+                    <div class="section-label">02 — Basic Info</div>
+                    <div class="field">
+                        <label for="handle">Instagram handle <span class="req">*</span></label>
+                        <div class="input-prefix-wrap">
+                            <span class="input-prefix">@</span>
+                            <input type="text" id="handle" name="instagram_handle" placeholder="yourhandle" />
                         </div>
                     </div>
-
-                    <div class="section-label">Profile</div>
                     <div class="field-row">
                         <div class="field">
-                            <label for="niche">Niche</label>
-                            <select id="niche" name="niche">
-                                <option value="" disabled selected>Select your niche</option>
-                                <option>Food</option>
-                                <option>Fashion</option>
-                                <option>Fitness</option>
-                                <option>Travel</option>
-                                <option>Beauty</option>
-                                <option>Tech</option>
-                                <option>Lifestyle</option>
-                                <option>Gaming</option>
-                                <option>Finance</option>
-                                <option>Comedy</option>
-                            </select>
+                            <label for="city">City <span class="req">*</span></label>
+                            <input type="text" id="city" name="city" placeholder="Mumbai" />
                         </div>
                         <div class="field">
-                            <label for="city">City</label>
-                            <input type="text" id="city" name="city" placeholder="Mumbai" />
+                            <label for="state">State <span class="req">*</span></label>
+                            <select id="state" name="state">
+                                <option value="" disabled selected>Select state</option>
+                                <option>Andhra Pradesh</option><option>Arunachal Pradesh</option>
+                                <option>Assam</option><option>Bihar</option><option>Chhattisgarh</option>
+                                <option>Delhi</option><option>Goa</option><option>Gujarat</option>
+                                <option>Haryana</option><option>Himachal Pradesh</option>
+                                <option>Jharkhand</option><option>Karnataka</option><option>Kerala</option>
+                                <option>Madhya Pradesh</option><option>Maharashtra</option>
+                                <option>Manipur</option><option>Meghalaya</option><option>Mizoram</option>
+                                <option>Nagaland</option><option>Odisha</option><option>Punjab</option>
+                                <option>Rajasthan</option><option>Sikkim</option><option>Tamil Nadu</option>
+                                <option>Telangana</option><option>Tripura</option>
+                                <option>Uttar Pradesh</option><option>Uttarakhand</option>
+                                <option>West Bengal</option>
+                            </select>
                         </div>
                     </div>
                     <div class="field">
-                        <label for="bio">Short bio <span class="optional">(optional)</span></label>
-                        <textarea id="bio" name="bio" rows="3" placeholder="Tell brands what kind of content you make and who your audience is..."></textarea>
+                        <label for="languages">Languages spoken <span class="req">*</span></label>
+                        <input type="text" id="languages" name="languages" placeholder="e.g. Hindi, English, Tamil" />
                     </div>
 
-                    <div class="section-label">Pricing</div>
+                    <!-- 03 NICHE -->
+                    <div class="section-label">03 — Your Niche</div>
+                    <div class="field">
+                        <label>Primary niche <span class="req">*</span></label>
+                        <div class="niche-grid" id="nicheGrid">
+                            <label class="niche-opt"><input type="radio" name="niche" value="Food" /><span>🍜 Food &amp; Beverages</span></label>
+                            <label class="niche-opt"><input type="radio" name="niche" value="Fashion" /><span>👗 Fashion &amp; Lifestyle</span></label>
+                            <label class="niche-opt"><input type="radio" name="niche" value="Fitness" /><span>🏋️ Fitness &amp; Health</span></label>
+                            <label class="niche-opt"><input type="radio" name="niche" value="Beauty" /><span>💄 Beauty &amp; Skincare</span></label>
+                            <label class="niche-opt"><input type="radio" name="niche" value="Travel" /><span>✈️ Travel</span></label>
+                            <label class="niche-opt"><input type="radio" name="niche" value="Tech" /><span>💻 Tech</span></label>
+                            <label class="niche-opt"><input type="radio" name="niche" value="Finance" /><span>📈 Business &amp; Finance</span></label>
+                            <label class="niche-opt"><input type="radio" name="niche" value="Lifestyle" /><span>🌿 Lifestyle</span></label>
+                            <label class="niche-opt"><input type="radio" name="niche" value="Gaming" /><span>🎮 Entertainment</span></label>
+                            <label class="niche-opt"><input type="radio" name="niche" value="Comedy" /><span>😂 Comedy</span></label>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="nicheSubcategories">Niche subcategories <span class="optional">(optional)</span></label>
+                        <input type="text" id="nicheSubcategories" name="niche_subcategories" placeholder="e.g. Street food, Café reviews, Home cooking" />
+                    </div>
+
+                    <!-- 04 STATS -->
+                    <div class="section-label">04 — Your Stats</div>
+                    <div class="field-row three-col">
+                        <div class="field">
+                            <label for="followers">Follower count <span class="req">*</span></label>
+                            <input type="number" id="followers" name="followers" placeholder="e.g. 8500" min="1000" />
+                        </div>
+                        <div class="field">
+                            <label for="avgReelViews">Avg reel views <span class="req">*</span></label>
+                            <input type="number" id="avgReelViews" name="avg_reel_views" placeholder="e.g. 15000" min="0" />
+                        </div>
+                        <div class="field">
+                            <label for="accountAge">Account age <span class="req">*</span></label>
+                            <input type="text" id="accountAge" name="account_age" placeholder="e.g. 2 years" />
+                        </div>
+                    </div>
+
+                    <!-- 05 AUDIENCE -->
+                    <div class="section-label">05 — Audience Demographics</div>
+                    <div class="field">
+                        <label>Primary age group <span class="req">*</span></label>
+                        <div class="pill-group" id="ageGroup">
+                            <label class="pill-opt"><input type="radio" name="audience_age_group" value="13-17" /><span>13 – 17</span></label>
+                            <label class="pill-opt"><input type="radio" name="audience_age_group" value="18-24" /><span>18 – 24</span></label>
+                            <label class="pill-opt"><input type="radio" name="audience_age_group" value="25-34" /><span>25 – 34</span></label>
+                            <label class="pill-opt"><input type="radio" name="audience_age_group" value="35-44" /><span>35 – 44</span></label>
+                            <label class="pill-opt"><input type="radio" name="audience_age_group" value="45+" /><span>45+</span></label>
+                        </div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field">
+                            <label for="audienceGender">Audience gender split <span class="req">*</span></label>
+                            <input type="text" id="audienceGender" name="audience_gender" placeholder="e.g. 65% Female, 35% Male" />
+                        </div>
+                        <div class="field">
+                            <label for="topLocations">Top audience locations <span class="req">*</span></label>
+                            <input type="text" id="topLocations" name="top_locations" placeholder="e.g. Mumbai, Delhi, Bangalore" />
+                        </div>
+                    </div>
+
+                    <!-- 06 PRICING -->
+                    <div class="section-label">06 — Your Pricing</div>
                     <div class="barter-toggle">
                         <label class="toggle-label">
                             <input type="checkbox" id="barterCheck" name="barter" />
@@ -101,24 +160,48 @@
                             I'm open to brand barter instead of paid rates
                         </label>
                     </div>
-
                     <div id="priceFields" class="field-row three-col">
                         <div class="field">
-                            <label for="reelPrice">Reel (₹)</label>
+                            <label for="reelPrice">Reel (₹) <span class="req">*</span></label>
                             <input type="number" id="reelPrice" name="reel_price" placeholder="e.g. 3500" min="0" />
                         </div>
                         <div class="field">
-                            <label for="storyPrice">Story (₹)</label>
+                            <label for="storyPrice">Story (₹) <span class="req">*</span></label>
                             <input type="number" id="storyPrice" name="story_price" placeholder="e.g. 1500" min="0" />
                         </div>
                         <div class="field">
-                            <label for="postPrice">Static post (₹)</label>
+                            <label for="postPrice">Static post (₹) <span class="req">*</span></label>
                             <input type="number" id="postPrice" name="post_price" placeholder="e.g. 2000" min="0" />
                         </div>
                     </div>
-                    <div id="barterNote" class="field" style="display:none">
+                    <div class="field-row" id="pricingExtras">
+                        <div class="field">
+                            <label for="bundlePricing">Bundle pricing <span class="optional">(optional)</span></label>
+                            <input type="text" id="bundlePricing" name="bundle_pricing" placeholder="e.g. 3 reels for ₹9,000" />
+                        </div>
+                        <div class="field">
+                            <label for="minDealSize">Minimum deal size (₹) <span class="optional">(optional)</span></label>
+                            <input type="number" id="minDealSize" name="min_deal_size" placeholder="e.g. 5000" min="0" />
+                        </div>
+                    </div>
+                    <div id="barterNoteField" class="field" style="display:none">
                         <label for="barterNoteText">What kind of barter are you open to?</label>
                         <input type="text" id="barterNoteText" name="barter_note" placeholder="e.g. Fashion brands, skincare products, food deliveries..." />
+                    </div>
+
+                    <!-- 07 CONTENT -->
+                    <div class="section-label">07 — Your Content</div>
+                    <div class="field">
+                        <label for="contentLinks">Best content links <span class="req">*</span></label>
+                        <textarea id="contentLinks" name="content_links" rows="3" placeholder="Paste your best reel / post URLs (one per line)"></textarea>
+                    </div>
+                    <div class="field">
+                        <label for="pastCollabs">Past brand collaborations <span class="optional">(optional)</span></label>
+                        <textarea id="pastCollabs" name="past_collabs" rows="3" placeholder="List brands you've worked with before, e.g. Nykaa, Swiggy, boAt..."></textarea>
+                    </div>
+                    <div class="field">
+                        <label for="bio">Short bio <span class="optional">(optional)</span></label>
+                        <textarea id="bio" name="bio" rows="3" placeholder="Tell brands what kind of content you make and who your audience is..."></textarea>
                     </div>
 
                     <div id="formError" class="form-error" style="display:none"></div>
@@ -126,6 +209,7 @@
                     <button type="submit" class="submit-btn" id="submitBtn">
                         Submit Application →
                     </button>
+
                 </form>
 
                 <div id="successState" class="success-state" style="display:none">
@@ -190,55 +274,92 @@
     </div>
 
     <script>
-        const barterCheck  = document.getElementById("barterCheck");
-        const priceFields  = document.getElementById("priceFields");
-        const barterNote   = document.getElementById("barterNote");
+        const barterCheck   = document.getElementById("barterCheck");
+        const priceFields   = document.getElementById("priceFields");
+        const pricingExtras = document.getElementById("pricingExtras");
+        const barterNoteField = document.getElementById("barterNoteField");
+
+        // Niche radio visual toggle
+        document.querySelectorAll(".niche-opt input").forEach(radio => {
+            radio.addEventListener("change", () => {
+                document.querySelectorAll(".niche-opt").forEach(l => l.classList.remove("selected"));
+                radio.closest(".niche-opt").classList.add("selected");
+            });
+        });
+
+        // Age group pill toggle
+        document.querySelectorAll(".pill-opt input").forEach(radio => {
+            radio.addEventListener("change", () => {
+                document.querySelectorAll(".pill-opt").forEach(l => l.classList.remove("selected"));
+                radio.closest(".pill-opt").classList.add("selected");
+            });
+        });
 
         barterCheck.addEventListener("change", () => {
-            priceFields.style.display = barterCheck.checked ? "none" : "";
-            barterNote.style.display  = barterCheck.checked ? ""     : "none";
+            const isBarter = barterCheck.checked;
+            priceFields.style.display    = isBarter ? "none" : "";
+            pricingExtras.style.display  = isBarter ? "none" : "";
+            barterNoteField.style.display = isBarter ? "" : "none";
         });
 
         document.getElementById("joinForm").addEventListener("submit", async (e) => {
             e.preventDefault();
-            const btn = document.getElementById("submitBtn");
+            const btn    = document.getElementById("submitBtn");
             const errBox = document.getElementById("formError");
             errBox.style.display = "none";
 
+            const isBarter = barterCheck.checked;
+
             const data = {
-                full_name:        document.getElementById("fullName").value.trim(),
-                email:            document.getElementById("email").value.trim(),
-                password:         document.getElementById("password").value,
-                instagram_handle: document.getElementById("handle").value.trim().replace(/^@/, ""),
-                niche:            document.getElementById("niche").value,
-                city:             document.getElementById("city").value.trim(),
-                followers:        parseInt(document.getElementById("followers").value) || 0,
-                bio:              document.getElementById("bio").value.trim(),
-                barter:           barterCheck.checked,
-                barter_note:      document.getElementById("barterNoteText").value.trim(),
-                reel_price:       parseInt(document.getElementById("reelPrice").value) || 0,
-                story_price:      parseInt(document.getElementById("storyPrice").value) || 0,
-                post_price:       parseInt(document.getElementById("postPrice").value) || 0,
+                full_name:            document.getElementById("fullName").value.trim(),
+                email:                document.getElementById("email").value.trim(),
+                password:             document.getElementById("password").value,
+                instagram_handle:     document.getElementById("handle").value.trim().replace(/^@/, ""),
+                city:                 document.getElementById("city").value.trim(),
+                state:                document.getElementById("state").value,
+                languages:            document.getElementById("languages").value.trim(),
+                niche:                document.querySelector('input[name="niche"]:checked')?.value || "",
+                niche_subcategories:  document.getElementById("nicheSubcategories").value.trim(),
+                followers:            parseInt(document.getElementById("followers").value) || 0,
+                avg_reel_views:       parseInt(document.getElementById("avgReelViews").value) || 0,
+                account_age:          document.getElementById("accountAge").value.trim(),
+                audience_age_group:   document.querySelector('input[name="audience_age_group"]:checked')?.value || "",
+                audience_gender:      document.getElementById("audienceGender").value.trim(),
+                top_locations:        document.getElementById("topLocations").value.trim(),
+                barter:               isBarter,
+                barter_note:          document.getElementById("barterNoteText").value.trim(),
+                reel_price:           parseInt(document.getElementById("reelPrice").value) || 0,
+                story_price:          parseInt(document.getElementById("storyPrice").value) || 0,
+                post_price:           parseInt(document.getElementById("postPrice").value) || 0,
+                bundle_pricing:       document.getElementById("bundlePricing").value.trim(),
+                min_deal_size:        parseInt(document.getElementById("minDealSize").value) || 0,
+                content_links:        document.getElementById("contentLinks").value.trim(),
+                past_collabs:         document.getElementById("pastCollabs").value.trim(),
+                bio:                  document.getElementById("bio").value.trim(),
             };
 
             const confirmPw = document.getElementById("confirmPassword").value;
 
-            // Client-side validation
-            const missing = ["full_name","email","password","instagram_handle","niche","city","followers"]
-                .find(k => !data[k]);
-            if (missing) return showError("Please fill in all required fields.");
+            // Validation
+            if (!data.full_name || !data.email || !data.password || !data.instagram_handle ||
+                !data.city || !data.state || !data.languages) return showError("Please fill in all required fields in Basic Info.");
+            if (!data.niche) return showError("Please select your primary niche.");
+            if (!data.followers || !data.avg_reel_views || !data.account_age) return showError("Please fill in all stats fields.");
+            if (!data.audience_age_group || !data.audience_gender || !data.top_locations) return showError("Please fill in your audience demographics.");
+            if (!isBarter && (!data.reel_price || !data.story_price || !data.post_price)) return showError("Please enter your pricing for reel, story, and post.");
+            if (!data.content_links) return showError("Please add at least one content link.");
             if (data.password !== confirmPw) return showError("Passwords don't match.");
             if (data.password.length < 8) return showError("Password must be at least 8 characters.");
             if (data.followers < 1000) return showError("We currently accept creators with 1,000+ followers.");
 
-            btn.disabled = true;
+            btn.disabled    = true;
             btn.textContent = "Submitting…";
 
             try {
-                const res = await fetch("/auth/creator/register", {
-                    method: "POST",
+                const res  = await fetch("/auth/creator/register", {
+                    method:  "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(data),
+                    body:    JSON.stringify(data),
                 });
                 const json = await res.json();
                 if (!res.ok) return showError(json.error || "Something went wrong.");
@@ -249,14 +370,15 @@
             } catch {
                 showError("Network error. Please try again.");
             } finally {
-                btn.disabled = false;
+                btn.disabled    = false;
                 btn.textContent = "Submit Application →";
             }
 
             function showError(msg) {
-                errBox.textContent = msg;
+                errBox.textContent   = msg;
                 errBox.style.display = "block";
-                btn.disabled = false;
+                errBox.scrollIntoView({ behavior: "smooth", block: "center" });
+                btn.disabled    = false;
                 btn.textContent = "Submit Application →";
             }
         });

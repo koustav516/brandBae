@@ -259,7 +259,7 @@ body {
 
 .app-stats {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
     gap: 10px;
     margin-bottom: 14px;
 }
@@ -290,6 +290,81 @@ body {
 }
 
 .app-stat.barter strong { color: var(--green); font-size: 12px; }
+
+/* DETAIL ROWS (languages, audience info, etc.) */
+.app-details {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 14px;
+}
+
+.app-detail-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+}
+
+.detail-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    color: var(--ink-faint);
+    flex-shrink: 0;
+    min-width: 100px;
+}
+
+.app-links {
+    word-break: break-all;
+    color: var(--blue);
+}
+
+/* PRICING TAGS */
+.app-pricing {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.app-price-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ink);
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 5px 12px;
+}
+
+.app-price-tag span {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--ink-faint);
+}
+
+.app-price-tag.barter {
+    background: var(--green-bg);
+    border-color: rgba(22,163,74,0.2);
+    color: var(--green);
+}
+.app-price-tag.barter span { color: var(--green); opacity: 0.7; }
+
+.app-price-tag.bundle {
+    background: var(--blue-light);
+    border-color: rgba(59,91,219,0.2);
+    color: var(--blue);
+}
+.app-price-tag.bundle span { color: var(--blue); opacity: 0.7; }
 
 .app-bio {
     font-size: 13px;

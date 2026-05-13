@@ -66,24 +66,54 @@ async function initDB() {
     `);
     await pool.query(`
         CREATE TABLE IF NOT EXISTS creator_applications (
-            id               SERIAL PRIMARY KEY,
-            user_id          INTEGER REFERENCES users(id) ON DELETE CASCADE,
-            full_name        TEXT NOT NULL,
-            instagram_handle TEXT NOT NULL,
-            niche            TEXT NOT NULL,
-            city             TEXT NOT NULL,
-            followers        INTEGER NOT NULL,
-            reel_price       INTEGER,
-            story_price      INTEGER,
-            post_price       INTEGER,
-            barter           BOOLEAN NOT NULL DEFAULT false,
-            barter_note      TEXT,
-            bio              TEXT,
-            status           TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected')),
-            reviewed_at      TIMESTAMPTZ,
-            created_at       TIMESTAMPTZ DEFAULT NOW()
+            id                  SERIAL PRIMARY KEY,
+            user_id             INTEGER REFERENCES users(id) ON DELETE CASCADE,
+            full_name           TEXT NOT NULL,
+            instagram_handle    TEXT NOT NULL,
+            niche               TEXT NOT NULL,
+            niche_subcategories TEXT,
+            city                TEXT NOT NULL,
+            state               TEXT,
+            languages           TEXT,
+            followers           INTEGER NOT NULL,
+            avg_reel_views      INTEGER,
+            account_age         TEXT,
+            audience_age_group  TEXT,
+            audience_gender     TEXT,
+            top_locations       TEXT,
+            reel_price          INTEGER,
+            story_price         INTEGER,
+            post_price          INTEGER,
+            bundle_pricing      TEXT,
+            min_deal_size       INTEGER,
+            barter              BOOLEAN NOT NULL DEFAULT false,
+            barter_note         TEXT,
+            content_links       TEXT,
+            past_collabs        TEXT,
+            bio                 TEXT,
+            status              TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected')),
+            reviewed_at         TIMESTAMPTZ,
+            created_at          TIMESTAMPTZ DEFAULT NOW()
         )
     `);
+
+    // Add new columns to existing tables without dropping data
+    const newCols = [
+        "ALTER TABLE creator_applications ADD COLUMN IF NOT EXISTS state TEXT",
+        "ALTER TABLE creator_applications ADD COLUMN IF NOT EXISTS languages TEXT",
+        "ALTER TABLE creator_applications ADD COLUMN IF NOT EXISTS niche_subcategories TEXT",
+        "ALTER TABLE creator_applications ADD COLUMN IF NOT EXISTS avg_reel_views INTEGER",
+        "ALTER TABLE creator_applications ADD COLUMN IF NOT EXISTS account_age TEXT",
+        "ALTER TABLE creator_applications ADD COLUMN IF NOT EXISTS audience_age_group TEXT",
+        "ALTER TABLE creator_applications ADD COLUMN IF NOT EXISTS audience_gender TEXT",
+        "ALTER TABLE creator_applications ADD COLUMN IF NOT EXISTS top_locations TEXT",
+        "ALTER TABLE creator_applications ADD COLUMN IF NOT EXISTS bundle_pricing TEXT",
+        "ALTER TABLE creator_applications ADD COLUMN IF NOT EXISTS min_deal_size INTEGER",
+        "ALTER TABLE creator_applications ADD COLUMN IF NOT EXISTS content_links TEXT",
+        "ALTER TABLE creator_applications ADD COLUMN IF NOT EXISTS past_collabs TEXT",
+    ];
+    for (const sql of newCols) await pool.query(sql);
+
     console.log("Database ready.");
 }
 
@@ -150,15 +180,25 @@ app.get("/api/creator/me", requireAuth, async (req, res) => {
 
 // ── AUTH — CREATOR REGISTER (application) ──
 app.post("/auth/creator/register", async (req, res) => {
-    const { email, password, full_name, instagram_handle, niche, city,
-            followers, reel_price, story_price, post_price, barter, barter_note, bio } = req.body;
+    const {
+        email, password, full_name, instagram_handle,
+        niche, niche_subcategories, city, state, languages,
+        followers, avg_reel_views, account_age,
+        audience_age_group, audience_gender, top_locations,
+        reel_price, story_price, post_price, bundle_pricing, min_deal_size,
+        barter, barter_note,
+        content_links, past_collabs, bio,
+    } = req.body;
 
     if (!email || !password || !full_name || !instagram_handle || !niche || !city || !followers) {
         return res.status(400).json({ error: "Missing required fields" });
     }
 
     try {
-        const existing = await pool.query("SELECT id FROM users WHERE email = $1", [email.toLowerCase().trim()]);
+        const existing = await pool.query(
+            "SELECT id FROM users WHERE email = $1",
+            [email.toLowerCase().trim()]
+        );
         if (existing.rows.length) return res.status(409).json({ error: "An account with this email already exists." });
 
         const handleTaken = await pool.query(
@@ -176,15 +216,27 @@ app.post("/auth/creator/register", async (req, res) => {
 
         await pool.query(
             `INSERT INTO creator_applications
-             (user_id, full_name, instagram_handle, niche, city, followers,
-              reel_price, story_price, post_price, barter, barter_note, bio)
-             VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)`,
-            [user.id, full_name, instagram_handle, niche, city, parseInt(followers),
-             reel_price || 0, story_price || 0, post_price || 0,
-             barter || false, barter_note || null, bio || null]
+             (user_id, full_name, instagram_handle,
+              niche, niche_subcategories, city, state, languages,
+              followers, avg_reel_views, account_age,
+              audience_age_group, audience_gender, top_locations,
+              reel_price, story_price, post_price, bundle_pricing, min_deal_size,
+              barter, barter_note,
+              content_links, past_collabs, bio)
+             VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24)`,
+            [
+                user.id, full_name, instagram_handle,
+                niche, niche_subcategories || null, city, state || null, languages || null,
+                parseInt(followers), avg_reel_views ? parseInt(avg_reel_views) : null, account_age || null,
+                audience_age_group || null, audience_gender || null, top_locations || null,
+                reel_price || 0, story_price || 0, post_price || 0, bundle_pricing || null,
+                min_deal_size ? parseInt(min_deal_size) : null,
+                barter || false, barter_note || null,
+                content_links || null, past_collabs || null, bio || null,
+            ]
         );
 
-        console.log(`[NEW APPLICATION] ${full_name} (${instagram_handle}) — ${niche} · ${city}`);
+        console.log(`[NEW APPLICATION] ${full_name} (@${instagram_handle}) — ${niche} · ${city}, ${state || "India"}`);
         res.status(201).json({ success: true, message: "Application submitted. We'll review it within 48 hours." });
     } catch (err) {
         console.error("POST /auth/creator/register error:", err.message);

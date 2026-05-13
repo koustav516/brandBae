@@ -1395,6 +1395,20 @@ footer {
     color: #a8bcff;
 }
 
+.footer-link-admin {
+    font-size: 11px;
+    opacity: 0.35;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 10px;
+    margin-top: 4px;
+    letter-spacing: 0.2px;
+}
+
+.footer-link-admin:hover {
+    opacity: 1;
+    color: rgba(255,255,255,0.6);
+}
+
 .footer-bottom {
     display: flex;
     align-items: center;

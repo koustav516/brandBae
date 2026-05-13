@@ -181,25 +181,49 @@
                         </div>
                         <div class="app-meta">
                             <span class="app-niche">${a.niche}</span>
-                            <span class="app-city">📍 ${a.city}</span>
+                            <span class="app-city">📍 ${a.city}${a.state ? ", " + a.state : ""}</span>
                         </div>
                     </div>
+
                     <div class="app-stats">
                         <div class="app-stat">
                             <strong>${Number(a.followers).toLocaleString("en-IN")}</strong>
                             <span>Followers</span>
                         </div>
-                        ${a.barter
-                            ? `<div class="app-stat barter"><strong>Barter</strong><span>${a.barter_note || a.niche + " brands"}</span></div>`
-                            : `<div class="app-stat"><strong>₹${Number(a.reel_price).toLocaleString("en-IN")}</strong><span>Reel rate</span></div>`
-                        }
+                        ${a.avg_reel_views ? `<div class="app-stat"><strong>${Number(a.avg_reel_views).toLocaleString("en-IN")}</strong><span>Avg reel views</span></div>` : ""}
+                        ${a.account_age ? `<div class="app-stat"><strong>${a.account_age}</strong><span>Account age</span></div>` : ""}
                         <div class="app-stat"><strong>${a.email}</strong><span>Email</span></div>
                         <div class="app-stat">
                             <strong>${new Date(a.created_at).toLocaleDateString("en-IN")}</strong>
                             <span>Applied</span>
                         </div>
                     </div>
+
+                    <div class="app-details">
+                        ${a.languages ? `<div class="app-detail-row"><span class="detail-label">Languages</span><span>${a.languages}</span></div>` : ""}
+                        ${a.niche_subcategories ? `<div class="app-detail-row"><span class="detail-label">Sub-niche</span><span>${a.niche_subcategories}</span></div>` : ""}
+                        ${a.audience_age_group ? `<div class="app-detail-row"><span class="detail-label">Audience age</span><span>${a.audience_age_group}</span></div>` : ""}
+                        ${a.audience_gender ? `<div class="app-detail-row"><span class="detail-label">Audience gender</span><span>${a.audience_gender}</span></div>` : ""}
+                        ${a.top_locations ? `<div class="app-detail-row"><span class="detail-label">Top locations</span><span>${a.top_locations}</span></div>` : ""}
+                    </div>
+
+                    <div class="app-pricing">
+                        ${a.barter
+                            ? `<div class="app-price-tag barter">Barter only${a.barter_note ? " — " + a.barter_note : ""}</div>`
+                            : `
+                                ${a.reel_price  ? `<div class="app-price-tag"><span>Reel</span> ₹${Number(a.reel_price).toLocaleString("en-IN")}</div>` : ""}
+                                ${a.story_price ? `<div class="app-price-tag"><span>Story</span> ₹${Number(a.story_price).toLocaleString("en-IN")}</div>` : ""}
+                                ${a.post_price  ? `<div class="app-price-tag"><span>Post</span> ₹${Number(a.post_price).toLocaleString("en-IN")}</div>` : ""}
+                              `
+                        }
+                        ${a.bundle_pricing ? `<div class="app-price-tag bundle"><span>Bundle</span> ${a.bundle_pricing}</div>` : ""}
+                        ${a.min_deal_size  ? `<div class="app-price-tag"><span>Min deal</span> ₹${Number(a.min_deal_size).toLocaleString("en-IN")}</div>` : ""}
+                    </div>
+
                     ${a.bio ? `<div class="app-bio">${a.bio}</div>` : ""}
+                    ${a.content_links ? `<div class="app-detail-row"><span class="detail-label">Content links</span><span class="app-links">${a.content_links}</span></div>` : ""}
+                    ${a.past_collabs ? `<div class="app-bio"><strong>Past collabs:</strong> ${a.past_collabs}</div>` : ""}
+
                     ${a.status === "pending" ? `
                         <div class="app-actions">
                             <button class="btn-approve" onclick="review(${a.id}, 'approved')">✓ Approve</button>
