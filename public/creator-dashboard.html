@@ -9,695 +9,210 @@
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet" />
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
         :root {
-            --blue: #3B5BDB;
-            --blue-light: #EEF1FF;
-            --ink: #0F0F12;
-            --ink-soft: #5A5A72;
-            --ink-faint: #9898AA;
-            --border: #EBEBEF;
-            --border-mid: #D8D8E0;
-            --bg: #FFFFFF;
-            --bg-soft: #F7F7FA;
-            --green: #16a34a;
-            --green-bg: rgba(34,197,94,0.1);
-            --amber: #E8902A;
-            --amber-light: #FFF5E6;
-            --red: #dc2626;
+            --blue: #3B5BDB; --blue-light: #EEF1FF;
+            --ink: #0F0F12; --ink-soft: #5A5A72; --ink-faint: #9898AA;
+            --border: #EBEBEF; --border-mid: #D8D8E0;
+            --bg: #FFFFFF; --bg-soft: #F7F7FA;
+            --green: #16a34a; --green-light: rgba(34,197,94,0.1);
+            --amber: #E8902A; --amber-light: #FFF5E6;
+            --red: #dc2626; --navy: #0D0F1A;
         }
-
-        body {
-            font-family: 'Bricolage Grotesque', sans-serif;
-            background: var(--bg-soft);
-            color: var(--ink);
-            min-height: 100vh;
-        }
+        body { font-family: 'Bricolage Grotesque', sans-serif; background: var(--bg-soft); color: var(--ink); min-height: 100vh; }
 
         /* ── HEADER ── */
-        .header {
-            background: #fff;
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            z-index: 50;
-        }
-
-        .header-inner {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 5%;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .logo {
-            font-size: 18px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            color: var(--ink);
-            text-decoration: none;
-        }
+        .header { background: #fff; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
+        .header-inner { max-width: 1160px; margin: 0 auto; padding: 0 24px; height: 56px; display: flex; align-items: center; gap: 20px; }
+        .logo { font-size: 18px; font-weight: 800; letter-spacing: -0.5px; color: var(--ink); text-decoration: none; flex-shrink: 0; }
         .logo span { color: var(--blue); }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .creator-pill {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--bg-soft);
-            border: 1px solid var(--border);
-            border-radius: 100px;
-            padding: 5px 14px 5px 6px;
-        }
-
-        .creator-pill-avatar {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--blue-light), #dce8ff);
-            flex-shrink: 0;
-        }
-
-        .creator-pill-name {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--ink);
-        }
-
-        .logout-btn {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--ink-soft);
-            background: none;
-            border: 1px solid var(--border-mid);
-            border-radius: 8px;
-            padding: 6px 14px;
-            cursor: pointer;
-            font-family: inherit;
-            transition: background 0.15s;
-        }
+        .nav-tabs { display: flex; background: var(--bg-soft); border: 1px solid var(--border); border-radius: 100px; padding: 3px; gap: 2px; margin: 0 auto; }
+        .nav-tab { font-family: inherit; font-size: 13px; font-weight: 600; color: var(--ink-faint); background: none; border: none; border-radius: 100px; padding: 6px 16px; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+        .nav-tab.active { background: #fff; color: var(--ink); box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+        .nav-tab:hover:not(.active) { color: var(--ink-soft); }
+        .header-right { display: flex; align-items: center; gap: 10px; margin-left: auto; flex-shrink: 0; }
+        .help-link { font-size: 13px; font-weight: 600; color: var(--ink-faint); text-decoration: none; }
+        .user-chip { display: flex; align-items: center; gap: 7px; background: var(--bg-soft); border: 1px solid var(--border); border-radius: 100px; padding: 4px 12px 4px 5px; font-size: 13px; font-weight: 600; color: var(--ink); }
+        .user-chip-avatar { width: 26px; height: 26px; border-radius: 50%; background: linear-gradient(135deg, #c5d0f5, #dce8ff); flex-shrink: 0; }
+        .logout-btn { font-size: 12px; font-weight: 600; color: var(--ink-faint); background: none; border: 1px solid var(--border-mid); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-family: inherit; transition: background 0.15s; }
         .logout-btn:hover { background: var(--bg-soft); }
 
+        /* ── PAGE HEADER ── */
+        .page-hdr { background: #fff; border-bottom: 1px solid var(--border); padding: 14px 24px 18px; }
+        .page-hdr-inner { max-width: 1160px; margin: 0 auto; }
+        .breadcrumb { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--ink-faint); margin-bottom: 10px; }
+        .breadcrumb a { color: var(--ink-faint); text-decoration: none; }
+        .breadcrumb a:hover { color: var(--ink); }
+        .page-hdr-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+        .page-title { font-size: 26px; font-weight: 800; letter-spacing: -0.7px; line-height: 1.2; }
+        .page-title em { font-family: 'Instrument Serif', Georgia, serif; font-style: italic; font-weight: 400; color: var(--blue); }
+        .page-actions { display: flex; gap: 10px; flex-shrink: 0; }
+        .btn-share { display: flex; align-items: center; gap: 7px; font-family: inherit; font-size: 13px; font-weight: 600; color: var(--ink-soft); background: #fff; border: 1.5px solid var(--border-mid); border-radius: 10px; padding: 9px 16px; cursor: pointer; transition: border-color 0.15s; }
+        .btn-share:hover { border-color: var(--ink); }
+        .btn-preview { display: flex; align-items: center; gap: 7px; font-family: inherit; font-size: 13px; font-weight: 700; color: #fff; background: var(--ink); border: none; border-radius: 10px; padding: 9px 16px; cursor: pointer; transition: background 0.15s; }
+        .btn-preview:hover { background: var(--blue); }
+
         /* ── LAYOUT ── */
-        .page {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 36px 5% 80px;
-            display: grid;
-            grid-template-columns: 1fr 320px;
-            gap: 24px;
-            align-items: start;
-        }
-
+        .page { max-width: 1160px; margin: 0 auto; padding: 28px 24px 80px; display: grid; grid-template-columns: 1fr 316px; gap: 24px; align-items: start; }
         .main-col { display: flex; flex-direction: column; gap: 20px; }
-        .side-col  { display: flex; flex-direction: column; gap: 20px; }
+        .side-col  { display: flex; flex-direction: column; gap: 16px; }
+        .card { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
+        .card-lbl { font-size: 10px; font-weight: 700; letter-spacing: 1.3px; text-transform: uppercase; color: var(--ink-faint); }
 
-        /* ── CARDS ── */
-        .card {
-            background: #fff;
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 24px;
-        }
+        /* ── HERO ── */
+        .hero { position: relative; background: var(--navy); border-radius: 20px; overflow: hidden; padding: 30px 28px; display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 116px; }
+        .hero-glow1 { position: absolute; top: -60px; left: -40px; width: 260px; height: 200px; background: radial-gradient(circle, rgba(59,91,219,0.4) 0%, transparent 70%); pointer-events: none; }
+        .hero-glow2 { position: absolute; bottom: -60px; right: 60px; width: 200px; height: 160px; background: radial-gradient(circle, rgba(59,91,219,0.22) 0%, transparent 70%); pointer-events: none; }
+        .hero-waves { position: absolute; bottom: 0; left: 0; right: 0; height: 52px; overflow: hidden; opacity: 0.07; }
+        .hero-waves svg { position: absolute; bottom: 0; width: 200%; animation: waveScroll 7s linear infinite; }
+        .hero-waves svg:nth-child(2) { animation-delay: -3.5s; opacity: 0.5; }
+        @keyframes waveScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        .hero-body { position: relative; z-index: 1; }
+        .hero-body h2 { font-size: 22px; font-weight: 800; color: #fff; letter-spacing: -0.5px; margin-bottom: 5px; }
+        .hero-body h2 em { font-family: 'Instrument Serif', Georgia, serif; font-style: italic; font-weight: 400; color: var(--amber); }
+        .hero-sub { font-size: 13px; color: rgba(255,255,255,0.42); line-height: 1.5; max-width: 380px; }
+        .live-pill { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 8px; background: rgba(22,163,74,0.15); border: 1px solid rgba(22,163,74,0.3); border-radius: 100px; padding: 8px 16px; color: #4ade80; font-size: 13px; font-weight: 700; flex-shrink: 0; white-space: nowrap; }
+        .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; flex-shrink: 0; animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(74,222,128,0.5); } 50% { box-shadow: 0 0 0 5px rgba(74,222,128,0); } }
+        .pending-pill { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 8px; background: rgba(232,144,42,0.15); border: 1px solid rgba(232,144,42,0.3); border-radius: 100px; padding: 8px 16px; color: var(--amber); font-size: 13px; font-weight: 700; flex-shrink: 0; white-space: nowrap; }
+        .pending-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--amber); flex-shrink: 0; animation: pulse 2s ease-in-out infinite; }
 
-        .card-title {
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 1.2px;
-            text-transform: uppercase;
-            color: var(--ink-faint);
-            margin-bottom: 16px;
-        }
+        /* ── PENDING NOTICE ── */
+        .pend-notice { background: var(--amber-light); border: 1px solid rgba(232,144,42,0.25); border-radius: 14px; padding: 18px 20px; display: flex; gap: 14px; align-items: flex-start; }
+        .pend-icon { width: 36px; height: 36px; border-radius: 10px; background: rgba(232,144,42,0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--amber); }
+        .pend-notice h3 { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+        .pend-notice p  { font-size: 13px; color: var(--ink-soft); line-height: 1.55; }
 
-        /* ── WELCOME ── */
-        .welcome-card {
-            background: var(--ink);
-            border-color: transparent;
-            padding: 28px 28px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
-        }
+        /* ── LISTING CARD ── */
+        .listing-card { padding: 0; overflow: hidden; }
+        .listing-hdr { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--border); }
+        .edit-listing-btn { font-family: inherit; font-size: 13px; font-weight: 600; color: var(--blue); background: none; border: none; cursor: pointer; }
+        .edit-listing-btn:hover { text-decoration: underline; }
+        .cc-wrap { padding: 16px 20px; }
+        .cc-cover { height: 80px; border-radius: 12px; position: relative; margin-bottom: 0; }
+        .cc-avatar { width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.6); border: 3px solid #fff; position: absolute; bottom: -18px; left: 14px; backdrop-filter: blur(4px); }
+        .cc-locked { position: absolute; top: 10px; left: 10px; display: flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.92); border-radius: 100px; padding: 3px 10px 3px 7px; font-size: 10px; font-weight: 700; color: var(--ink-soft); }
+        .cc-niche { position: absolute; top: 10px; right: 10px; font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 100px; }
+        .cc-identity { display: flex; align-items: flex-start; justify-content: space-between; padding-top: 24px; margin-bottom: 14px; }
+        .cc-handle { font-size: 15px; font-weight: 700; letter-spacing: -0.3px; }
+        .cc-city { font-size: 12px; color: var(--ink-faint); margin-top: 2px; }
+        .cc-verified { display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; color: var(--green); background: var(--green-light); padding: 4px 10px; border-radius: 100px; }
+        .cc-sec { font-size: 9px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 8px; }
+        .cc-metrics { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 14px; }
+        .cc-metric { background: var(--bg-soft); border: 1px solid var(--border); border-radius: 10px; padding: 10px 8px; text-align: center; }
+        .cc-mval { font-size: 14px; font-weight: 700; color: var(--ink); display: block; margin-bottom: 2px; }
+        .cc-mkey { font-size: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; color: var(--ink-faint); }
+        .cc-rates { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 14px; }
+        .cc-rate { background: var(--amber-light); border-radius: 10px; padding: 10px 8px; text-align: center; }
+        .cc-rval { font-size: 14px; font-weight: 700; color: var(--amber); display: block; margin-bottom: 2px; }
+        .cc-rkey { font-size: 8.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: rgba(232,144,42,0.6); }
+        .cc-barter { grid-column:1/-1; background: rgba(34,197,94,0.07); border-radius: 10px; padding: 10px 14px; font-size: 12px; font-weight: 600; color: var(--green); text-align: center; }
+        .cc-collabs { margin-bottom: 12px; }
+        .cc-collab-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+        .cc-collab-pill { font-size: 12px; font-weight: 600; color: var(--ink-soft); background: var(--bg-soft); border: 1px solid var(--border); border-radius: 100px; padding: 3px 11px; }
+        .cc-add-btn { font-family: inherit; font-size: 12px; font-weight: 600; color: var(--blue); background: none; border: none; cursor: pointer; }
+        .cc-links { }
+        .cc-no-link { font-size: 12px; color: var(--ink-faint); display: inline; }
+        .cc-add-link-btn { font-family: inherit; font-size: 12px; font-weight: 600; color: var(--blue); background: none; border: none; cursor: pointer; margin-left: 6px; }
 
-        .welcome-text h2 {
-            font-size: 22px;
-            font-weight: 800;
-            color: #fff;
-            letter-spacing: -0.5px;
-            margin-bottom: 4px;
-        }
-
-        .welcome-text h2 em {
-            font-family: 'Instrument Serif', Georgia, serif;
-            font-style: italic;
-            font-weight: 400;
-            color: var(--amber);
-        }
-
-        .welcome-sub {
-            font-size: 13px;
-            color: rgba(255,255,255,0.45);
-        }
-
-        /* Status badge */
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            font-size: 12px;
-            font-weight: 700;
-            padding: 6px 14px;
-            border-radius: 100px;
-            flex-shrink: 0;
-        }
-
-        .status-badge.pending  { background: rgba(232,144,42,0.15); color: var(--amber); }
-        .status-badge.approved { background: var(--green-bg); color: var(--green); }
-        .status-badge.rejected { background: rgba(220,38,38,0.1); color: var(--red); }
-
-        .status-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: currentColor;
-            flex-shrink: 0;
-        }
-
-        /* ── PROFILE PREVIEW ── */
-        .profile-cover {
-            height: 88px;
-            border-radius: 12px;
-            margin-bottom: 14px;
-            position: relative;
-        }
-
-        .profile-avatar {
-            width: 52px;
-            height: 52px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.55);
-            border: 3px solid #fff;
-            position: absolute;
-            bottom: -20px;
-            left: 16px;
-            backdrop-filter: blur(6px);
-        }
-
-        .profile-niche-pill {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            font-size: 10px;
-            font-weight: 700;
-            padding: 4px 10px;
-            border-radius: 100px;
-        }
-
-        .profile-identity {
-            padding-top: 28px;
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            margin-bottom: 16px;
-        }
-
-        .profile-handle {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--ink);
-            letter-spacing: -0.3px;
-        }
-
-        .profile-city {
-            font-size: 12px;
-            color: var(--ink-faint);
-            margin-top: 2px;
-        }
-
-        .profile-verified {
-            font-size: 10px;
-            font-weight: 700;
-            color: var(--green);
-            background: var(--green-bg);
-            padding: 3px 9px;
-            border-radius: 100px;
-        }
-
-        .section-lbl {
-            font-size: 9px;
-            font-weight: 700;
-            letter-spacing: 1.2px;
-            text-transform: uppercase;
-            color: var(--ink-faint);
-            margin-bottom: 8px;
-        }
-
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin-bottom: 16px;
-        }
-
-        .metric-cell {
-            background: var(--bg-soft);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 10px 8px;
-            text-align: center;
-        }
-
-        .metric-val {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--ink);
-            letter-spacing: -0.4px;
-            display: block;
-            margin-bottom: 3px;
-        }
-
-        .metric-val.green { color: var(--green); }
-
-        .metric-key {
-            font-size: 8px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-            color: var(--ink-faint);
-        }
-
-        .rates-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-        }
-
-        .rate-cell {
-            background: var(--amber-light);
-            border-radius: 10px;
-            padding: 10px 8px;
-            text-align: center;
-        }
-
-        .rate-val {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--amber);
-            display: block;
-            margin-bottom: 3px;
-        }
-
-        .rate-key {
-            font-size: 8.5px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: rgba(232,144,42,0.6);
-        }
-
-        .barter-cell {
-            grid-column: 1 / -1;
-            background: rgba(34,197,94,0.07);
-            border-radius: 10px;
-            padding: 10px 14px;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--green);
-            text-align: center;
-        }
-
-        /* ── PENDING STATE ── */
-        .pending-notice {
-            background: var(--amber-light);
-            border: 1px solid rgba(232,144,42,0.25);
-            border-radius: 12px;
-            padding: 18px 20px;
-            display: flex;
-            gap: 14px;
-            align-items: flex-start;
-        }
-
-        .pending-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            background: rgba(232,144,42,0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            color: var(--amber);
-        }
-
-        .pending-notice h3 { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
-        .pending-notice p  { font-size: 13px; color: var(--ink-soft); line-height: 1.55; }
-
-        /* ── QUICK STATS (sidebar) ── */
-        .stat-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .stat-row:last-child { border-bottom: none; padding-bottom: 0; }
-        .stat-row:first-child { padding-top: 0; }
-
-        .stat-label {
-            font-size: 13px;
-            color: var(--ink-soft);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .stat-icon {
-            width: 28px;
-            height: 28px;
-            border-radius: 8px;
-            background: var(--bg-soft);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--ink-faint);
-            flex-shrink: 0;
-        }
-
-        .stat-value {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--ink);
-            letter-spacing: -0.3px;
-        }
+        /* ── STATS ── */
+        .stats-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+        .insights-btn { font-family: inherit; font-size: 12px; font-weight: 600; color: var(--blue); background: none; border: none; cursor: pointer; }
+        .srow { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); gap: 8px; }
+        .srow:first-of-type { padding-top: 0; }
+        .srow:last-child { border-bottom: none; padding-bottom: 0; }
+        .srow-left { display: flex; align-items: center; gap: 10px; }
+        .sicon { width: 30px; height: 30px; border-radius: 8px; background: var(--bg-soft); display: flex; align-items: center; justify-content: center; color: var(--ink-faint); flex-shrink: 0; }
+        .sname { font-size: 13px; font-weight: 500; color: var(--ink); }
+        .sdelta { font-size: 11px; color: var(--ink-faint); margin-top: 1px; }
+        .sdelta.up { color: var(--green); }
+        .srow-right { display: flex; align-items: center; gap: 10px; }
+        .snum { font-size: 20px; font-weight: 800; color: var(--ink); letter-spacing: -0.8px; min-width: 20px; text-align: right; }
 
         /* ── CHECKLIST ── */
-        .checklist { display: flex; flex-direction: column; gap: 10px; }
+        .cl-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+        .cl-badge { font-size: 11px; font-weight: 700; color: var(--ink-soft); background: var(--bg-soft); border: 1px solid var(--border); border-radius: 100px; padding: 2px 9px; }
+        .cl-bar { height: 6px; background: var(--bg-soft); border-radius: 100px; overflow: hidden; margin-bottom: 6px; }
+        .cl-fill { height: 100%; background: var(--green); border-radius: 100px; transition: width 0.5s ease; }
+        .cl-labels { display: flex; justify-content: space-between; margin-bottom: 14px; }
+        .cl-pct { font-size: 16px; font-weight: 800; color: var(--ink); letter-spacing: -0.5px; }
+        .cl-count { font-size: 12px; color: var(--ink-faint); }
+        .cl-item { display: flex; align-items: center; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--border); }
+        .cl-item:last-child { border-bottom: none; padding-bottom: 0; }
+        .cl-item-left { display: flex; align-items: center; gap: 9px; font-size: 13px; color: var(--ink-soft); }
+        .cl-icon { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 10px; font-weight: 700; }
+        .cl-icon.done { background: var(--green-light); color: var(--green); }
+        .cl-icon.todo { background: #f5f0ff; color: #7c3aed; }
+        .cl-carrot { font-size: 11px; font-weight: 700; color: #7c3aed; background: #f5f0ff; border-radius: 100px; padding: 2px 8px; white-space: nowrap; }
 
-        .check-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 13px;
-            color: var(--ink-soft);
-        }
+        /* ── ACCOUNT ── */
+        .arow { display: flex; align-items: center; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+        .arow:first-child { padding-top: 0; }
+        .arow:last-child { border-bottom: none; padding-bottom: 0; }
+        .albl { color: var(--ink-soft); }
+        .aval { font-weight: 600; color: var(--ink); }
+        .aval.id { font-weight: 800; font-size: 14px; letter-spacing: 0.5px; }
 
-        .check-icon {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            font-size: 10px;
-            font-weight: 700;
-        }
+        /* ── ACTIVITY ── */
+        .act-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+        .view-all { font-family: inherit; font-size: 12px; font-weight: 600; color: var(--blue); background: none; border: none; cursor: pointer; }
+        .act-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+        .act-item:last-child { border-bottom: none; padding-bottom: 0; }
+        .act-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+        .act-dot.on  { background: var(--blue); }
+        .act-dot.off { background: var(--border-mid); }
+        .act-body { flex: 1; }
+        .act-text { font-size: 13px; color: var(--ink-soft); line-height: 1.5; }
+        .act-text strong { color: var(--ink); font-weight: 600; }
+        .act-time { font-size: 11px; color: var(--ink-faint); margin-top: 2px; }
 
-        .check-icon.done { background: var(--green-bg); color: var(--green); }
-        .check-icon.pending { background: var(--amber-light); color: var(--amber); }
+        /* ── COMING SOON ── */
+        .cs-wrap { max-width: 1160px; margin: 0 auto; padding: 80px 24px; text-align: center; }
+        .cs-emoji { font-size: 36px; margin-bottom: 14px; }
+        .cs-title { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+        .cs-sub { font-size: 14px; color: var(--ink-faint); }
 
-        /* ── LOADING / ERROR ── */
-        .page-loading {
-            min-height: calc(100vh - 60px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            gap: 12px;
-            color: var(--ink-faint);
-            font-size: 14px;
-        }
-
-        .spinner {
-            width: 32px;
-            height: 32px;
-            border: 2.5px solid var(--border);
-            border-top-color: var(--blue);
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-        }
-
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* ── TABS ── */
-        .tabs {
-            display: flex;
-            gap: 4px;
-            background: var(--bg-soft);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 4px;
-            margin-bottom: 24px;
-            width: fit-content;
-        }
-
-        .tab-btn {
-            font-family: inherit;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--ink-faint);
-            background: none;
-            border: none;
-            border-radius: 9px;
-            padding: 8px 18px;
-            cursor: pointer;
-            transition: background 0.15s, color 0.15s;
-        }
-
-        .tab-btn.active {
-            background: #fff;
-            color: var(--ink);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-        }
-
-        .tab-panel { display: none; }
-        .tab-panel.active { display: contents; }
-
-        /* ── EDIT FORM ── */
-        .edit-card {
-            background: #fff;
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            overflow: hidden;
-        }
-
-        .edit-section {
-            padding: 24px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .edit-section:last-child { border-bottom: none; }
-
-        .edit-section-title {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--ink);
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .edit-section-title span {
-            font-size: 10px;
-            font-weight: 600;
-            color: var(--ink-faint);
-            background: var(--bg-soft);
-            border: 1px solid var(--border);
-            border-radius: 100px;
-            padding: 2px 8px;
-            letter-spacing: 0.3px;
-        }
-
-        .edit-field {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            margin-bottom: 14px;
-        }
-
+        /* ── EDIT TAB ── */
+        .edit-wrap { max-width: 1160px; margin: 0 auto; padding: 28px 24px 80px; }
+        .edit-card { background: #fff; border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+        .edit-sec { padding: 24px; border-bottom: 1px solid var(--border); }
+        .edit-sec:last-child { border-bottom: none; }
+        .edit-sec-title { font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .edit-sec-title .tag { font-size: 10px; font-weight: 600; color: var(--ink-faint); background: var(--bg-soft); border: 1px solid var(--border); border-radius: 100px; padding: 2px 8px; }
+        .edit-field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
         .edit-field:last-child { margin-bottom: 0; }
-
-        .edit-field label {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--ink-soft);
-        }
-
-        .edit-field input,
-        .edit-field textarea,
-        .edit-field select {
-            font-family: inherit;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--ink);
-            background: var(--bg);
-            border: 1.5px solid var(--border-mid);
-            border-radius: 10px;
-            padding: 10px 13px;
-            outline: none;
-            transition: border-color 0.15s, box-shadow 0.15s;
-            width: 100%;
-        }
-
-        .edit-field input:focus,
-        .edit-field textarea:focus,
-        .edit-field select:focus {
-            border-color: var(--blue);
-            box-shadow: 0 0 0 3px rgba(59,91,219,0.1);
-        }
-
+        .edit-field label { font-size: 12px; font-weight: 600; color: var(--ink-soft); }
+        .edit-field input, .edit-field textarea { font-family: inherit; font-size: 14px; font-weight: 500; color: var(--ink); background: var(--bg); border: 1.5px solid var(--border-mid); border-radius: 10px; padding: 10px 13px; outline: none; transition: border-color 0.15s, box-shadow 0.15s; width: 100%; }
+        .edit-field input:focus, .edit-field textarea:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(59,91,219,0.1); }
         .edit-field textarea { resize: vertical; }
-
-        .edit-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 14px;
-        }
-
+        .edit-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
         .edit-row .edit-field { margin-bottom: 0; }
-
         .edit-row.three { grid-template-columns: 1fr 1fr 1fr; }
-
-        .prefix-wrap {
-            display: flex;
-            align-items: center;
-            background: var(--bg);
-            border: 1.5px solid var(--border-mid);
-            border-radius: 10px;
-            overflow: hidden;
-            transition: border-color 0.15s;
-        }
-
-        .prefix-wrap:focus-within {
-            border-color: var(--blue);
-            box-shadow: 0 0 0 3px rgba(59,91,219,0.1);
-        }
-
-        .prefix-sym {
-            padding: 0 10px;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--ink-faint);
-            background: var(--bg-soft);
-            border-right: 1.5px solid var(--border-mid);
-            line-height: 42px;
-            flex-shrink: 0;
-        }
-
-        .prefix-wrap input {
-            border: none;
-            box-shadow: none !important;
-            border-radius: 0;
-        }
-
-        .toggle-label {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--ink-soft);
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .toggle-label input[type="checkbox"] { display: none; }
-
-        .toggle-slider {
-            position: relative;
-            width: 36px;
-            height: 20px;
-            background: var(--border-mid);
-            border-radius: 100px;
-            flex-shrink: 0;
-            transition: background 0.2s;
-        }
-
-        .toggle-slider::after {
-            content: '';
-            position: absolute;
-            width: 14px;
-            height: 14px;
-            background: #fff;
-            border-radius: 50%;
-            top: 3px;
-            left: 3px;
-            transition: transform 0.2s;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
-        }
-
-        .toggle-label input:checked ~ .toggle-slider { background: var(--blue); }
-        .toggle-label input:checked ~ .toggle-slider::after { transform: translateX(16px); }
-
-        .review-notice {
-            background: var(--amber-light);
-            border: 1px solid rgba(232,144,42,0.2);
-            border-radius: 10px;
-            padding: 12px 14px;
-            font-size: 12.5px;
-            color: var(--amber);
-            font-weight: 500;
-            margin-bottom: 14px;
-            line-height: 1.5;
-        }
-
-        .edit-actions {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 20px 24px;
-            background: var(--bg-soft);
-            border-top: 1px solid var(--border);
-        }
-
-        .save-btn {
-            background: var(--ink);
-            color: #fff;
-            border: none;
-            border-radius: 10px;
-            padding: 11px 24px;
-            font-size: 14px;
-            font-weight: 700;
-            font-family: inherit;
-            cursor: pointer;
-            transition: background 0.15s;
-        }
-
+        .pfx { display: flex; align-items: center; background: var(--bg); border: 1.5px solid var(--border-mid); border-radius: 10px; overflow: hidden; transition: border-color 0.15s; }
+        .pfx:focus-within { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(59,91,219,0.1); }
+        .pfx-sym { padding: 0 10px; font-size: 13px; font-weight: 600; color: var(--ink-faint); background: var(--bg-soft); border-right: 1.5px solid var(--border-mid); line-height: 42px; flex-shrink: 0; }
+        .pfx input { border: none !important; box-shadow: none !important; border-radius: 0; }
+        .toggle-lbl { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 500; color: var(--ink-soft); cursor: pointer; user-select: none; }
+        .toggle-lbl input[type="checkbox"] { display: none; }
+        .tslider { position: relative; width: 36px; height: 20px; background: var(--border-mid); border-radius: 100px; flex-shrink: 0; transition: background 0.2s; }
+        .tslider::after { content: ''; position: absolute; width: 14px; height: 14px; background: #fff; border-radius: 50%; top: 3px; left: 3px; transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
+        .toggle-lbl input:checked ~ .tslider { background: var(--blue); }
+        .toggle-lbl input:checked ~ .tslider::after { transform: translateX(16px); }
+        .review-note { background: var(--amber-light); border: 1px solid rgba(232,144,42,0.2); border-radius: 10px; padding: 12px 14px; font-size: 12.5px; color: var(--amber); font-weight: 500; margin-bottom: 14px; line-height: 1.5; }
+        .edit-actions { display: flex; align-items: center; gap: 10px; padding: 20px 24px; background: var(--bg-soft); border-top: 1px solid var(--border); }
+        .save-btn { background: var(--ink); color: #fff; border: none; border-radius: 10px; padding: 11px 24px; font-size: 14px; font-weight: 700; font-family: inherit; cursor: pointer; transition: background 0.15s; }
         .save-btn:hover { background: var(--blue); }
         .save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-        .save-status {
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--ink-faint);
-        }
-
+        .save-status { font-size: 13px; font-weight: 500; color: var(--ink-faint); }
         .save-status.ok  { color: var(--green); }
         .save-status.err { color: var(--red); }
 
-        /* ── RESPONSIVE ── */
-        @media (max-width: 860px) {
-            .page { grid-template-columns: 1fr; }
-            .side-col { order: -1; }
-        }
+        /* ── LOADING ── */
+        .page-loading { min-height: calc(100vh - 56px); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 12px; color: var(--ink-faint); font-size: 14px; }
+        .spinner { width: 32px; height: 32px; border: 2.5px solid var(--border); border-top-color: var(--blue); border-radius: 50%; animation: spin 0.7s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        @media (max-width: 560px) {
-            .welcome-card { flex-direction: column; align-items: flex-start; }
-            .metrics-grid { grid-template-columns: 1fr 1fr; }
-            .rates-grid   { grid-template-columns: 1fr 1fr; }
-        }
+        @media (max-width: 900px) { .page { grid-template-columns: 1fr; } .side-col { order: -1; } .nav-tabs { display: none; } }
+        @media (max-width: 600px) { .page-hdr-row { flex-direction: column; align-items: flex-start; } .page-actions { width: 100%; } .btn-share, .btn-preview { flex: 1; justify-content: center; } .cc-metrics, .cc-rates { grid-template-columns: 1fr 1fr; } }
     </style>
 </head>
 <body>
@@ -705,15 +220,47 @@
     <header class="header">
         <div class="header-inner">
             <a href="/" class="logo">Brand<span>bae</span></a>
+            <nav class="nav-tabs">
+                <button class="nav-tab active" data-tab="overview" onclick="switchTab('overview',this)">Overview</button>
+                <button class="nav-tab" data-tab="edit"     onclick="switchTab('edit',this)">Edit Profile</button>
+                <button class="nav-tab" data-tab="inbox"    onclick="switchTab('inbox',this)">Inbox</button>
+                <button class="nav-tab" data-tab="payouts"  onclick="switchTab('payouts',this)">Payouts</button>
+            </nav>
             <div class="header-right">
-                <div class="creator-pill">
-                    <div class="creator-pill-avatar"></div>
-                    <span class="creator-pill-name" id="headerName">Creator</span>
+                <a href="#" class="help-link">Help</a>
+                <div class="user-chip">
+                    <div class="user-chip-avatar"></div>
+                    <span id="headerName">Creator</span>
                 </div>
                 <button class="logout-btn" onclick="logout()">Log out</button>
             </div>
         </div>
     </header>
+
+    <div id="pageHdr" style="display:none">
+        <div class="page-hdr">
+            <div class="page-hdr-inner">
+                <div class="breadcrumb">
+                    <a href="/">Dashboard</a>
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                    <span>Your creator dashboard</span>
+                </div>
+                <div class="page-hdr-row">
+                    <h1 class="page-title">Your <em>creator</em> dashboard</h1>
+                    <div class="page-actions">
+                        <button class="btn-share" onclick="shareListing()">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+                            Share listing
+                        </button>
+                        <button class="btn-preview" onclick="previewAsBrand()">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            Preview as brand
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div id="pageLoading" class="page-loading">
         <div class="spinner"></div>
@@ -722,421 +269,434 @@
 
     <div id="pageContent" style="display:none">
 
-        <!-- TABS -->
-        <div style="max-width:1100px;margin:0 auto;padding:28px 5% 0;">
-            <div class="tabs">
-                <button class="tab-btn active" onclick="switchTab('overview', this)">Overview</button>
-                <button class="tab-btn" onclick="switchTab('edit', this)">Edit Profile</button>
+        <!-- OVERVIEW -->
+        <div class="tab-panel" id="tab-overview">
+            <div class="page">
+
+                <div class="main-col">
+
+                    <!-- HERO BANNER -->
+                    <div class="hero">
+                        <div class="hero-glow1"></div>
+                        <div class="hero-glow2"></div>
+                        <div class="hero-waves">
+                            <svg viewBox="0 0 1440 52" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" height="52">
+                                <path d="M0,26 C240,52 480,0 720,26 C960,52 1200,0 1440,26 L1440,52 L0,52 Z" fill="white"/>
+                                <path d="M1440,26 C1200,52 960,0 720,26 C480,52 240,0 0,26 L0,52 L1440,52 Z" fill="white"/>
+                            </svg>
+                        </div>
+                        <div class="hero-body">
+                            <h2>Hey, <em id="welcomeName">there</em> 👋</h2>
+                            <p class="hero-sub" id="welcomeSub">Here's your creator profile overview.</p>
+                        </div>
+                        <div id="statusBadge"></div>
+                    </div>
+
+                    <!-- PENDING NOTICE -->
+                    <div id="pendingNotice" class="pend-notice" style="display:none">
+                        <div class="pend-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        </div>
+                        <div>
+                            <h3>Application under review</h3>
+                            <p>Our team is reviewing your application. This usually takes 24–48 hours. We'll email you once you're approved and live on the marketplace.</p>
+                        </div>
+                    </div>
+
+                    <!-- MARKETPLACE LISTING PREVIEW -->
+                    <div id="profilePreview" class="card listing-card" style="display:none">
+                        <div class="listing-hdr">
+                            <span class="card-lbl">Your marketplace listing</span>
+                            <button class="edit-listing-btn" onclick="switchTab('edit', document.querySelector('[data-tab=edit]'))">Edit listing →</button>
+                        </div>
+                        <div class="cc-wrap" id="creatorCardInner"></div>
+                    </div>
+
+                    <!-- RECENT ACTIVITY -->
+                    <div class="card">
+                        <div class="act-hdr">
+                            <span class="card-lbl">Recent Activity</span>
+                            <button class="view-all">View all →</button>
+                        </div>
+                        <div id="activityFeed"></div>
+                    </div>
+
+                </div>
+
+                <div class="side-col">
+
+                    <!-- STATS -->
+                    <div class="card">
+                        <div class="stats-hdr">
+                            <span class="card-lbl">Your Stats · 7D</span>
+                            <button class="insights-btn">Insights →</button>
+                        </div>
+                        <div class="srow">
+                            <div class="srow-left">
+                                <div class="sicon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+                                <div><div class="sname">Profile views</div><div class="sdelta up">▲ 12 this week</div></div>
+                            </div>
+                            <div class="srow-right">
+                                <svg width="54" height="22" viewBox="0 0 54 22" fill="none"><polyline points="0,18 7,16 14,12 21,14 28,9 35,7 42,4 54,2" stroke="#16a34a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/></svg>
+                                <span class="snum">47</span>
+                            </div>
+                        </div>
+                        <div class="srow">
+                            <div class="srow-left">
+                                <div class="sicon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+                                <div><div class="sname">Unlocks</div><div class="sdelta up">▲ 2 this week</div></div>
+                            </div>
+                            <div class="srow-right">
+                                <svg width="54" height="22" viewBox="0 0 54 22" fill="none"><polyline points="0,18 7,18 14,17 21,17 28,15 35,13 42,11 54,9" stroke="#16a34a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/></svg>
+                                <span class="snum">3</span>
+                            </div>
+                        </div>
+                        <div class="srow">
+                            <div class="srow-left">
+                                <div class="sicon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+                                <div><div class="sname">Messages</div><div class="sdelta">No new</div></div>
+                            </div>
+                            <div class="srow-right">
+                                <svg width="54" height="22" viewBox="0 0 54 22" fill="none"><polyline points="0,18 7,18 14,18 21,18 28,18 35,18 42,18 54,18" stroke="#9898AA" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/></svg>
+                                <span class="snum">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CHECKLIST -->
+                    <div class="card">
+                        <div class="cl-top">
+                            <span class="card-lbl">Profile Checklist</span>
+                            <span class="cl-badge" id="clBadge">— / —</span>
+                        </div>
+                        <div class="cl-bar"><div class="cl-fill" id="clFill" style="width:0%"></div></div>
+                        <div class="cl-labels">
+                            <span class="cl-pct" id="clPct">0%</span>
+                            <span class="cl-count" id="clCount">0 of 6 complete</span>
+                        </div>
+                        <div id="checklist"></div>
+                    </div>
+
+                    <!-- ACCOUNT -->
+                    <div class="card">
+                        <div class="card-lbl" style="margin-bottom:14px">Account</div>
+                        <div class="arow"><span class="albl">Applied on</span><span class="aval" id="appliedDate">—</span></div>
+                        <div class="arow"><span class="albl">Niche</span><span class="aval" id="sideNiche">—</span></div>
+                        <div class="arow"><span class="albl">City</span><span class="aval" id="sideCity">—</span></div>
+                        <div class="arow"><span class="albl">Creator ID</span><span class="aval id" id="creatorId">—</span></div>
+                    </div>
+
+                </div>
             </div>
         </div>
 
-        <div class="page">
+        <!-- EDIT PROFILE -->
+        <div class="tab-panel" id="tab-edit" style="display:none">
+            <div class="edit-wrap">
+                <div class="edit-card">
 
-        <!-- OVERVIEW TAB -->
-        <div class="tab-panel active" id="tab-overview">
-
-        <!-- MAIN COLUMN -->
-        <div class="main-col">
-
-            <!-- Welcome banner -->
-            <div class="card welcome-card">
-                <div class="welcome-text">
-                    <h2>Hey, <em id="welcomeName">there</em> 👋</h2>
-                    <p class="welcome-sub" id="welcomeSub">Here's your creator profile overview.</p>
-                </div>
-                <div id="statusBadge"></div>
-            </div>
-
-            <!-- Pending notice (shown only if pending) -->
-            <div id="pendingNotice" class="pending-notice" style="display:none">
-                <div class="pending-icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                </div>
-                <div>
-                    <h3>Application under review</h3>
-                    <p>Our team is reviewing your application. This usually takes 24–48 hours. We'll email you as soon as you're approved and live on the marketplace.</p>
-                </div>
-            </div>
-
-            <!-- Profile preview (shown only if approved) -->
-            <div id="profilePreview" class="card" style="display:none">
-                <div class="card-title">Your marketplace listing</div>
-
-                <div class="profile-cover" id="profileCover">
-                    <div class="profile-avatar"></div>
-                    <span class="profile-niche-pill" id="profileNichePill"></span>
-                </div>
-
-                <div class="profile-identity">
-                    <div>
-                        <div class="profile-handle" id="profileHandle">@handle</div>
-                        <div class="profile-city" id="profileCity">📍 City</div>
+                    <div class="edit-sec">
+                        <div class="edit-sec-title">Basic Info</div>
+                        <div class="edit-row">
+                            <div class="edit-field"><label>City</label><input type="text" id="edit-city" placeholder="Mumbai" /></div>
+                            <div class="edit-field"><label>Languages</label><input type="text" id="edit-languages" placeholder="Hindi, English…" /></div>
+                        </div>
                     </div>
-                    <span class="profile-verified">✓ Verified</span>
-                </div>
 
-                <div class="section-lbl">Performance</div>
-                <div class="metrics-grid" id="metricsGrid"></div>
+                    <div class="edit-sec">
+                        <div class="edit-sec-title">Pricing</div>
+                        <div style="margin-bottom:16px">
+                            <label class="toggle-lbl">
+                                <input type="checkbox" id="edit-barter" />
+                                <span class="tslider"></span>
+                                Open to brand barter instead of paid rates
+                            </label>
+                        </div>
+                        <div id="edit-price-fields" class="edit-row three">
+                            <div class="edit-field"><label>Reel (₹)</label><div class="pfx"><span class="pfx-sym">₹</span><input type="number" id="edit-reel-price" placeholder="3500" min="0" /></div></div>
+                            <div class="edit-field"><label>Story (₹)</label><div class="pfx"><span class="pfx-sym">₹</span><input type="number" id="edit-story-price" placeholder="1500" min="0" /></div></div>
+                            <div class="edit-field"><label>Static post (₹)</label><div class="pfx"><span class="pfx-sym">₹</span><input type="number" id="edit-post-price" placeholder="2000" min="0" /></div></div>
+                        </div>
+                        <div class="edit-field" id="edit-barter-note-field" style="display:none">
+                            <label>What kind of barter are you open to?</label>
+                            <input type="text" id="edit-barter-note" placeholder="e.g. Fashion brands, skincare products…" />
+                        </div>
+                    </div>
 
-                <div class="section-lbl">Pricing</div>
-                <div class="rates-grid" id="ratesGrid"></div>
+                    <div class="edit-sec">
+                        <div class="edit-sec-title">Content &amp; Bio</div>
+                        <div class="edit-field"><label>Best content links <span style="font-weight:400;color:var(--ink-faint)">(one per line)</span></label><textarea id="edit-content-links" rows="3" placeholder="Paste your best reel / post URLs"></textarea></div>
+                        <div class="edit-field"><label>Past brand collabs <span style="font-weight:400;color:var(--ink-faint)">(optional)</span></label><textarea id="edit-past-collabs" rows="2" placeholder="e.g. Nykaa, Swiggy, boAt…"></textarea></div>
+                        <div class="edit-field"><label>Bio <span style="font-weight:400;color:var(--ink-faint)">(optional)</span></label><textarea id="edit-bio" rows="3" placeholder="Tell brands what kind of content you make…"></textarea></div>
+                    </div>
 
-                <div id="profileBioWrap" style="display:none">
-                    <div class="section-lbl" style="margin-top:16px">Bio</div>
-                    <p id="profileBio" style="font-size:13px;color:var(--ink-soft);line-height:1.65;"></p>
-                </div>
+                    <div class="edit-sec">
+                        <div class="edit-sec-title">Update Follower Count <span class="tag">Needs review</span></div>
+                        <div class="review-note">Follower count updates go through a quick review before going live on the marketplace. Usually approved within 24 hours.</div>
+                        <div class="edit-field"><label>New follower count</label><input type="number" id="edit-followers" placeholder="Leave blank to keep current count" min="1000" /></div>
+                    </div>
 
-                <div id="profileCollabsWrap" style="display:none">
-                    <div class="section-lbl" style="margin-top:16px">Past Collabs</div>
-                    <div id="profileCollabs" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
-                </div>
+                    <div class="edit-actions">
+                        <button class="save-btn" id="saveBtn" onclick="saveProfile()">Save changes</button>
+                        <span class="save-status" id="saveStatus"></span>
+                    </div>
 
-                <div id="profileLinksWrap" style="display:none">
-                    <div class="section-lbl" style="margin-top:16px">Content Links</div>
-                    <div id="profileLinks" style="display:flex;flex-direction:column;gap:6px;"></div>
                 </div>
             </div>
-
         </div>
 
-        <!-- SIDE COLUMN -->
-        <div class="side-col">
-
-            <!-- Quick stats -->
-            <div class="card">
-                <div class="card-title">Your stats</div>
-                <div class="stat-row">
-                    <span class="stat-label">
-                        <span class="stat-icon">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                        </span>
-                        Profile views
-                    </span>
-                    <span class="stat-value">—</span>
-                </div>
-                <div class="stat-row">
-                    <span class="stat-label">
-                        <span class="stat-icon">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                        </span>
-                        Unlocks
-                    </span>
-                    <span class="stat-value">—</span>
-                </div>
-                <div class="stat-row">
-                    <span class="stat-label">
-                        <span class="stat-icon">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                        </span>
-                        Messages
-                    </span>
-                    <span class="stat-value">—</span>
-                </div>
+        <!-- INBOX -->
+        <div class="tab-panel" id="tab-inbox" style="display:none">
+            <div class="cs-wrap">
+                <div class="cs-emoji">✉️</div>
+                <div class="cs-title">Inbox coming soon</div>
+                <div class="cs-sub">You'll be able to manage brand messages here.</div>
             </div>
+        </div>
 
-            <!-- Profile checklist -->
-            <div class="card">
-                <div class="card-title">Profile checklist</div>
-                <div class="checklist" id="checklist"></div>
+        <!-- PAYOUTS -->
+        <div class="tab-panel" id="tab-payouts" style="display:none">
+            <div class="cs-wrap">
+                <div class="cs-emoji">💸</div>
+                <div class="cs-title">Payouts coming soon</div>
+                <div class="cs-sub">Track your earnings and manage payouts here.</div>
             </div>
+        </div>
 
-            <!-- Applied on -->
-            <div class="card">
-                <div class="card-title">Account</div>
-                <div class="stat-row">
-                    <span class="stat-label">Applied on</span>
-                    <span class="stat-value" id="appliedDate">—</span>
-                </div>
-                <div class="stat-row">
-                    <span class="stat-label">Niche</span>
-                    <span class="stat-value" id="sideNiche">—</span>
-                </div>
-                <div class="stat-row">
-                    <span class="stat-label">City</span>
-                    <span class="stat-value" id="sideCity">—</span>
-                </div>
-            </div>
-
-        </div><!-- end side-col -->
-
-        </div><!-- end tab-overview -->
-
-        <!-- EDIT PROFILE TAB -->
-        <div class="tab-panel" id="tab-edit" style="grid-column:1/-1">
-            <div class="edit-card">
-
-                <!-- Basic info -->
-                <div class="edit-section">
-                    <div class="edit-section-title">Basic Info</div>
-                    <div class="edit-row">
-                        <div class="edit-field">
-                            <label>City</label>
-                            <input type="text" id="edit-city" placeholder="Mumbai" />
-                        </div>
-                        <div class="edit-field">
-                            <label>Languages</label>
-                            <input type="text" id="edit-languages" placeholder="Hindi, English..." />
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Pricing -->
-                <div class="edit-section">
-                    <div class="edit-section-title">Pricing</div>
-                    <div class="barter-toggle" style="margin-bottom:16px">
-                        <label class="toggle-label">
-                            <input type="checkbox" id="edit-barter" />
-                            <span class="toggle-slider"></span>
-                            Open to brand barter instead of paid rates
-                        </label>
-                    </div>
-                    <div id="edit-price-fields" class="edit-row three">
-                        <div class="edit-field">
-                            <label>Reel (₹)</label>
-                            <div class="prefix-wrap">
-                                <span class="prefix-sym">₹</span>
-                                <input type="number" id="edit-reel-price" placeholder="3500" min="0" />
-                            </div>
-                        </div>
-                        <div class="edit-field">
-                            <label>Story (₹)</label>
-                            <div class="prefix-wrap">
-                                <span class="prefix-sym">₹</span>
-                                <input type="number" id="edit-story-price" placeholder="1500" min="0" />
-                            </div>
-                        </div>
-                        <div class="edit-field">
-                            <label>Static post (₹)</label>
-                            <div class="prefix-wrap">
-                                <span class="prefix-sym">₹</span>
-                                <input type="number" id="edit-post-price" placeholder="2000" min="0" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="edit-row" id="edit-pricing-extras">
-                        <div class="edit-field">
-                            <label>Bundle pricing <span style="font-weight:400;color:var(--ink-faint)">(optional)</span></label>
-                            <input type="text" id="edit-bundle" placeholder="e.g. 3 reels for ₹9,000" />
-                        </div>
-                        <div class="edit-field">
-                            <label>Min deal size (₹) <span style="font-weight:400;color:var(--ink-faint)">(optional)</span></label>
-                            <input type="number" id="edit-min-deal" placeholder="e.g. 5000" min="0" />
-                        </div>
-                    </div>
-                    <div class="edit-field" id="edit-barter-note-field" style="display:none">
-                        <label>What kind of barter are you open to?</label>
-                        <input type="text" id="edit-barter-note" placeholder="e.g. Fashion brands, skincare products..." />
-                    </div>
-                </div>
-
-                <!-- Content -->
-                <div class="edit-section">
-                    <div class="edit-section-title">Content &amp; Bio</div>
-                    <div class="edit-field">
-                        <label>Best content links <span style="font-weight:400;color:var(--ink-faint)">(one per line)</span></label>
-                        <textarea id="edit-content-links" rows="3" placeholder="Paste your best reel / post URLs"></textarea>
-                    </div>
-                    <div class="edit-field">
-                        <label>Past brand collabs <span style="font-weight:400;color:var(--ink-faint)">(optional)</span></label>
-                        <textarea id="edit-past-collabs" rows="2" placeholder="e.g. Nykaa, Swiggy, boAt..."></textarea>
-                    </div>
-                    <div class="edit-field">
-                        <label>Bio <span style="font-weight:400;color:var(--ink-faint)">(optional)</span></label>
-                        <textarea id="edit-bio" rows="3" placeholder="Tell brands what kind of content you make..."></textarea>
-                    </div>
-                </div>
-
-                <!-- Follower update (requires review) -->
-                <div class="edit-section">
-                    <div class="edit-section-title">Update Follower Count <span>Needs review</span></div>
-                    <div class="review-notice">
-                        Follower count updates go through a quick review before going live on the marketplace. Usually approved within 24 hours.
-                    </div>
-                    <div class="edit-field">
-                        <label>New follower count</label>
-                        <input type="number" id="edit-followers" placeholder="Leave blank to keep current count" min="1000" />
-                    </div>
-                </div>
-
-                <!-- Actions -->
-                <div class="edit-actions">
-                    <button class="save-btn" id="saveBtn" onclick="saveProfile()">Save changes</button>
-                    <span class="save-status" id="saveStatus"></span>
-                </div>
-
-            </div>
-        </div><!-- end tab-edit -->
-
-        </div><!-- end .page grid -->
-    </div><!-- end pageContent -->
+    </div>
 
     <script>
         const nicheColors = {
-            Food:      { bg: "rgba(59,91,219,0.12)",   color: "#3B5BDB",  cover: "linear-gradient(135deg,#dce8ff,#c5d0f5)" },
-            Fashion:   { bg: "rgba(180,60,100,0.12)",  color: "#b43c64",  cover: "linear-gradient(135deg,#fce4ec,#f8bbd0)" },
-            Fitness:   { bg: "rgba(26,122,69,0.12)",   color: "#1a7a45",  cover: "linear-gradient(135deg,#e8f5e9,#c8e6c9)" },
-            Travel:    { bg: "rgba(0,131,143,0.12)",   color: "#00838f",  cover: "linear-gradient(135deg,#e0f7fa,#b2ebf2)" },
-            Beauty:    { bg: "rgba(173,20,87,0.12)",   color: "#ad1457",  cover: "linear-gradient(135deg,#fce4ec,#f3e5f5)" },
-            Tech:      { bg: "rgba(48,63,159,0.12)",   color: "#303f9f",  cover: "linear-gradient(135deg,#e8eaf6,#c5cae9)" },
-            Lifestyle: { bg: "rgba(245,127,23,0.12)",  color: "#f57f17",  cover: "linear-gradient(135deg,#fff8e1,#ffecb3)" },
-            Gaming:    { bg: "rgba(94,53,177,0.12)",   color: "#5e35b1",  cover: "linear-gradient(135deg,#ede7f6,#d1c4e9)" },
-            Finance:   { bg: "rgba(46,125,50,0.12)",   color: "#2e7d32",  cover: "linear-gradient(135deg,#e8f5e9,#dcedc8)" },
-            Comedy:    { bg: "rgba(230,81,0,0.12)",    color: "#e65100",  cover: "linear-gradient(135deg,#fff3e0,#ffe0b2)" },
+            Food:      { bg:"rgba(59,91,219,0.12)",  color:"#3B5BDB", cover:"linear-gradient(135deg,#dce8ff,#c5d0f5)" },
+            Fashion:   { bg:"rgba(180,60,100,0.12)", color:"#b43c64", cover:"linear-gradient(135deg,#fce4ec,#f8bbd0)" },
+            Fitness:   { bg:"rgba(26,122,69,0.12)",  color:"#1a7a45", cover:"linear-gradient(135deg,#e8f5e9,#c8e6c9)" },
+            Travel:    { bg:"rgba(0,131,143,0.12)",  color:"#00838f", cover:"linear-gradient(135deg,#e0f7fa,#b2ebf2)" },
+            Beauty:    { bg:"rgba(173,20,87,0.12)",  color:"#ad1457", cover:"linear-gradient(135deg,#fce4ec,#f3e5f5)" },
+            Tech:      { bg:"rgba(48,63,159,0.12)",  color:"#303f9f", cover:"linear-gradient(135deg,#e8eaf6,#c5cae9)" },
+            Lifestyle: { bg:"rgba(245,127,23,0.12)", color:"#f57f17", cover:"linear-gradient(135deg,#fff8e1,#ffecb3)" },
+            Gaming:    { bg:"rgba(94,53,177,0.12)",  color:"#5e35b1", cover:"linear-gradient(135deg,#ede7f6,#d1c4e9)" },
+            Finance:   { bg:"rgba(46,125,50,0.12)",  color:"#2e7d32", cover:"linear-gradient(135deg,#e8f5e9,#dcedc8)" },
+            Comedy:    { bg:"rgba(230,81,0,0.12)",   color:"#e65100", cover:"linear-gradient(135deg,#fff3e0,#ffe0b2)" },
         };
 
-        function fmt(n) {
-            return n >= 1000 ? (n / 1000).toFixed(1).replace(/\.0$/, "") + "K" : String(n);
+        function fmt(n) { return n >= 1000 ? (n/1000).toFixed(1).replace(/\.0$/,"")+"K" : String(n); }
+
+        function fmtDate(d, opts) {
+            return new Date(d).toLocaleDateString("en-IN", opts || { day:"numeric", month:"short", year:"numeric" });
         }
 
+        function relTime(d) {
+            const diff = Date.now() - new Date(d).getTime();
+            const h = Math.floor(diff / 3600000);
+            if (h < 1)  return "just now";
+            if (h < 24) return h + "h ago";
+            if (h < 48) return "Yesterday · " + new Date(d).toLocaleTimeString("en-IN", { hour:"2-digit", minute:"2-digit" });
+            return fmtDate(d, { day:"numeric", month:"short" }) + " · " + new Date(d).toLocaleTimeString("en-IN", { hour:"2-digit", minute:"2-digit" });
+        }
+
+        let _profile = null;
+
         async function loadDashboard() {
-            // Check auth
             const authRes = await fetch("/auth/me").catch(() => null);
-            if (!authRes || !authRes.ok) {
-                window.location.href = "/login/creator";
-                return;
-            }
+            if (!authRes || !authRes.ok) { window.location.href = "/login/creator"; return; }
             const user = await authRes.json();
-            if (user.role !== "creator") {
-                window.location.href = "/login/creator";
-                return;
-            }
+            if (user.role !== "creator") { window.location.href = "/login/creator"; return; }
 
-            // Load profile
             const profileRes = await fetch("/api/creator/me").catch(() => null);
-            if (!profileRes || !profileRes.ok) {
-                window.location.href = "/login/creator";
-                return;
-            }
+            if (!profileRes || !profileRes.ok) { window.location.href = "/login/creator"; return; }
             const p = await profileRes.json();
+            _profile = p;
 
-            // Populate header
             document.getElementById("headerName").textContent = p.full_name.split(" ")[0];
-
-            // Populate welcome
             document.getElementById("welcomeName").textContent = p.full_name.split(" ")[0];
-
-            const statusMap = {
-                pending:  { label: "Under review",  cls: "pending"  },
-                approved: { label: "Live on marketplace", cls: "approved" },
-                rejected: { label: "Not approved",  cls: "rejected" },
-            };
-            const s = statusMap[p.status] || statusMap.pending;
-            document.getElementById("statusBadge").innerHTML =
-                `<span class="status-badge ${s.cls}"><span class="status-dot"></span>${s.label}</span>`;
 
             const subMap = {
                 pending:  "Your application is being reviewed. Usually 24–48 hours.",
-                approved: "You're live on the marketplace. Brands can find and unlock you.",
+                approved: "You're live on the marketplace. Brands can find and unlock your profile right now — share your listing to drive more views.",
                 rejected: "Your application wasn't approved this time. Contact us for details.",
             };
-            document.getElementById("welcomeSub").textContent = subMap[p.status];
+            document.getElementById("welcomeSub").textContent = subMap[p.status] || subMap.pending;
 
-            if (p.status === "pending") {
+            if (p.status === "approved") {
+                document.getElementById("statusBadge").innerHTML =
+                    `<div class="live-pill"><span class="live-dot"></span>Live on marketplace</div>`;
+            } else if (p.status === "pending") {
+                document.getElementById("statusBadge").innerHTML =
+                    `<div class="pending-pill"><span class="pending-dot"></span>Under review</div>`;
                 document.getElementById("pendingNotice").style.display = "flex";
             }
 
-            if (p.status === "approved") {
-                renderProfile(p);
-            }
+            if (p.status === "approved") renderProfile(p);
 
-            // Side stats
-            document.getElementById("appliedDate").textContent =
-                new Date(p.created_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
-            document.getElementById("sideNiche").textContent = p.niche;
-            document.getElementById("sideCity").textContent  = p.city;
+            document.getElementById("appliedDate").textContent = fmtDate(p.created_at);
+            document.getElementById("sideNiche").textContent   = p.niche;
+            document.getElementById("sideCity").textContent    = p.city;
+            document.getElementById("creatorId").textContent   = p.user_id || "—";
 
-            // Checklist
             renderChecklist(p);
-
-            // Populate edit form with current values
+            renderActivity(p);
             populateEditForm(p);
 
-            // Show page
             document.getElementById("pageLoading").style.display = "none";
+            document.getElementById("pageHdr").style.display     = "block";
             document.getElementById("pageContent").style.display = "block";
         }
 
         function renderProfile(p) {
             const nc = nicheColors[p.niche] || nicheColors.Food;
 
-            document.getElementById("profileCover").style.background = nc.cover;
-            document.getElementById("profileNichePill").textContent   = p.niche;
-            document.getElementById("profileNichePill").style.cssText =
-                `background:${nc.bg};color:${nc.color};position:absolute;top:12px;right:12px;font-size:10px;font-weight:700;padding:4px 10px;border-radius:100px;`;
-            document.getElementById("profileHandle").textContent = "@" + p.instagram_handle;
-            document.getElementById("profileCity").textContent   = "📍 " + p.city;
+            const collabsHtml = p.past_collabs
+                ? `<div class="cc-collabs">
+                       <div class="cc-sec">Past Collabs</div>
+                       <div class="cc-collab-pills">
+                           ${p.past_collabs.split(/[,\n]+/).map(b=>b.trim()).filter(Boolean).map(b=>
+                               `<span class="cc-collab-pill">${b}</span>`).join("")}
+                           <button class="cc-add-btn" onclick="switchTab('edit',document.querySelector('[data-tab=edit]'))">+ Add collab</button>
+                       </div>
+                   </div>`
+                : `<div class="cc-collabs">
+                       <div class="cc-sec">Past Collabs</div>
+                       <button class="cc-add-btn" onclick="switchTab('edit',document.querySelector('[data-tab=edit]'))">+ Add collab</button>
+                   </div>`;
 
-            document.getElementById("metricsGrid").innerHTML = `
-                <div class="metric-cell">
-                    <span class="metric-val">${fmt(p.followers)}</span>
-                    <span class="metric-key">Followers</span>
+            const linksHtml = p.content_links
+                ? `<div class="cc-links">
+                       <div class="cc-sec">Content Links</div>
+                       ${p.content_links.split(/\n+/).map(l=>l.trim()).filter(Boolean).map(l=>
+                           `<a href="${l}" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:var(--blue);text-decoration:none;margin-bottom:4px;word-break:break-all;">
+                               <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                               ${l}</a>`).join("")}
+                   </div>`
+                : `<div class="cc-links">
+                       <div class="cc-sec">Content Links</div>
+                       <span class="cc-no-link">No links added yet</span>
+                       <button class="cc-add-link-btn" onclick="switchTab('edit',document.querySelector('[data-tab=edit]'))">Add link</button>
+                   </div>`;
+
+            const ratesHtml = p.barter
+                ? `<div class="cc-rates"><div class="cc-barter">🤝 Open to brand barter${p.barter_note ? " — " + p.barter_note : ""}</div></div>`
+                : `<div class="cc-rates">
+                       <div class="cc-rate"><span class="cc-rval">₹${Number(p.reel_price).toLocaleString("en-IN")}</span><span class="cc-rkey">Reel</span></div>
+                       <div class="cc-rate"><span class="cc-rval">₹${Number(p.story_price).toLocaleString("en-IN")}</span><span class="cc-rkey">Story</span></div>
+                       <div class="cc-rate"><span class="cc-rval">₹${Number(p.post_price).toLocaleString("en-IN")}</span><span class="cc-rkey">Post</span></div>
+                   </div>`;
+
+            document.getElementById("creatorCardInner").innerHTML = `
+                <div class="cc-cover" style="background:${nc.cover}">
+                    <div class="cc-avatar"></div>
+                    <div class="cc-locked">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        Handle locked
+                    </div>
+                    <span class="cc-niche" style="background:${nc.bg};color:${nc.color}">${p.niche}</span>
                 </div>
-                <div class="metric-cell">
-                    <span class="metric-val green">${p.engagement > 0 ? p.engagement + "%" : "—"}</span>
-                    <span class="metric-key">Engagement</span>
+                <div class="cc-identity">
+                    <div>
+                        <div class="cc-handle">@${p.instagram_handle}</div>
+                        <div class="cc-city">📍 ${p.city}</div>
+                    </div>
+                    <div class="cc-verified">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        Verified
+                    </div>
                 </div>
-                <div class="metric-cell">
-                    <span class="metric-val">${p.avg_reel_views > 0 ? fmt(p.avg_reel_views) : "—"}</span>
-                    <span class="metric-key">Reel Views</span>
+                <div class="cc-sec">Performance · Last 30 days</div>
+                <div class="cc-metrics">
+                    <div class="cc-metric"><span class="cc-mval">${fmt(p.followers)}</span><span class="cc-mkey">Followers</span></div>
+                    <div class="cc-metric"><span class="cc-mval">${p.engagement > 0 ? p.engagement+"%" : "—"}</span><span class="cc-mkey">Engagement</span></div>
+                    <div class="cc-metric"><span class="cc-mval">${p.avg_reel_views > 0 ? fmt(p.avg_reel_views) : "—"}</span><span class="cc-mkey">Reel Views</span></div>
                 </div>
+                <div class="cc-sec">Your Pricing</div>
+                ${ratesHtml}
+                ${collabsHtml}
+                ${linksHtml}
             `;
-
-            document.getElementById("ratesGrid").innerHTML = p.barter
-                ? `<div class="barter-cell">🤝 Open to brand barter · ${p.barter_note || p.niche + " brands"}</div>`
-                : `
-                    <div class="rate-cell"><span class="rate-val">₹${Number(p.reel_price).toLocaleString("en-IN")}</span><span class="rate-key">Reel</span></div>
-                    <div class="rate-cell"><span class="rate-val">₹${Number(p.story_price).toLocaleString("en-IN")}</span><span class="rate-key">Story</span></div>
-                    <div class="rate-cell"><span class="rate-val">₹${Number(p.post_price).toLocaleString("en-IN")}</span><span class="rate-key">Post</span></div>
-                `;
-
-            // Bio
-            if (p.bio) {
-                document.getElementById("profileBio").textContent = p.bio;
-                document.getElementById("profileBioWrap").style.display = "block";
-            }
-
-            // Past collabs — render as pills
-            if (p.past_collabs) {
-                const brands = p.past_collabs.split(/[,\n]+/).map(b => b.trim()).filter(Boolean);
-                document.getElementById("profileCollabs").innerHTML = brands.map(b =>
-                    `<span style="font-size:12px;font-weight:600;color:var(--ink-soft);background:var(--bg-soft);border:1px solid var(--border);border-radius:100px;padding:3px 11px;">${b}</span>`
-                ).join("");
-                document.getElementById("profileCollabsWrap").style.display = "block";
-            }
-
-            // Content links
-            if (p.content_links) {
-                const links = p.content_links.split(/\n+/).map(l => l.trim()).filter(Boolean);
-                document.getElementById("profileLinks").innerHTML = links.map(l =>
-                    `<a href="${l}" target="_blank" rel="noopener"
-                        style="font-size:12.5px;font-weight:500;color:var(--blue);text-decoration:none;word-break:break-all;display:flex;align-items:center;gap:6px;">
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                        ${l}
-                    </a>`
-                ).join("");
-                document.getElementById("profileLinksWrap").style.display = "block";
-            }
 
             document.getElementById("profilePreview").style.display = "block";
         }
 
         function renderChecklist(p) {
             const items = [
-                { label: "Application submitted",                done: true },
-                { label: "Profile approved by team",             done: p.status === "approved" },
-                { label: "Live on marketplace",                  done: p.status === "approved" },
-                { label: "Pricing set",                          done: p.barter || p.reel_price > 0 },
-                { label: "Bio added",                            done: !!p.bio },
+                { label: "Application submitted",   done: true },
+                { label: "Profile approved by team", done: p.status === "approved" },
+                { label: "Live on marketplace",      done: p.status === "approved" },
+                { label: "Pricing set",              done: p.barter || p.reel_price > 0 },
+                { label: "Bio added",                done: !!p.bio },
+                { label: "Add a content link",       done: !!p.content_links, carrot: "+5 views" },
             ];
 
+            const done  = items.filter(i => i.done).length;
+            const total = items.length;
+            const pct   = Math.round((done / total) * 100);
+
+            document.getElementById("clBadge").textContent  = done + " / " + total;
+            document.getElementById("clFill").style.width   = pct + "%";
+            document.getElementById("clPct").textContent    = pct + "%";
+            document.getElementById("clCount").textContent  = done + " of " + total + " complete";
+
             document.getElementById("checklist").innerHTML = items.map(item => `
-                <div class="check-item">
-                    <span class="check-icon ${item.done ? "done" : "pending"}">
-                        ${item.done ? "✓" : "·"}
-                    </span>
-                    ${item.label}
+                <div class="cl-item">
+                    <div class="cl-item-left">
+                        <span class="cl-icon ${item.done ? "done" : "todo"}">${item.done ? "✓" : "·"}</span>
+                        ${item.label}
+                    </div>
+                    ${(!item.done && item.carrot) ? `<span class="cl-carrot">${item.carrot}</span>` : ""}
                 </div>
             `).join("");
+        }
+
+        function renderActivity(p) {
+            const events = [];
+
+            events.push({ text: "Application submitted to <strong>Brandbae creator marketplace</strong>", time: p.created_at, on: false });
+
+            if (p.reel_price > 0 || p.story_price > 0 || p.post_price > 0) {
+                const parts = [];
+                if (p.reel_price > 0)  parts.push("Reel ₹" + Number(p.reel_price).toLocaleString("en-IN"));
+                if (p.story_price > 0) parts.push("Story ₹" + Number(p.story_price).toLocaleString("en-IN"));
+                if (p.post_price > 0)  parts.push("Post ₹" + Number(p.post_price).toLocaleString("en-IN"));
+                events.push({ text: "Pricing set: <strong>" + parts.join(" · ") + "</strong>", time: p.created_at, on: false });
+            }
+
+            if (p.status === "approved" && p.reviewed_at) {
+                events.push({ text: "Profile approved by the <strong>Brandbae team</strong> — you're live on the marketplace", time: p.reviewed_at, on: true });
+            }
+
+            events.sort((a, b) => new Date(b.time) - new Date(a.time));
+
+            document.getElementById("activityFeed").innerHTML = events.map(e => `
+                <div class="act-item">
+                    <div class="act-dot ${e.on ? "on" : "off"}"></div>
+                    <div class="act-body">
+                        <div class="act-text">${e.text}</div>
+                        <div class="act-time">${relTime(e.time)}</div>
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        function switchTab(name, btn) {
+            document.querySelectorAll(".nav-tab").forEach(b => b.classList.remove("active"));
+            document.querySelectorAll(".tab-panel").forEach(p => p.style.display = "none");
+            if (btn) btn.classList.add("active");
+            const tabBtn = document.querySelector(`[data-tab="${name}"]`);
+            if (tabBtn) tabBtn.classList.add("active");
+            const panel = document.getElementById("tab-" + name);
+            if (panel) panel.style.display = "block";
+        }
+
+        function shareListing() {
+            const url = window.location.origin + "/marketplace";
+            navigator.clipboard.writeText(url).then(() => {
+                const btn = document.querySelector(".btn-share");
+                const orig = btn.innerHTML;
+                btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied!`;
+                setTimeout(() => { btn.innerHTML = orig; }, 2000);
+            }).catch(() => {});
+        }
+
+        function previewAsBrand() {
+            window.open("/marketplace", "_blank");
         }
 
         async function logout() {
@@ -1144,54 +704,34 @@
             window.location.href = "/login/creator";
         }
 
-        loadDashboard();
-
-        // ── TABS ──
-        function switchTab(name, btn) {
-            document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-            document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
-            btn.classList.add("active");
-            document.getElementById("tab-" + name).classList.add("active");
-        }
-
-        // ── EDIT FORM: populate & barter toggle ──
         function populateEditForm(p) {
             document.getElementById("edit-city").value          = p.city || "";
             document.getElementById("edit-languages").value     = p.languages || "";
             document.getElementById("edit-reel-price").value    = p.reel_price || "";
             document.getElementById("edit-story-price").value   = p.story_price || "";
             document.getElementById("edit-post-price").value    = p.post_price || "";
-            document.getElementById("edit-bundle").value        = p.bundle_pricing || "";
-            document.getElementById("edit-min-deal").value      = p.min_deal_size || "";
             document.getElementById("edit-barter-note").value   = p.barter_note || "";
             document.getElementById("edit-content-links").value = p.content_links || "";
             document.getElementById("edit-past-collabs").value  = p.past_collabs || "";
             document.getElementById("edit-bio").value           = p.bio || "";
-
-            const barterCheck = document.getElementById("edit-barter");
-            barterCheck.checked = !!p.barter;
-            toggleBarterFields(!!p.barter);
-
-            barterCheck.addEventListener("change", () => toggleBarterFields(barterCheck.checked));
+            const bc = document.getElementById("edit-barter");
+            bc.checked = !!p.barter;
+            toggleBarter(!!p.barter);
+            bc.addEventListener("change", () => toggleBarter(bc.checked));
         }
 
-        function toggleBarterFields(isBarter) {
-            document.getElementById("edit-price-fields").style.display    = isBarter ? "none" : "";
-            document.getElementById("edit-pricing-extras").style.display  = isBarter ? "none" : "";
-            document.getElementById("edit-barter-note-field").style.display = isBarter ? "" : "none";
+        function toggleBarter(on) {
+            document.getElementById("edit-price-fields").style.display    = on ? "none" : "";
+            document.getElementById("edit-barter-note-field").style.display = on ? "" : "none";
         }
 
-        // ── SAVE ──
         async function saveProfile() {
-            const btn    = document.getElementById("saveBtn");
-            const status = document.getElementById("saveStatus");
+            const btn = document.getElementById("saveBtn");
+            const st  = document.getElementById("saveStatus");
             btn.disabled = true;
-            status.textContent = "Saving…";
-            status.className   = "save-status";
+            st.textContent = "Saving…"; st.className = "save-status";
 
             const isBarter = document.getElementById("edit-barter").checked;
-            const requestedFollowers = parseInt(document.getElementById("edit-followers").value) || null;
-
             const body = {
                 city:                document.getElementById("edit-city").value.trim() || null,
                 languages:           document.getElementById("edit-languages").value.trim() || null,
@@ -1200,35 +740,30 @@
                 reel_price:          parseInt(document.getElementById("edit-reel-price").value) || null,
                 story_price:         parseInt(document.getElementById("edit-story-price").value) || null,
                 post_price:          parseInt(document.getElementById("edit-post-price").value) || null,
-                bundle_pricing:      document.getElementById("edit-bundle").value.trim() || null,
-                min_deal_size:       parseInt(document.getElementById("edit-min-deal").value) || null,
                 content_links:       document.getElementById("edit-content-links").value.trim() || null,
                 past_collabs:        document.getElementById("edit-past-collabs").value.trim() || null,
                 bio:                 document.getElementById("edit-bio").value.trim() || null,
-                requested_followers: requestedFollowers,
+                requested_followers: parseInt(document.getElementById("edit-followers").value) || null,
             };
 
             try {
-                const res  = await fetch("/api/creator/me", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+                const res  = await fetch("/api/creator/me", { method:"PATCH", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body) });
                 const json = await res.json();
-
                 if (!res.ok) {
-                    status.textContent = json.error || "Something went wrong.";
-                    status.className   = "save-status err";
+                    st.textContent = json.error || "Something went wrong."; st.className = "save-status err";
                 } else {
-                    status.textContent = json.followerUpdatePending
-                        ? "Saved! Follower count update is pending review."
-                        : "Changes saved ✓";
-                    status.className = "save-status ok";
+                    st.textContent = json.followerUpdatePending ? "Saved! Follower update pending review." : "Changes saved ✓";
+                    st.className = "save-status ok";
                     document.getElementById("edit-followers").value = "";
                 }
             } catch {
-                status.textContent = "Network error. Try again.";
-                status.className   = "save-status err";
+                st.textContent = "Network error. Try again."; st.className = "save-status err";
             } finally {
                 btn.disabled = false;
             }
         }
+
+        loadDashboard();
     </script>
 </body>
 </html>
