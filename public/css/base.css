@@ -1,0 +1,40 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --blue: #3B5BDB;
+    --blue-dark: #2f4ac0;
+    --blue-light: #eef1ff;
+    --blue-mid: #c5d0f5;
+    --blue-navy: #1a2a6c;
+    --amber: #E8902A;
+    --amber-light: #FFF5E6;
+    --ink: #111111;
+    --ink-mid: #555555;
+    --ink-soft: #888888;
+    --ink-faint: #bbbbbb;
+    --border: #eef0f8;
+    --border-mid: #dde3f5;
+    --bg: #ffffff;
+    --bg-soft: #f7f9ff;
+    --green: #1a7a45;
+    --green-bg: #edfaf3;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.6;
+    overflow-x: hidden;
+    font-weight: 400;
+}
