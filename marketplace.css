@@ -893,12 +893,51 @@ nav {
         display: none;
     }
 
+    /* Scrollable filter bar */
+    .filters-bar {
+        padding: 0;
+        overflow-x: auto;
+        overflow-y: visible;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .filters-bar::-webkit-scrollbar { display: none; }
+
+    .filters-inner {
+        flex-wrap: nowrap;
+        min-width: max-content;
+        gap: 7px;
+        padding: 10px 4%;
+    }
+
+    .filter-group {
+        flex-wrap: nowrap;
+        gap: 6px;
+    }
+
+    .filter-divider,
+    .filter-label { display: none; }
+
+    .niche-chip {
+        font-size: 11.5px;
+        padding: 5px 12px;
+        white-space: nowrap;
+    }
+
+    .filter-select {
+        font-size: 11.5px;
+        white-space: nowrap;
+    }
+
+    /* 2-column grid */
     .grid-wrap {
-        padding: 0 4% 60px;
+        padding: 0 3% 60px;
     }
 
     .creators-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
     }
 
     .creator-card {
@@ -906,11 +945,98 @@ nav {
         height: auto;
     }
 
-    .modal {
-        padding: 32px 20px;
+    /* Shorter cover */
+    .card-cover {
+        height: 58px;
+        padding: 8px 10px;
     }
 
-    .filters-inner {
-        gap: 8px;
+    .card-avatar {
+        width: 44px;
+        height: 44px;
+        bottom: -18px;
+        left: 10px;
+    }
+
+    .cover-niche {
+        font-size: 9px;
+        padding: 3px 8px;
+    }
+
+    /* Tighter body */
+    .card-body {
+        padding: 22px 10px 0;
+    }
+
+    .sec-label {
+        font-size: 8px;
+        margin: 8px 0 5px;
+    }
+
+    /* Perf grid: show only followers + engagement */
+    .perf-cell:nth-child(3),
+    .perf-cell:nth-child(4),
+    .perf-cell:nth-child(5) {
+        display: none;
+    }
+
+    .perf-cell {
+        padding: 8px 8px;
+    }
+
+    .pv {
+        font-size: 13px;
+    }
+
+    .pk {
+        font-size: 8px;
+    }
+
+    /* Hide audience section entirely */
+    .card-audience {
+        display: none;
+    }
+
+    /* Compact pricing */
+    .price-row {
+        padding: 6px 10px;
+        font-size: 10.5px;
+    }
+
+    .price-row strong {
+        font-size: 11.5px;
+    }
+
+    .barter-note-top {
+        font-size: 10px;
+        padding: 7px 10px;
+    }
+
+    .barter-note-body {
+        font-size: 10px;
+        padding: 8px 10px;
+    }
+
+    /* Smaller unlock button */
+    .unlock-btn {
+        margin: 10px 10px 12px;
+        width: calc(100% - 20px);
+        padding: 10px;
+        font-size: 11.5px;
+        gap: 5px;
+        border-radius: 9px;
+    }
+
+    /* Results header */
+    .results-header {
+        padding: 12px 4%;
+    }
+
+    .results-count {
+        font-size: 12px;
+    }
+
+    .modal {
+        padding: 32px 20px;
     }
 }

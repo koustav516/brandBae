@@ -165,26 +165,28 @@ function renderCreators(data) {
                     </div>
                 </div>
 
-                <div class="sec-label">Audience</div>
-                <div class="audience-wrap">
-                    <div class="age-gender-row">
-                        <div class="age-block">
-                            <div class="aud-val">${c.ageRange} yrs</div>
-                            <div class="aud-key">Age Range</div>
-                        </div>
-                        <div class="gender-block">
-                            <div class="gender-bar-wrap">
-                                <div class="gb-f" style="width:${c.femaleP}%"></div>
-                                <div class="gb-m" style="width:${c.maleP}%"></div>
+                <div class="card-audience">
+                    <div class="sec-label">Audience</div>
+                    <div class="audience-wrap">
+                        <div class="age-gender-row">
+                            <div class="age-block">
+                                <div class="aud-val">${c.ageRange} yrs</div>
+                                <div class="aud-key">Age Range</div>
                             </div>
-                            <div class="gender-labels">
-                                <span class="gl-f">♀ ${c.femaleP}% Female</span>
-                                <span class="gl-m">♂ ${c.maleP}% Male</span>
+                            <div class="gender-block">
+                                <div class="gender-bar-wrap">
+                                    <div class="gb-f" style="width:${c.femaleP}%"></div>
+                                    <div class="gb-m" style="width:${c.maleP}%"></div>
+                                </div>
+                                <div class="gender-labels">
+                                    <span class="gl-f">♀ ${c.femaleP}% Female</span>
+                                    <span class="gl-m">♂ ${c.maleP}% Male</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="locations-row">
-                        ${c.locations.map((l) => `<span class="loc-pill">📍 ${l}</span>`).join("")}
+                        <div class="locations-row">
+                            ${c.locations.map((l) => `<span class="loc-pill">📍 ${l}</span>`).join("")}
+                        </div>
                     </div>
                 </div>
 
