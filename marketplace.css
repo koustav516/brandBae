@@ -132,6 +132,157 @@ nav {
     border-color: var(--border-mid);
 }
 
+/* ── CATEGORIES ── */
+.categories-section {
+    background: var(--bg);
+    padding: 20px 5% 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.categories-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding-bottom: 20px;
+}
+
+.categories-label {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 14px;
+    letter-spacing: -0.2px;
+}
+
+.categories-row {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 2px;
+}
+
+.categories-row::-webkit-scrollbar { display: none; }
+
+.cat-card {
+    position: relative;
+    flex-shrink: 0;
+    width: 150px;
+    height: 100px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.cat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+}
+
+.cat-card.active {
+    outline: 3px solid #fff;
+    box-shadow: 0 0 0 5px var(--blue);
+}
+
+.cat-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.68) 0%, rgba(0,0,0,0.12) 55%, transparent 100%);
+    z-index: 1;
+}
+
+.cat-card span {
+    position: absolute;
+    bottom: 10px;
+    left: 12px;
+    z-index: 2;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+/* Category backgrounds — replace background-image with your own photos */
+.cat-all {
+    background:
+        linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%),
+        linear-gradient(135deg, #1a2a6c 0%, #3B5BDB 50%, #00b4db 100%);
+}
+
+.cat-food {
+    background:
+        linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.1) 55%, transparent 100%),
+        radial-gradient(ellipse at 65% 20%, rgba(255,200,60,0.55) 0%, transparent 55%),
+        linear-gradient(135deg, #7a2e00 0%, #c95b0a 45%, #e8830a 100%);
+}
+
+.cat-fashion {
+    background:
+        linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.1) 55%, transparent 100%),
+        radial-gradient(ellipse at 35% 20%, rgba(255,190,210,0.45) 0%, transparent 55%),
+        linear-gradient(135deg, #4a0e2e 0%, #a0294f 45%, #d4608a 100%);
+}
+
+.cat-fitness {
+    background:
+        linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.1) 55%, transparent 100%),
+        radial-gradient(ellipse at 70% 25%, rgba(80,255,130,0.35) 0%, transparent 55%),
+        linear-gradient(135deg, #062e12 0%, #0f7a30 45%, #16a34a 100%);
+}
+
+.cat-travel {
+    background:
+        linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.1) 55%, transparent 100%),
+        radial-gradient(ellipse at 60% 20%, rgba(120,210,255,0.45) 0%, transparent 55%),
+        linear-gradient(135deg, #052640 0%, #0c5a8f 40%, #1a8fc4 100%);
+}
+
+.cat-beauty {
+    background:
+        linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.1) 55%, transparent 100%),
+        radial-gradient(ellipse at 40% 20%, rgba(255,180,230,0.45) 0%, transparent 55%),
+        linear-gradient(135deg, #4a0a5e 0%, #9b27af 45%, #d054e0 100%);
+}
+
+.cat-tech {
+    background:
+        linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.1) 55%, transparent 100%),
+        radial-gradient(ellipse at 70% 25%, rgba(0,200,255,0.35) 0%, transparent 55%),
+        linear-gradient(135deg, #060e28 0%, #0d2b5c 40%, #1440a0 100%);
+}
+
+.cat-lifestyle {
+    background:
+        linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.1) 55%, transparent 100%),
+        radial-gradient(ellipse at 55% 20%, rgba(180,230,100,0.35) 0%, transparent 55%),
+        linear-gradient(135deg, #1e3a10 0%, #4a7c28 45%, #6ba83a 100%);
+}
+
+.cat-gaming {
+    background:
+        linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.1) 55%, transparent 100%),
+        radial-gradient(ellipse at 65% 20%, rgba(160,80,255,0.5) 0%, transparent 55%),
+        linear-gradient(135deg, #0d0220 0%, #3a0870 40%, #5c1aaa 100%);
+}
+
+.cat-finance {
+    background:
+        linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.1) 55%, transparent 100%),
+        radial-gradient(ellipse at 60% 25%, rgba(50,210,100,0.35) 0%, transparent 55%),
+        linear-gradient(135deg, #041a0c 0%, #0d5c24 40%, #145c32 100%);
+}
+
+.cat-comedy {
+    background:
+        linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.1) 55%, transparent 100%),
+        radial-gradient(ellipse at 45% 20%, rgba(255,230,60,0.5) 0%, transparent 55%),
+        linear-gradient(135deg, #5a2200 0%, #b85800 40%, #e07800 100%);
+}
+
 /* ── FILTERS ── */
 .filters-bar {
     background: var(--bg);
@@ -893,6 +1044,23 @@ nav {
         display: none;
     }
 
+    /* Categories section */
+    .categories-section {
+        padding: 16px 4% 0;
+    }
+
+    .cat-card {
+        width: 110px;
+        height: 76px;
+        border-radius: 10px;
+    }
+
+    .cat-card span {
+        font-size: 11.5px;
+        bottom: 8px;
+        left: 9px;
+    }
+
     /* Scrollable filter bar */
     .filters-bar {
         padding: 0;
@@ -916,13 +1084,10 @@ nav {
         gap: 6px;
     }
 
-    .filter-divider,
-    .filter-label { display: none; }
+    .filter-divider { display: none; }
 
-    .niche-chip {
-        font-size: 11.5px;
-        padding: 5px 12px;
-        white-space: nowrap;
+    .filter-label {
+        font-size: 10.5px;
     }
 
     .filter-select {

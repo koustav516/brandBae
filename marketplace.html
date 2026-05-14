@@ -42,91 +42,21 @@
             <div class="filters-inner">
                 <div class="filter-label">Niche</div>
                 <div class="filter-group" id="nicheFilters">
-                    <button
-                        class="niche-chip active"
-                        data-niche="All"
-                        onclick="setNiche(this)"
-                    >
-                        All
-                    </button>
-                    <button
-                        class="niche-chip"
-                        data-niche="Food"
-                        onclick="setNiche(this)"
-                    >
-                        🍔 Food
-                    </button>
-                    <button
-                        class="niche-chip"
-                        data-niche="Fashion"
-                        onclick="setNiche(this)"
-                    >
-                        👗 Fashion
-                    </button>
-                    <button
-                        class="niche-chip"
-                        data-niche="Fitness"
-                        onclick="setNiche(this)"
-                    >
-                        💪 Fitness
-                    </button>
-                    <button
-                        class="niche-chip"
-                        data-niche="Travel"
-                        onclick="setNiche(this)"
-                    >
-                        ✈️ Travel
-                    </button>
-                    <button
-                        class="niche-chip"
-                        data-niche="Beauty"
-                        onclick="setNiche(this)"
-                    >
-                        💄 Beauty
-                    </button>
-                    <button
-                        class="niche-chip"
-                        data-niche="Tech"
-                        onclick="setNiche(this)"
-                    >
-                        📱 Tech
-                    </button>
-                    <button
-                        class="niche-chip"
-                        data-niche="Lifestyle"
-                        onclick="setNiche(this)"
-                    >
-                        🌿 Lifestyle
-                    </button>
-                    <button
-                        class="niche-chip"
-                        data-niche="Gaming"
-                        onclick="setNiche(this)"
-                    >
-                        🎮 Gaming
-                    </button>
-                    <button
-                        class="niche-chip"
-                        data-niche="Finance"
-                        onclick="setNiche(this)"
-                    >
-                        💹 Finance
-                    </button>
-                    <button
-                        class="niche-chip"
-                        data-niche="Comedy"
-                        onclick="setNiche(this)"
-                    >
-                        😂 Comedy
-                    </button>
+                    <button class="niche-chip active" data-niche="All" onclick="setNiche(this)">All</button>
+                    <button class="niche-chip" data-niche="Food" onclick="setNiche(this)">🍔 Food</button>
+                    <button class="niche-chip" data-niche="Fashion" onclick="setNiche(this)">👗 Fashion</button>
+                    <button class="niche-chip" data-niche="Fitness" onclick="setNiche(this)">💪 Fitness</button>
+                    <button class="niche-chip" data-niche="Travel" onclick="setNiche(this)">✈️ Travel</button>
+                    <button class="niche-chip" data-niche="Beauty" onclick="setNiche(this)">💄 Beauty</button>
+                    <button class="niche-chip" data-niche="Tech" onclick="setNiche(this)">📱 Tech</button>
+                    <button class="niche-chip" data-niche="Lifestyle" onclick="setNiche(this)">🌿 Lifestyle</button>
+                    <button class="niche-chip" data-niche="Gaming" onclick="setNiche(this)">🎮 Gaming</button>
+                    <button class="niche-chip" data-niche="Finance" onclick="setNiche(this)">💹 Finance</button>
+                    <button class="niche-chip" data-niche="Comedy" onclick="setNiche(this)">😂 Comedy</button>
                 </div>
                 <div class="filter-divider"></div>
                 <div class="filter-label">Followers</div>
-                <select
-                    class="filter-select"
-                    id="followersFilter"
-                    onchange="applyFilters()"
-                >
+                <select class="filter-select" id="followersFilter" onchange="applyFilters()">
                     <option value="all">All sizes</option>
                     <option value="1000-3000">1K – 3K</option>
                     <option value="3000-7000">3K – 7K</option>
@@ -136,22 +66,14 @@
                 </select>
                 <div class="filter-divider"></div>
                 <div class="filter-label">Collab</div>
-                <select
-                    class="filter-select"
-                    id="barterFilter"
-                    onchange="applyFilters()"
-                >
+                <select class="filter-select" id="barterFilter" onchange="applyFilters()">
                     <option value="all">All types</option>
                     <option value="barter">🤝 Barter only</option>
                     <option value="paid">💰 Paid only</option>
                 </select>
                 <div class="filter-divider"></div>
                 <div class="filter-label">Sort</div>
-                <select
-                    class="filter-select"
-                    id="sortFilter"
-                    onchange="applyFilters()"
-                >
+                <select class="filter-select" id="sortFilter" onchange="applyFilters()">
                     <option value="default">Featured</option>
                     <option value="engagement">Highest Engagement</option>
                     <option value="views">Most Reel Views</option>

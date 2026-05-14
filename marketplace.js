@@ -205,9 +205,7 @@ function renderCreators(data) {
 }
 
 function setNiche(btn) {
-    document
-        .querySelectorAll(".niche-chip")
-        .forEach((c) => c.classList.remove("active"));
+    document.querySelectorAll(".niche-chip").forEach((c) => c.classList.remove("active"));
     btn.classList.add("active");
     activeNiche = btn.dataset.niche;
     applyFilters();
