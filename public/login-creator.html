@@ -474,6 +474,20 @@
     </div>
 
     <script>
+        // Auto-redirect if already logged in
+        (async () => {
+            try {
+                const res = await fetch("/auth/me");
+                if (res.ok) {
+                    const user = await res.json();
+                    if (user.role === "creator") {
+                        window.location.replace("/creator/dashboard");
+                        return;
+                    }
+                }
+            } catch {}
+        })();
+
         document.getElementById("loginForm").addEventListener("submit", async (e) => {
             e.preventDefault();
             const btn    = document.getElementById("submitBtn");

@@ -4,7 +4,9 @@ const jwt     = require("jsonwebtoken");
 const { pool, generateUserId } = require("../db/pool");
 
 const router = express.Router();
-const JWT_SECRET = process.env.JWT_SECRET || "brandbae-dev-secret-change-in-prod";
+const JWT_SECRET  = process.env.JWT_SECRET || "brandbae-dev-secret-change-in-prod";
+const IS_PROD     = process.env.NODE_ENV === "production" || !!process.env.RAILWAY_ENVIRONMENT;
+const COOKIE_BASE = `HttpOnly; Path=/; SameSite=Lax${IS_PROD ? "; Secure" : ""}`;
 
 function requireAuth(req, res, next) {
     const token = req.cookies?.token || req.headers.authorization?.split(" ")[1];
@@ -121,7 +123,7 @@ router.post("/creator/login", async (req, res) => {
             { expiresIn: "7d" }
         );
 
-        res.setHeader("Set-Cookie", `token=${token}; HttpOnly; Path=/; Max-Age=604800; SameSite=Lax`);
+        res.setHeader("Set-Cookie", `token=${token}; ${COOKIE_BASE}; Max-Age=604800`);
         res.json({ success: true, name: user.full_name });
     } catch (err) {
         console.error("POST /auth/creator/login error:", err.message);
@@ -152,7 +154,7 @@ router.post("/admin/login", async (req, res) => {
             { expiresIn: "12h" }
         );
 
-        res.setHeader("Set-Cookie", `token=${token}; HttpOnly; Path=/; Max-Age=43200; SameSite=Lax`);
+        res.setHeader("Set-Cookie", `token=${token}; ${COOKIE_BASE}; Max-Age=43200`);
         res.json({ success: true });
     } catch (err) {
         console.error("POST /auth/admin/login error:", err.message);
@@ -162,7 +164,7 @@ router.post("/admin/login", async (req, res) => {
 
 // ── LOGOUT ──
 router.post("/logout", (_req, res) => {
-    res.setHeader("Set-Cookie", "token=; HttpOnly; Path=/; Max-Age=0; SameSite=Lax");
+    res.setHeader("Set-Cookie", `token=; ${COOKIE_BASE}; Max-Age=0`);
     res.json({ success: true });
 });
 
