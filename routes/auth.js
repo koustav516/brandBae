@@ -5,7 +5,7 @@ const crypto  = require("crypto");
 const { Resend } = require("resend");
 const { pool, generateUserId } = require("../db/pool");
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 const router = express.Router();
 const JWT_SECRET  = process.env.JWT_SECRET || "brandbae-dev-secret-change-in-prod";
@@ -194,6 +194,10 @@ router.post("/forgot-password", async (req, res) => {
         const base     = process.env.BASE_URL || `http://localhost:${process.env.PORT || 3000}`;
         const resetUrl = `${base}/reset-password?token=${token}`;
 
+        if (!resend) {
+            console.warn("[RESET] RESEND_API_KEY not set — email not sent, token:", token);
+            return res.json({ success: true });
+        }
         await resend.emails.send({
             from:    process.env.RESEND_FROM || "Brandbae <onboarding@resend.dev>",
             to:      email.toLowerCase().trim(),
