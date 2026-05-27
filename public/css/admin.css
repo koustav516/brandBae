@@ -445,7 +445,77 @@ body {
 }
 .submit-btn:hover { background: var(--blue); }
 
+.btn-edit-stats {
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--blue);
+    background: var(--blue-light);
+    border: 1px solid rgba(59,91,219,0.2);
+    border-radius: 8px;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.btn-edit-stats:hover { background: #dce8ff; }
+
+.stats-edit-form {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+}
+
+.stats-edit-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 10px;
+}
+
+.stats-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.stats-field-wide {
+    grid-column: span 2;
+}
+
+.stats-field label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stats-field input {
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    background: var(--bg-soft);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    outline: none;
+    transition: border-color 0.15s;
+    width: 100%;
+}
+
+.stats-field input:focus {
+    border-color: var(--blue);
+    background: #fff;
+}
+
+.stats-save-msg {
+    font-size: 13px;
+    font-weight: 600;
+}
+
 @media (max-width: 640px) {
     .app-stats { grid-template-columns: 1fr 1fr; }
     .app-top { flex-direction: column; }
+    .stats-edit-grid { grid-template-columns: 1fr 1fr; }
+    .stats-field-wide { grid-column: span 2; }
 }

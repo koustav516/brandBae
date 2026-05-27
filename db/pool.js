@@ -101,6 +101,12 @@ async function initDB() {
         )
     `);
 
+    await pool.query(`
+        ALTER TABLE users
+            ADD COLUMN IF NOT EXISTS reset_token         TEXT,
+            ADD COLUMN IF NOT EXISTS reset_token_expires TIMESTAMPTZ
+    `);
+
     const newCols = [
         "ALTER TABLE creator_applications ADD COLUMN IF NOT EXISTS state TEXT",
         "ALTER TABLE creator_applications ADD COLUMN IF NOT EXISTS languages TEXT",
@@ -116,6 +122,8 @@ async function initDB() {
         "ALTER TABLE creator_applications ADD COLUMN IF NOT EXISTS past_collabs TEXT",
         "ALTER TABLE creator_applications ADD COLUMN IF NOT EXISTS pending_followers INTEGER",
         "ALTER TABLE creators ADD COLUMN IF NOT EXISTS user_id TEXT",
+        "ALTER TABLE creator_applications ADD COLUMN IF NOT EXISTS female_p INTEGER",
+        "ALTER TABLE creator_applications ADD COLUMN IF NOT EXISTS male_p INTEGER",
     ];
     for (const sql of newCols) await pool.query(sql);
 

@@ -1,7 +1,11 @@
 const express = require("express");
 const bcrypt  = require("bcrypt");
 const jwt     = require("jsonwebtoken");
+const crypto  = require("crypto");
+const { Resend } = require("resend");
 const { pool, generateUserId } = require("../db/pool");
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const router = express.Router();
 const JWT_SECRET  = process.env.JWT_SECRET || "brandbae-dev-secret-change-in-prod";
@@ -32,7 +36,7 @@ router.post("/creator/register", async (req, res) => {
         email, password, full_name, instagram_handle,
         niche, niche_subcategories, city, state, languages,
         followers, avg_reel_views, account_age,
-        audience_age_group, audience_gender, top_locations,
+        audience_age_group, female_p, male_p, top_locations,
         reel_price, story_price, post_price, bundle_pricing, min_deal_size,
         barter, barter_note,
         content_links, past_collabs, bio,
@@ -65,16 +69,19 @@ router.post("/creator/register", async (req, res) => {
              (user_id, full_name, instagram_handle,
               niche, niche_subcategories, city, state, languages,
               followers, avg_reel_views, account_age,
-              audience_age_group, audience_gender, top_locations,
+              audience_age_group, female_p, male_p, top_locations,
               reel_price, story_price, post_price, bundle_pricing, min_deal_size,
               barter, barter_note,
               content_links, past_collabs, bio)
-             VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24)`,
+             VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25)`,
             [
                 user.id, full_name, instagram_handle,
                 niche, niche_subcategories || null, city, state || null, languages || null,
                 parseInt(followers), avg_reel_views ? parseInt(avg_reel_views) : null, account_age || null,
-                audience_age_group || null, audience_gender || null, top_locations || null,
+                audience_age_group || null,
+                female_p != null ? parseInt(female_p) : null,
+                male_p   != null ? parseInt(male_p)   : null,
+                top_locations || null,
                 reel_price || 0, story_price || 0, post_price || 0, bundle_pricing || null,
                 min_deal_size ? parseInt(min_deal_size) : null,
                 barter || false, barter_note || null,
@@ -158,6 +165,96 @@ router.post("/admin/login", async (req, res) => {
         res.json({ success: true });
     } catch (err) {
         console.error("POST /auth/admin/login error:", err.message);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+// ── FORGOT PASSWORD ──
+router.post("/forgot-password", async (req, res) => {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: "Email required" });
+
+    try {
+        const { rows } = await pool.query(
+            `SELECT id FROM users WHERE email = $1 AND role = 'creator'`,
+            [email.toLowerCase().trim()]
+        );
+
+        // Always return success to avoid leaking which emails are registered
+        if (!rows.length) return res.json({ success: true });
+
+        const token   = crypto.randomBytes(32).toString("hex");
+        const expires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+
+        await pool.query(
+            `UPDATE users SET reset_token = $1, reset_token_expires = $2 WHERE id = $3`,
+            [token, expires, rows[0].id]
+        );
+
+        const base     = process.env.BASE_URL || `http://localhost:${process.env.PORT || 3000}`;
+        const resetUrl = `${base}/reset-password?token=${token}`;
+
+        await resend.emails.send({
+            from:    process.env.RESEND_FROM || "Brandbae <onboarding@resend.dev>",
+            to:      email.toLowerCase().trim(),
+            subject: "Reset your Brandbae password",
+            html: `
+                <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;color:#0F0F12;">
+                    <div style="font-size:20px;font-weight:800;margin-bottom:24px;">Brand<span style="color:#3B5BDB;">bae</span></div>
+                    <h2 style="font-size:22px;font-weight:700;margin-bottom:8px;">Reset your password</h2>
+                    <p style="color:#5A5A72;font-size:14px;line-height:1.6;margin-bottom:28px;">
+                        We received a request to reset your Brandbae creator account password.
+                        Click the button below — this link expires in <strong>1 hour</strong>.
+                    </p>
+                    <a href="${resetUrl}" style="display:inline-block;background:#0F0F12;color:#fff;text-decoration:none;font-weight:700;font-size:14px;padding:13px 28px;border-radius:10px;">
+                        Reset password →
+                    </a>
+                    <p style="color:#9898AA;font-size:12px;margin-top:28px;line-height:1.6;">
+                        If you didn't request this, you can safely ignore this email.<br/>
+                        This link will expire in 1 hour.
+                    </p>
+                </div>
+            `,
+        });
+
+        console.log(`[RESET] Password reset requested for ${email}`);
+        res.json({ success: true });
+    } catch (err) {
+        console.error("POST /auth/forgot-password error:", err.message);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+// ── RESET PASSWORD ──
+router.post("/reset-password", async (req, res) => {
+    const { token, password } = req.body;
+    if (!token || !password) return res.status(400).json({ error: "Token and password required" });
+    if (password.length < 8) return res.status(400).json({ error: "Password must be at least 8 characters" });
+
+    try {
+        const { rows } = await pool.query(
+            `SELECT id FROM users
+             WHERE reset_token = $1
+               AND reset_token_expires > NOW()
+               AND role = 'creator'`,
+            [token]
+        );
+
+        if (!rows.length) return res.status(400).json({ error: "This reset link is invalid or has expired." });
+
+        const password_hash = await bcrypt.hash(password, 12);
+
+        await pool.query(
+            `UPDATE users
+             SET password_hash = $1, reset_token = NULL, reset_token_expires = NULL
+             WHERE id = $2`,
+            [password_hash, rows[0].id]
+        );
+
+        console.log(`[RESET] Password reset completed for user #${rows[0].id}`);
+        res.json({ success: true });
+    } catch (err) {
+        console.error("POST /auth/reset-password error:", err.message);
         res.status(500).json({ error: "Internal server error" });
     }
 });

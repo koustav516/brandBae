@@ -129,6 +129,13 @@ function renderCreators(data) {
                     </div>
                </div>`;
 
+            const handleHTML = c.instagramHandle
+                ? `<a class="ig-btn" href="https://instagram.com/${c.instagramHandle}" target="_blank" rel="noopener">
+                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                       @${c.instagramHandle}
+                   </a>`
+                : "";
+
             return `
         <div class="creator-card">
 
@@ -141,6 +148,12 @@ function renderCreators(data) {
 
             <div class="card-body">
 
+                ${c.fullName || c.instagramHandle ? `
+                <div class="creator-identity">
+                    ${c.fullName ? `<div class="creator-name">${c.fullName}</div>` : ""}
+                    ${c.city ? `<div class="creator-city">📍 ${c.city}</div>` : ""}
+                </div>` : ""}
+
                 <div class="sec-label">Performance</div>
                 <div class="perf-grid">
                     <div class="perf-cell">
@@ -148,19 +161,19 @@ function renderCreators(data) {
                         <div class="pk">Followers</div>
                     </div>
                     <div class="perf-cell">
-                        <div class="pv ${ec}">${c.engagement}%</div>
+                        <div class="pv ${ec}">${c.engagement > 0 ? c.engagement + "%" : "—"}</div>
                         <div class="pk">Engagement Rate</div>
                     </div>
                     <div class="perf-cell">
-                        <div class="pv">${c.avgLikes.toLocaleString("en-IN")}</div>
+                        <div class="pv">${c.avgLikes > 0 ? c.avgLikes.toLocaleString("en-IN") : "—"}</div>
                         <div class="pk">Avg Likes</div>
                     </div>
                     <div class="perf-cell">
-                        <div class="pv">${c.avgComments}</div>
+                        <div class="pv">${c.avgComments > 0 ? c.avgComments : "—"}</div>
                         <div class="pk">Avg Comments</div>
                     </div>
                     <div class="perf-cell full">
-                        <div class="pv">${fmt(c.avgReelViews)}</div>
+                        <div class="pv">${c.avgReelViews > 0 ? fmt(c.avgReelViews) : "—"}</div>
                         <div class="pk">Avg Reel Views</div>
                     </div>
                 </div>
@@ -195,9 +208,7 @@ function renderCreators(data) {
 
             </div>
 
-            <button class="unlock-btn" onclick="openModal(${c.id})">
-                🔒 Unlock for ₹149
-            </button>
+            ${handleHTML}
 
         </div>`;
         })
@@ -242,72 +253,6 @@ function applyFilters() {
     renderCreators(filtered);
 }
 
-function openModal(id) {
-    document.getElementById("modalStep1").style.display = "block";
-    document.getElementById("modalBeta").style.display = "none";
-    document.getElementById("inputName").value = "";
-    document.getElementById("inputPhone").value = "";
-    document.getElementById("inputCity").value = "";
-    ["inputName", "inputCity"].forEach((id) =>
-        document.getElementById(id).classList.remove("error"),
-    );
-    document.getElementById("phoneWrap").classList.remove("error");
-    document.getElementById("modalOverlay").classList.add("open");
-    document.body.style.overflow = "hidden";
-    setTimeout(() => document.getElementById("inputName").focus(), 100);
-}
-
-function handleStep1() {
-    const name = document.getElementById("inputName").value.trim();
-    const phone = document.getElementById("inputPhone").value.trim();
-    const city = document.getElementById("inputCity").value.trim();
-    let valid = true;
-
-    if (!name) {
-        document.getElementById("inputName").classList.add("error");
-        valid = false;
-    } else document.getElementById("inputName").classList.remove("error");
-
-    if (!phone || phone.length < 10) {
-        document.getElementById("phoneWrap").classList.add("error");
-        valid = false;
-    } else document.getElementById("phoneWrap").classList.remove("error");
-
-    if (!city) {
-        document.getElementById("inputCity").classList.add("error");
-        valid = false;
-    } else document.getElementById("inputCity").classList.remove("error");
-
-    if (!valid) return;
-
-    // Show beta screen immediately, then save in background
-    document.getElementById("confirmedName").textContent = name.split(" ")[0];
-    document.getElementById("confirmedPhone").textContent = "+91 " + phone;
-    document.getElementById("confirmedCity").textContent = city;
-
-    document.getElementById("modalStep1").style.display = "none";
-    document.getElementById("modalBeta").style.display = "block";
-
-    // Save lead to database
-    fetch("/api/leads", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, phone, city }),
-    }).catch((err) => console.error("Lead save failed:", err));
-}
-
-function closeModal() {
-    document.getElementById("modalOverlay").classList.remove("open");
-    document.body.style.overflow = "";
-}
-
-function handleOverlayClick(e) {
-    if (e.target === document.getElementById("modalOverlay")) closeModal();
-}
-
-document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeModal();
-});
 
 fetch("/api/creators")
     .then((r) => r.json())

@@ -236,6 +236,51 @@
                             <button class="btn-approve" onclick="review(${a.id}, 'approved')">✓ Approve</button>
                             <button class="btn-reject"  onclick="review(${a.id}, 'rejected')">✕ Reject</button>
                         </div>`
+                    : a.status === "approved" ? `
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;">
+                            <div class="app-status-tag approved">approved</div>
+                            <button class="btn-edit-stats" onclick="toggleStats('${a.user_id}')">✏️ Edit Stats</button>
+                        </div>
+                        <div class="stats-edit-form" id="stats-${a.user_id}" style="display:none">
+                            <div class="stats-edit-grid">
+                                <div class="stats-field">
+                                    <label>Engagement Rate (%)</label>
+                                    <input type="number" step="0.1" min="0" max="100" id="eng-${a.user_id}" value="${a.c_engagement || ''}" placeholder="e.g. 4.2" />
+                                </div>
+                                <div class="stats-field">
+                                    <label>Avg Likes</label>
+                                    <input type="number" min="0" id="likes-${a.user_id}" value="${a.c_avg_likes || ''}" placeholder="e.g. 320" />
+                                </div>
+                                <div class="stats-field">
+                                    <label>Avg Comments</label>
+                                    <input type="number" min="0" id="comments-${a.user_id}" value="${a.c_avg_comments || ''}" placeholder="e.g. 18" />
+                                </div>
+                                <div class="stats-field">
+                                    <label>Avg Reel Views</label>
+                                    <input type="number" min="0" id="views-${a.user_id}" value="${a.c_avg_reel_views || a.avg_reel_views || ''}" placeholder="e.g. 5000" />
+                                </div>
+                                <div class="stats-field">
+                                    <label>Age Range</label>
+                                    <input type="text" id="age-${a.user_id}" value="${a.c_age_range || ''}" placeholder="e.g. 18-35" />
+                                </div>
+                                <div class="stats-field">
+                                    <label>Female %</label>
+                                    <input type="number" min="0" max="100" id="female-${a.user_id}" value="${a.c_female_p || ''}" placeholder="e.g. 62" />
+                                </div>
+                                <div class="stats-field">
+                                    <label>Male %</label>
+                                    <input type="number" min="0" max="100" id="male-${a.user_id}" value="${a.c_male_p || ''}" placeholder="e.g. 38" />
+                                </div>
+                                <div class="stats-field stats-field-wide">
+                                    <label>Top Locations (comma-separated)</label>
+                                    <input type="text" id="loc-${a.user_id}" value="${a.c_locations ? a.c_locations.join(', ') : ''}" placeholder="e.g. Mumbai, Delhi, Pune" />
+                                </div>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:10px;margin-top:12px;">
+                                <button class="btn-approve" onclick="saveStats('${a.user_id}')">Save Stats</button>
+                                <span class="stats-save-msg" id="msg-${a.user_id}"></span>
+                            </div>
+                        </div>`
                     : `<div class="app-status-tag ${a.status}">${a.status}</div>`}
                 </div>
             `).join("");
@@ -317,6 +362,44 @@
                 card.style.opacity       = "1";
                 card.style.pointerEvents = "auto";
                 alert("Failed to update. Try again.");
+            }
+        }
+
+        function toggleStats(userId) {
+            const form = document.getElementById("stats-" + userId);
+            form.style.display = form.style.display === "none" ? "block" : "none";
+        }
+
+        async function saveStats(userId) {
+            const get = id => document.getElementById(id + "-" + userId).value.trim();
+            const msg = document.getElementById("msg-" + userId);
+
+            const body = {
+                engagement:     get("eng")      || null,
+                avg_likes:      get("likes")    || null,
+                avg_comments:   get("comments") || null,
+                avg_reel_views: get("views")    || null,
+                age_range:      get("age")      || null,
+                female_p:       get("female")   || null,
+                male_p:         get("male")     || null,
+                locations:      get("loc")      || null,
+            };
+
+            msg.textContent = "Saving…";
+            msg.style.color = "#9898AA";
+
+            try {
+                const res = await fetch(`/api/admin/creator-stats/${userId}`, {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(body),
+                });
+                if (!res.ok) throw new Error();
+                msg.textContent = "Saved ✓";
+                msg.style.color = "#16a34a";
+            } catch {
+                msg.textContent = "Failed. Try again.";
+                msg.style.color = "#dc2626";
             }
         }
 

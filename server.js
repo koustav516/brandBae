@@ -35,6 +35,8 @@ app.get("/marketplace",       page("marketplace.html"));
 app.get("/join",              page("join.html"));
 app.get("/login/creator",     page("login-creator.html"));
 app.get("/creator/dashboard", page("creator-dashboard.html"));
+app.get("/forgot-password",   page("forgot-password.html"));
+app.get("/reset-password",    page("reset-password.html"));
 app.get("/admin",             page("admin.html"));
 
 // ── API ROUTES ──
@@ -47,9 +49,18 @@ app.use("/api/leads",    leadsRouter);
 app.get("/api/admin/applications", requireAdmin, async (_req, res) => {
     try {
         const { rows } = await pool.query(`
-            SELECT ca.*, u.email
+            SELECT ca.*, u.email,
+                c.engagement    AS c_engagement,
+                c.avg_likes     AS c_avg_likes,
+                c.avg_comments  AS c_avg_comments,
+                c.avg_reel_views AS c_avg_reel_views,
+                c.age_range     AS c_age_range,
+                c.female_p      AS c_female_p,
+                c.male_p        AS c_male_p,
+                c.locations     AS c_locations
             FROM creator_applications ca
             JOIN users u ON u.id = ca.user_id
+            LEFT JOIN creators c ON c.user_id = ca.user_id
             ORDER BY ca.created_at DESC
         `);
         res.json(rows);
@@ -91,8 +102,8 @@ app.patch("/api/admin/applications/:id", requireAdmin, async (req, res) => {
                  ON CONFLICT DO NOTHING`,
                 [
                     app.niche, app.followers, 0, app.city,
-                    0, 0, 0,
-                    "18-35", 50, 50, [app.city],
+                    0, 0, app.avg_reel_views || 0,
+                    app.audience_age_group || "18-35", app.female_p || 50, app.male_p || 50, [app.city],
                     app.reel_price  || 0,
                     app.story_price || 0,
                     app.post_price  || 0,
@@ -163,6 +174,44 @@ app.patch("/api/admin/follower-update/:userId", requireAdmin, async (req, res) =
         res.status(500).json({ error: "Internal server error" });
     } finally {
         client.release();
+    }
+});
+
+// ── ADMIN — update creator marketplace stats ──
+app.patch("/api/admin/creator-stats/:userId", requireAdmin, async (req, res) => {
+    const { engagement, avg_likes, avg_comments, avg_reel_views, age_range, female_p, male_p, locations } = req.body;
+
+    try {
+        const { rowCount } = await pool.query(
+            `UPDATE creators SET
+                engagement     = COALESCE($1, engagement),
+                avg_likes      = COALESCE($2, avg_likes),
+                avg_comments   = COALESCE($3, avg_comments),
+                avg_reel_views = COALESCE($4, avg_reel_views),
+                age_range      = COALESCE($5, age_range),
+                female_p       = COALESCE($6, female_p),
+                male_p         = COALESCE($7, male_p),
+                locations      = COALESCE($8, locations)
+             WHERE user_id = $9`,
+            [
+                engagement    != null ? parseFloat(engagement)   : null,
+                avg_likes     != null ? parseInt(avg_likes)      : null,
+                avg_comments  != null ? parseInt(avg_comments)   : null,
+                avg_reel_views!= null ? parseInt(avg_reel_views) : null,
+                age_range     || null,
+                female_p      != null ? parseInt(female_p)       : null,
+                male_p        != null ? parseInt(male_p)         : null,
+                locations     ? locations.split(",").map(l => l.trim()).filter(Boolean) : null,
+                req.params.userId,
+            ]
+        );
+
+        if (!rowCount) return res.status(404).json({ error: "Creator not found" });
+        console.log(`[ADMIN] Stats updated for user #${req.params.userId}`);
+        res.json({ success: true });
+    } catch (err) {
+        console.error("PATCH /api/admin/creator-stats error:", err.message);
+        res.status(500).json({ error: "Internal server error" });
     }
 });
 

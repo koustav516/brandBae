@@ -8,20 +8,24 @@ const router = express.Router();
 router.get("/", async (_req, res) => {
     try {
         const { rows } = await pool.query(`
-            SELECT id, niche, followers, engagement, city,
-                avg_likes      AS "avgLikes",
-                avg_comments   AS "avgComments",
-                avg_reel_views AS "avgReelViews",
-                age_range      AS "ageRange",
-                female_p       AS "femaleP",
-                male_p         AS "maleP",
-                locations,
-                reel_price     AS "reelPrice",
-                story_price    AS "storyPrice",
-                post_price     AS "postPrice",
-                verified, barter,
-                barter_note    AS "barterNote"
-            FROM creators ORDER BY id
+            SELECT c.id, c.niche, c.followers, c.engagement, c.city,
+                c.avg_likes      AS "avgLikes",
+                c.avg_comments   AS "avgComments",
+                c.avg_reel_views AS "avgReelViews",
+                c.age_range      AS "ageRange",
+                c.female_p       AS "femaleP",
+                c.male_p         AS "maleP",
+                c.locations,
+                c.reel_price     AS "reelPrice",
+                c.story_price    AS "storyPrice",
+                c.post_price     AS "postPrice",
+                c.verified, c.barter,
+                c.barter_note       AS "barterNote",
+                ca.instagram_handle AS "instagramHandle",
+                ca.full_name        AS "fullName"
+            FROM creators c
+            LEFT JOIN creator_applications ca ON ca.user_id = c.user_id
+            ORDER BY c.id
         `);
         res.json(rows);
     } catch (err) {
