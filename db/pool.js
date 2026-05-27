@@ -124,6 +124,8 @@ async function initDB() {
         "ALTER TABLE creators ADD COLUMN IF NOT EXISTS user_id TEXT",
         "ALTER TABLE creator_applications ADD COLUMN IF NOT EXISTS female_p INTEGER",
         "ALTER TABLE creator_applications ADD COLUMN IF NOT EXISTS male_p INTEGER",
+        "ALTER TABLE creator_applications ADD COLUMN IF NOT EXISTS photo_url TEXT",
+        "ALTER TABLE creators ADD COLUMN IF NOT EXISTS photo_url TEXT",
     ];
     for (const sql of newCols) await pool.query(sql);
 

@@ -89,7 +89,7 @@
         .edit-listing-btn:hover { text-decoration: underline; }
         .cc-wrap { padding: 16px 20px; }
         .cc-cover { height: 80px; border-radius: 12px; position: relative; margin-bottom: 0; }
-        .cc-avatar { width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.6); border: 3px solid #fff; position: absolute; bottom: -18px; left: 14px; backdrop-filter: blur(4px); }
+        .cc-avatar { width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.6); border: 3px solid #fff; position: absolute; bottom: -18px; left: 14px; }
         .cc-locked { position: absolute; top: 10px; left: 10px; display: flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.92); border-radius: 100px; padding: 3px 10px 3px 7px; font-size: 10px; font-weight: 700; color: var(--ink-soft); }
         .cc-niche { position: absolute; top: 10px; right: 10px; font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 100px; }
         .cc-identity { display: flex; align-items: flex-start; justify-content: space-between; padding-top: 24px; margin-bottom: 14px; }
@@ -396,6 +396,21 @@
                 <div class="edit-card">
 
                     <div class="edit-sec">
+                        <div class="edit-sec-title">Profile Photo</div>
+                        <div style="display:flex;align-items:center;gap:16px;">
+                            <div id="editPhotoCircle" onclick="document.getElementById('editPhotoInput').click()" style="width:72px;height:72px;border-radius:50%;border:2px dashed var(--border-mid);background:var(--bg-soft);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;color:var(--ink-faint);font-size:11px;font-weight:600;overflow:hidden;flex-shrink:0;transition:border-color 0.15s;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                                <span>Upload</span>
+                            </div>
+                            <input type="file" id="editPhotoInput" accept="image/*" style="display:none" onchange="handleEditPhotoUpload(this)" />
+                            <div>
+                                <div style="font-size:13px;font-weight:500;color:var(--ink-soft)" id="editPhotoStatus">Click the circle to upload a photo</div>
+                                <div style="font-size:12px;color:var(--ink-faint);margin-top:3px;">JPG or PNG · Max 5MB</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="edit-sec">
                         <div class="edit-sec-title">Basic Info</div>
                         <div class="edit-row">
                             <div class="edit-field"><label>City</label><input type="text" id="edit-city" placeholder="Mumbai" /></div>
@@ -508,6 +523,12 @@
             _profile = p;
 
             document.getElementById("headerName").textContent = p.full_name.split(" ")[0];
+        if (p.photo_url) {
+            const chipAvatar = document.querySelector(".user-chip-avatar");
+            chipAvatar.style.backgroundImage    = `url(${p.photo_url})`;
+            chipAvatar.style.backgroundSize     = "cover";
+            chipAvatar.style.backgroundPosition = "center";
+        }
             document.getElementById("welcomeName").textContent = p.full_name.split(" ")[0];
 
             const subMap = {
@@ -583,7 +604,7 @@
 
             document.getElementById("creatorCardInner").innerHTML = `
                 <div class="cc-cover" style="background:${nc.cover}">
-                    <div class="cc-avatar"></div>
+                    <div class="cc-avatar" style="${p.photo_url ? `background:url(${p.photo_url}) center/cover no-repeat` : ""}"></div>
                     <span class="cc-niche" style="background:${nc.bg};color:${nc.color}">${p.niche}</span>
                 </div>
                 <div class="cc-identity">
@@ -700,6 +721,40 @@
             window.location.href = "/login/creator";
         }
 
+        const CLOUDINARY_CLOUD  = "dlqqforuy";
+        const CLOUDINARY_PRESET = "girm3koi";
+        let _pendingPhotoUrl = null;
+
+        async function handleEditPhotoUpload(input) {
+            const file = input.files[0];
+            if (!file) return;
+            const circle = document.getElementById("editPhotoCircle");
+            const status = document.getElementById("editPhotoStatus");
+            status.textContent = "Uploading…";
+            status.style.color = "var(--ink-soft)";
+            circle.style.opacity = "0.6";
+            try {
+                const fd = new FormData();
+                fd.append("file", file);
+                fd.append("upload_preset", CLOUDINARY_PRESET);
+                const r = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, { method: "POST", body: fd });
+                const d = await r.json();
+                if (!r.ok) throw new Error(d.error?.message || "Upload failed");
+                _pendingPhotoUrl = d.secure_url;
+                circle.style.backgroundImage    = `url(${d.secure_url})`;
+                circle.style.backgroundSize     = "cover";
+                circle.style.backgroundPosition = "center";
+                circle.innerHTML = "";
+                status.textContent = "Photo ready — click Save changes to apply";
+                status.style.color = "var(--green)";
+            } catch {
+                status.textContent = "Upload failed — try again";
+                status.style.color = "var(--red)";
+            } finally {
+                circle.style.opacity = "1";
+            }
+        }
+
         function populateEditForm(p) {
             document.getElementById("edit-city").value          = p.city || "";
             document.getElementById("edit-languages").value     = p.languages || "";
@@ -714,6 +769,14 @@
             bc.checked = !!p.barter;
             toggleBarter(!!p.barter);
             bc.addEventListener("change", () => toggleBarter(bc.checked));
+            if (p.photo_url) {
+                const c = document.getElementById("editPhotoCircle");
+                c.style.backgroundImage    = `url(${p.photo_url})`;
+                c.style.backgroundSize     = "cover";
+                c.style.backgroundPosition = "center";
+                c.innerHTML = "";
+                document.getElementById("editPhotoStatus").textContent = "Current photo — click to replace";
+            }
         }
 
         function toggleBarter(on) {
@@ -740,6 +803,7 @@
                 past_collabs:        document.getElementById("edit-past-collabs").value.trim() || null,
                 bio:                 document.getElementById("edit-bio").value.trim() || null,
                 requested_followers: parseInt(document.getElementById("edit-followers").value) || null,
+                photo_url:           _pendingPhotoUrl || null,
             };
 
             try {
@@ -751,6 +815,7 @@
                     st.textContent = json.followerUpdatePending ? "Saved! Follower update pending review." : "Changes saved ✓";
                     st.className = "save-status ok";
                     document.getElementById("edit-followers").value = "";
+                    _pendingPhotoUrl = null;
                 }
             } catch {
                 st.textContent = "Network error. Try again."; st.className = "save-status err";

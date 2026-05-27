@@ -664,6 +664,19 @@ textarea { resize: vertical; }
     text-decoration: none;
 }
 
+/* PHOTO UPLOAD */
+.photo-upload-wrap { display: flex; align-items: center; gap: 14px; }
+.photo-preview-circle {
+    width: 72px; height: 72px; border-radius: 50%;
+    border: 2px dashed var(--border-mid);
+    background: var(--bg-soft);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 5px; cursor: pointer; color: var(--ink-faint); font-size: 11px; font-weight: 600;
+    transition: border-color 0.15s, background 0.15s; flex-shrink: 0;
+    overflow: hidden;
+}
+.photo-preview-circle:hover { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
+
 /* RESPONSIVE */
 @media (max-width: 900px) {
     .page { grid-template-columns: 1fr; }

@@ -39,7 +39,7 @@ router.post("/creator/register", async (req, res) => {
         audience_age_group, female_p, male_p, top_locations,
         reel_price, story_price, post_price, bundle_pricing, min_deal_size,
         barter, barter_note,
-        content_links, past_collabs, bio,
+        content_links, past_collabs, bio, photo_url,
     } = req.body;
 
     if (!email || !password || !full_name || !instagram_handle || !niche || !city || !followers) {
@@ -72,8 +72,8 @@ router.post("/creator/register", async (req, res) => {
               audience_age_group, female_p, male_p, top_locations,
               reel_price, story_price, post_price, bundle_pricing, min_deal_size,
               barter, barter_note,
-              content_links, past_collabs, bio)
-             VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25)`,
+              content_links, past_collabs, bio, photo_url)
+             VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26)`,
             [
                 user.id, full_name, instagram_handle,
                 niche, niche_subcategories || null, city, state || null, languages || null,
@@ -85,7 +85,7 @@ router.post("/creator/register", async (req, res) => {
                 reel_price || 0, story_price || 0, post_price || 0, bundle_pricing || null,
                 min_deal_size ? parseInt(min_deal_size) : null,
                 barter || false, barter_note || null,
-                content_links || null, past_collabs || null, bio || null,
+                content_links || null, past_collabs || null, bio || null, photo_url || null,
             ]
         );
 

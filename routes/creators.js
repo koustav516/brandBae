@@ -22,7 +22,8 @@ router.get("/", async (_req, res) => {
                 c.verified, c.barter,
                 c.barter_note       AS "barterNote",
                 ca.instagram_handle AS "instagramHandle",
-                ca.full_name        AS "fullName"
+                ca.full_name        AS "fullName",
+                ca.photo_url        AS "photoUrl"
             FROM creators c
             LEFT JOIN creator_applications ca ON ca.user_id = c.user_id
             ORDER BY c.id
@@ -60,7 +61,7 @@ router.patch("/me", requireAuth, async (req, res) => {
     const {
         city, languages, bio, past_collabs, content_links,
         barter, barter_note, reel_price, story_price, post_price,
-        bundle_pricing, min_deal_size, requested_followers,
+        bundle_pricing, min_deal_size, requested_followers, photo_url,
     } = req.body;
 
     const client = await pool.connect();
@@ -82,8 +83,9 @@ router.patch("/me", requireAuth, async (req, res) => {
                 post_price       = COALESCE($10, post_price),
                 bundle_pricing   = COALESCE($11, bundle_pricing),
                 min_deal_size    = COALESCE($12, min_deal_size),
-                pending_followers = COALESCE($13, pending_followers)
-             WHERE user_id = $14 RETURNING *`,
+                pending_followers = COALESCE($13, pending_followers),
+                photo_url        = COALESCE($14, photo_url)
+             WHERE user_id = $15 RETURNING *`,
             [
                 city        || null,
                 languages   || null,
@@ -98,6 +100,7 @@ router.patch("/me", requireAuth, async (req, res) => {
                 bundle_pricing  ?? null,
                 min_deal_size   || null,
                 requested_followers || null,
+                photo_url   || null,
                 req.user.id,
             ]
         );
@@ -117,6 +120,7 @@ router.patch("/me", requireAuth, async (req, res) => {
                      reel_price  = COALESCE($4, c.reel_price),
                      story_price = COALESCE($5, c.story_price),
                      post_price  = COALESCE($6, c.post_price),
+                     photo_url   = COALESCE($8, c.photo_url),
                      user_id     = $7
                  FROM creator_applications ca
                  WHERE ca.user_id = $7
@@ -129,6 +133,7 @@ router.patch("/me", requireAuth, async (req, res) => {
                     story_price || null,
                     post_price  || null,
                     req.user.id,
+                    photo_url   || null,
                 ]
             );
         }

@@ -100,6 +100,20 @@
                 <div class="form-step" id="step-2" style="display:none">
                     <div class="field">
                         <div class="label-row">
+                            <label>Profile photo <span class="optional">(optional)</span></label>
+                            <span class="label-hint" id="photoHint">Helps brands recognise you</span>
+                        </div>
+                        <div class="photo-upload-wrap">
+                            <div class="photo-preview-circle" id="photoCircle" onclick="document.getElementById('photoFileInput').click()">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                                <span>Upload photo</span>
+                            </div>
+                            <input type="file" id="photoFileInput" accept="image/*" style="display:none" onchange="handlePhotoUpload(this)" />
+                            <input type="hidden" id="photoUrl" />
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="label-row">
                             <label for="handle">Instagram handle <span class="req">*</span></label>
                             <span class="label-hint">Your public @username</span>
                         </div>
@@ -391,6 +405,40 @@
     </div>
 
     <script>
+        const CLOUDINARY_CLOUD  = "dlqqforuy";
+        const CLOUDINARY_PRESET = "girm3koi";
+
+        async function handlePhotoUpload(input) {
+            const file = input.files[0];
+            if (!file) return;
+            const hint = document.getElementById("photoHint");
+            const circle = document.getElementById("photoCircle");
+            hint.textContent = "Uploading…";
+            circle.style.pointerEvents = "none";
+            circle.style.opacity = "0.6";
+            try {
+                const fd = new FormData();
+                fd.append("file", file);
+                fd.append("upload_preset", CLOUDINARY_PRESET);
+                const r = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, { method: "POST", body: fd });
+                const d = await r.json();
+                if (!r.ok) throw new Error(d.error?.message || "Upload failed");
+                document.getElementById("photoUrl").value = d.secure_url;
+                circle.style.backgroundImage = `url(${d.secure_url})`;
+                circle.style.backgroundSize  = "cover";
+                circle.style.backgroundPosition = "center";
+                circle.innerHTML = "";
+                hint.textContent = "✓ Photo uploaded";
+                hint.style.color = "var(--green)";
+            } catch (e) {
+                hint.textContent = "Upload failed — try again";
+                hint.style.color = "var(--red)";
+            } finally {
+                circle.style.pointerEvents = "auto";
+                circle.style.opacity = "1";
+            }
+        }
+
         let currentStep = 1;
         const TOTAL_STEPS = 4;
 
@@ -541,6 +589,7 @@
                 content_links:       document.getElementById("contentLinks").value.trim(),
                 past_collabs:        document.getElementById("pastCollabs").value.trim(),
                 bio:                 document.getElementById("bio").value.trim(),
+                photo_url:           document.getElementById("photoUrl").value || null,
             };
 
             btn.disabled = true;

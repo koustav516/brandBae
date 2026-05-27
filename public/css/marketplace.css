@@ -423,40 +423,50 @@ nav {
     border-color: var(--blue-mid);
 }
 
-/* ── COVER ── */
-.card-cover {
-    height: 76px;
-    position: relative;
+/* ── PHOTO ── */
+.card-photo {
+    height: 200px;
     flex-shrink: 0;
+    border-radius: 14px 14px 0 0;
+    position: relative;
     display: flex;
-    align-items: flex-start;
-    justify-content: flex-end;
-    padding: 12px 14px;
+    align-items: center;
+    justify-content: center;
 }
 
-.card-avatar {
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
-    border: 3px solid var(--bg);
-    filter: blur(7px);
+.card-photo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     position: absolute;
-    bottom: -22px;
-    left: 16px;
-    flex-shrink: 0;
+    top: 0; left: 0;
+    border-radius: 14px 14px 0 0;
+}
+
+.card-photo-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.35);
+    color: rgba(0,0,0,0.25);
 }
 
 .cover-niche {
     font-size: 10px;
     font-weight: 700;
-    padding: 4px 11px;
+    padding: 3px 10px;
     border-radius: 100px;
     letter-spacing: 0.3px;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 /* ── CARD BODY ── */
 .card-body {
-    padding: 28px 14px 0;
+    padding: 14px 14px 0;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -693,6 +703,14 @@ nav {
 /* ── CREATOR IDENTITY ── */
 .creator-identity {
     margin-bottom: 14px;
+}
+
+.creator-name-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 3px;
 }
 
 .creator-name {
@@ -1164,11 +1182,8 @@ nav {
         padding: 8px 10px;
     }
 
-    .card-avatar {
-        width: 44px;
-        height: 44px;
-        bottom: -18px;
-        left: 10px;
+    .card-photo {
+        height: 160px;
     }
 
     .cover-niche {

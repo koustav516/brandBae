@@ -97,8 +97,8 @@ app.patch("/api/admin/applications/:id", requireAdmin, async (req, res) => {
                      avg_likes, avg_comments, avg_reel_views,
                      age_range, female_p, male_p, locations,
                      reel_price, story_price, post_price,
-                     verified, barter, barter_note, user_id)
-                 VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18)
+                     verified, barter, barter_note, user_id, photo_url)
+                 VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19)
                  ON CONFLICT DO NOTHING`,
                 [
                     app.niche, app.followers, 0, app.city,
@@ -107,7 +107,7 @@ app.patch("/api/admin/applications/:id", requireAdmin, async (req, res) => {
                     app.reel_price  || 0,
                     app.story_price || 0,
                     app.post_price  || 0,
-                    true, app.barter, app.barter_note || null, app.user_id,
+                    true, app.barter, app.barter_note || null, app.user_id, app.photo_url || null,
                 ]
             );
         }
@@ -179,10 +179,13 @@ app.patch("/api/admin/follower-update/:userId", requireAdmin, async (req, res) =
 
 // ── ADMIN — update creator marketplace stats ──
 app.patch("/api/admin/creator-stats/:userId", requireAdmin, async (req, res) => {
-    const { engagement, avg_likes, avg_comments, avg_reel_views, age_range, female_p, male_p, locations } = req.body;
+    const { engagement, avg_likes, avg_comments, avg_reel_views, age_range, female_p, male_p, locations, followers, photo_url } = req.body;
 
+    const client = await pool.connect();
     try {
-        const { rowCount } = await pool.query(
+        await client.query("BEGIN");
+
+        const { rowCount } = await client.query(
             `UPDATE creators SET
                 engagement     = COALESCE($1, engagement),
                 avg_likes      = COALESCE($2, avg_likes),
@@ -191,8 +194,10 @@ app.patch("/api/admin/creator-stats/:userId", requireAdmin, async (req, res) => 
                 age_range      = COALESCE($5, age_range),
                 female_p       = COALESCE($6, female_p),
                 male_p         = COALESCE($7, male_p),
-                locations      = COALESCE($8, locations)
-             WHERE user_id = $9`,
+                locations      = COALESCE($8, locations),
+                followers      = COALESCE($9, followers),
+                photo_url      = COALESCE($10, photo_url)
+             WHERE user_id = $11`,
             [
                 engagement    != null ? parseFloat(engagement)   : null,
                 avg_likes     != null ? parseInt(avg_likes)      : null,
@@ -202,16 +207,39 @@ app.patch("/api/admin/creator-stats/:userId", requireAdmin, async (req, res) => 
                 female_p      != null ? parseInt(female_p)       : null,
                 male_p        != null ? parseInt(male_p)         : null,
                 locations     ? locations.split(",").map(l => l.trim()).filter(Boolean) : null,
+                followers     != null ? parseInt(followers)      : null,
+                photo_url     || null,
                 req.params.userId,
             ]
         );
 
-        if (!rowCount) return res.status(404).json({ error: "Creator not found" });
+        if (!rowCount) {
+            await client.query("ROLLBACK");
+            return res.status(404).json({ error: "Creator not found" });
+        }
+
+        // Sync followers and photo_url back to creator_applications
+        await client.query(
+            `UPDATE creator_applications SET
+                followers = COALESCE($1, followers),
+                photo_url = COALESCE($2, photo_url)
+             WHERE user_id = $3`,
+            [
+                followers != null ? parseInt(followers) : null,
+                photo_url || null,
+                req.params.userId,
+            ]
+        );
+
+        await client.query("COMMIT");
         console.log(`[ADMIN] Stats updated for user #${req.params.userId}`);
         res.json({ success: true });
     } catch (err) {
+        await client.query("ROLLBACK");
         console.error("PATCH /api/admin/creator-stats error:", err.message);
         res.status(500).json({ error: "Internal server error" });
+    } finally {
+        client.release();
     }
 });
 

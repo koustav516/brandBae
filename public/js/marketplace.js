@@ -69,16 +69,16 @@ function renderCreators(data) {
     }
 
     const coverGradients = {
-        Food: "linear-gradient(135deg, #dce8ff, #c5d0f5)",
-        Fashion: "linear-gradient(135deg, #fce4ec, #f8bbd0)",
-        Fitness: "linear-gradient(135deg, #e8f5e9, #c8e6c9)",
-        Travel: "linear-gradient(135deg, #e0f7fa, #b2ebf2)",
-        Beauty: "linear-gradient(135deg, #fce4ec, #f3e5f5)",
-        Tech: "linear-gradient(135deg, #e8eaf6, #c5cae9)",
-        Lifestyle: "linear-gradient(135deg, #fff8e1, #ffecb3)",
-        Gaming: "linear-gradient(135deg, #ede7f6, #d1c4e9)",
-        Finance: "linear-gradient(135deg, #e8f5e9, #dcedc8)",
-        Comedy: "linear-gradient(135deg, #fff3e0, #ffe0b2)",
+        Food:      "linear-gradient(135deg, #667eea, #764ba2)",
+        Fashion:   "linear-gradient(135deg, #f093fb, #f5576c)",
+        Fitness:   "linear-gradient(135deg, #4facfe, #00f2fe)",
+        Travel:    "linear-gradient(135deg, #43e97b, #38f9d7)",
+        Beauty:    "linear-gradient(135deg, #fa709a, #fee140)",
+        Tech:      "linear-gradient(135deg, #30cfd0, #667eea)",
+        Lifestyle: "linear-gradient(135deg, #f6d365, #fda085)",
+        Gaming:    "linear-gradient(135deg, #6a11cb, #2575fc)",
+        Finance:   "linear-gradient(135deg, #11998e, #38ef7d)",
+        Comedy:    "linear-gradient(135deg, #f7971e, #ffd200)",
     };
 
     const nicheColors = {
@@ -96,12 +96,8 @@ function renderCreators(data) {
 
     grid.innerHTML = data
         .map((c) => {
-            const cfg = nicheConfig[c.niche] || {
-                gradient: ["#e5e7eb", "#d1d5db"],
-            };
             const cover = coverGradients[c.niche] || coverGradients.Food;
             const nColor = nicheColors[c.niche] || nicheColors.Food;
-            const avatarBg = `linear-gradient(135deg, ${cfg.gradient[0]}, ${cfg.gradient[1]})`;
             const ec = engClass(c.engagement);
 
             const pricingHTML = c.barter
@@ -139,20 +135,22 @@ function renderCreators(data) {
             return `
         <div class="creator-card">
 
-            <div class="card-cover" style="background:${cover}">
-                <div class="card-avatar" style="background:${avatarBg}"></div>
-                <span class="cover-niche" style="background:${nColor.bg};color:${nColor.color};border:1px solid ${nColor.color}33">
-                    ${c.niche}
-                </span>
+            <div class="card-photo" style="background:${cover}" id="cover-${c.id}">
+                ${c.photoUrl
+                    ? `<img src="${c.photoUrl}" class="card-photo-img" onerror="this.style.display='none'" />`
+                    : `<div class="card-photo-placeholder"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>`
+                }
             </div>
 
             <div class="card-body">
 
-                ${c.fullName || c.instagramHandle ? `
                 <div class="creator-identity">
-                    ${c.fullName ? `<div class="creator-name">${c.fullName}</div>` : ""}
+                    <div class="creator-name-row">
+                        ${c.fullName ? `<span class="creator-name">${c.fullName}</span>` : ""}
+                        <span class="cover-niche" style="background:${nColor.bg};color:${nColor.color};border:1px solid ${nColor.color}33">${c.niche}</span>
+                    </div>
                     ${c.city ? `<div class="creator-city">📍 ${c.city}</div>` : ""}
-                </div>` : ""}
+                </div>
 
                 <div class="sec-label">Performance</div>
                 <div class="perf-grid">

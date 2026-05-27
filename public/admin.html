@@ -182,9 +182,15 @@
             list.innerHTML = filtered.map(a => `
                 <div class="app-card" id="app-${a.id}">
                     <div class="app-top">
-                        <div class="app-identity">
-                            <div class="app-name">${a.full_name}</div>
-                            <div class="app-handle">@${a.instagram_handle}</div>
+                        <div class="app-identity" style="display:flex;align-items:center;gap:12px;">
+                            ${a.photo_url
+                                ? `<img src="${a.photo_url}" style="width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid var(--border);" />`
+                                : `<div style="width:44px;height:44px;border-radius:50%;background:var(--blue-light);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--blue);">${a.full_name.charAt(0)}</div>`
+                            }
+                            <div>
+                                <div class="app-name">${a.full_name}</div>
+                                <div class="app-handle">@${a.instagram_handle}</div>
+                            </div>
                         </div>
                         <div class="app-meta">
                             <span class="app-niche">${a.niche}</span>
@@ -242,7 +248,22 @@
                             <button class="btn-edit-stats" onclick="toggleStats('${a.user_id}')">✏️ Edit Stats</button>
                         </div>
                         <div class="stats-edit-form" id="stats-${a.user_id}" style="display:none">
+                            <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+                                <div id="photo-circle-${a.user_id}" onclick="document.getElementById('photo-input-${a.user_id}').click()" style="width:52px;height:52px;border-radius:10px;border:2px dashed var(--border-mid);background:${a.photo_url ? `url(${a.photo_url}) center/cover no-repeat` : 'var(--bg-soft)'};cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px;overflow:hidden;" title="Upload photo">
+                                    ${a.photo_url ? '' : '📷'}
+                                </div>
+                                <input type="file" id="photo-input-${a.user_id}" accept="image/*" style="display:none" onchange="uploadAdminPhoto(this,'${a.user_id}')" />
+                                <div>
+                                    <div style="font-size:12px;font-weight:600;color:var(--ink-soft)" id="photo-status-${a.user_id}">${a.photo_url ? 'Click photo to replace' : 'Click to upload profile photo'}</div>
+                                    <div style="font-size:11px;color:var(--ink-faint);margin-top:2px;">Saved when you click Save</div>
+                                </div>
+                                <input type="hidden" id="photo-url-${a.user_id}" value="${a.photo_url || ''}" />
+                            </div>
                             <div class="stats-edit-grid">
+                                <div class="stats-field">
+                                    <label>Followers</label>
+                                    <input type="number" min="0" id="followers-${a.user_id}" value="${a.followers || ''}" placeholder="e.g. 25000" />
+                                </div>
                                 <div class="stats-field">
                                     <label>Engagement Rate (%)</label>
                                     <input type="number" step="0.1" min="0" max="100" id="eng-${a.user_id}" value="${a.c_engagement || ''}" placeholder="e.g. 4.2" />
@@ -277,7 +298,7 @@
                                 </div>
                             </div>
                             <div style="display:flex;align-items:center;gap:10px;margin-top:12px;">
-                                <button class="btn-approve" onclick="saveStats('${a.user_id}')">Save Stats</button>
+                                <button class="btn-approve" onclick="saveStats('${a.user_id}')">Save</button>
                                 <span class="stats-save-msg" id="msg-${a.user_id}"></span>
                             </div>
                         </div>`
@@ -298,9 +319,15 @@
             list.innerHTML = pending.map(a => `
                 <div class="app-card" id="upd-${a.user_id}">
                     <div class="app-top">
-                        <div class="app-identity">
-                            <div class="app-name">${a.full_name}</div>
-                            <div class="app-handle">@${a.instagram_handle}</div>
+                        <div class="app-identity" style="display:flex;align-items:center;gap:12px;">
+                            ${a.photo_url
+                                ? `<img src="${a.photo_url}" style="width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid var(--border);" />`
+                                : `<div style="width:44px;height:44px;border-radius:50%;background:var(--blue-light);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--blue);">${a.full_name.charAt(0)}</div>`
+                            }
+                            <div>
+                                <div class="app-name">${a.full_name}</div>
+                                <div class="app-handle">@${a.instagram_handle}</div>
+                            </div>
                         </div>
                         <div class="app-meta">
                             <span class="app-niche">${a.niche}</span>
@@ -365,6 +392,36 @@
             }
         }
 
+        const CLOUDINARY_CLOUD  = "dlqqforuy";
+        const CLOUDINARY_PRESET = "girm3koi";
+
+        async function uploadAdminPhoto(input, userId) {
+            const file = input.files[0];
+            if (!file) return;
+            const circle = document.getElementById("photo-circle-" + userId);
+            const status = document.getElementById("photo-status-" + userId);
+            status.textContent = "Uploading…";
+            status.style.color = "#9898AA";
+            try {
+                const fd = new FormData();
+                fd.append("file", file);
+                fd.append("upload_preset", CLOUDINARY_PRESET);
+                const r = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, { method: "POST", body: fd });
+                const d = await r.json();
+                if (!r.ok) throw new Error(d.error?.message || "Upload failed");
+                document.getElementById("photo-url-" + userId).value = d.secure_url;
+                circle.style.backgroundImage    = `url(${d.secure_url})`;
+                circle.style.backgroundSize     = "cover";
+                circle.style.backgroundPosition = "center";
+                circle.textContent = "";
+                status.textContent = "Ready — click Save to apply";
+                status.style.color = "#16a34a";
+            } catch {
+                status.textContent = "Upload failed — try again";
+                status.style.color = "#dc2626";
+            }
+        }
+
         function toggleStats(userId) {
             const form = document.getElementById("stats-" + userId);
             form.style.display = form.style.display === "none" ? "block" : "none";
@@ -375,14 +432,16 @@
             const msg = document.getElementById("msg-" + userId);
 
             const body = {
-                engagement:     get("eng")      || null,
-                avg_likes:      get("likes")    || null,
-                avg_comments:   get("comments") || null,
-                avg_reel_views: get("views")    || null,
-                age_range:      get("age")      || null,
-                female_p:       get("female")   || null,
-                male_p:         get("male")     || null,
-                locations:      get("loc")      || null,
+                followers:      get("followers") || null,
+                engagement:     get("eng")       || null,
+                avg_likes:      get("likes")     || null,
+                avg_comments:   get("comments")  || null,
+                avg_reel_views: get("views")     || null,
+                age_range:      get("age")       || null,
+                female_p:       get("female")    || null,
+                male_p:         get("male")      || null,
+                locations:      get("loc")       || null,
+                photo_url:      document.getElementById("photo-url-" + userId).value || null,
             };
 
             msg.textContent = "Saving…";
