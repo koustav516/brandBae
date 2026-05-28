@@ -14,20 +14,225 @@
         <link rel="stylesheet" href="/css/base.css" />
         <link rel="stylesheet" href="/css/components.css" />
         <link rel="stylesheet" href="/css/landing.css" />
+        <style>
+            .nav-login-wrap { position: relative; }
+
+            .nav-login-btn {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+            }
+
+            .nav-login-menu {
+                display: none;
+                position: absolute;
+                top: calc(100% + 10px);
+                right: 0;
+                background: #fff;
+                border: 1px solid #eee;
+                border-radius: 14px;
+                box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+                min-width: 220px;
+                overflow: hidden;
+                z-index: 200;
+                animation: menuIn 0.15s ease;
+            }
+
+            .nav-login-menu.open { display: block; }
+
+            @keyframes menuIn {
+                from { opacity: 0; transform: translateY(-6px); }
+                to   { opacity: 1; transform: translateY(0); }
+            }
+
+            .login-menu-item {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 14px 16px;
+                text-decoration: none;
+                color: #111;
+                transition: background 0.15s;
+                border-bottom: 1px solid #f0f0f0;
+            }
+
+            .login-menu-item:last-child { border-bottom: none; }
+            .login-menu-item:hover { background: #f7f8fc; }
+
+            .login-menu-icon {
+                width: 36px;
+                height: 36px;
+                border-radius: 10px;
+                background: #f0f2ff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 16px;
+                flex-shrink: 0;
+            }
+
+            .login-menu-label {
+                font-size: 13px;
+                font-weight: 700;
+                color: #111;
+                margin-bottom: 2px;
+            }
+
+            .login-menu-sub {
+                font-size: 11px;
+                color: #999;
+                font-weight: 500;
+            }
+
+            /* ── HAMBURGER ── */
+            .hamburger {
+                display: none;
+                flex-direction: column;
+                gap: 5px;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 6px;
+                border-radius: 8px;
+                transition: background 0.15s;
+            }
+            .hamburger:hover { background: #f0f0f0; }
+            .hamburger span {
+                display: block;
+                width: 22px;
+                height: 2px;
+                background: #111;
+                border-radius: 2px;
+                transition: all 0.25s;
+                transform-origin: center;
+            }
+            .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+            .hamburger.open span:nth-child(2) { opacity: 0; }
+            .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+            /* ── MOBILE MENU ── */
+            .mobile-menu {
+                display: none;
+                position: fixed;
+                top: 60px;
+                left: 0; right: 0;
+                background: #fff;
+                border-bottom: 1px solid #eee;
+                box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+                padding: 16px 5%;
+                z-index: 99;
+                flex-direction: column;
+                gap: 4px;
+                animation: slideDown 0.2s ease;
+            }
+            .mobile-menu.open { display: flex; }
+
+            @keyframes slideDown {
+                from { opacity: 0; transform: translateY(-8px); }
+                to   { opacity: 1; transform: translateY(0); }
+            }
+
+            .mobile-link {
+                display: block;
+                padding: 12px 8px;
+                font-size: 15px;
+                font-weight: 600;
+                color: #111;
+                text-decoration: none;
+                border-radius: 8px;
+                transition: background 0.15s, padding-left 0.15s;
+            }
+            .mobile-link:hover { background: #f7f8fc; padding-left: 14px; }
+
+            .mobile-divider {
+                height: 1px;
+                background: #eee;
+                margin: 8px 0;
+            }
+
+            .mobile-cta {
+                display: block;
+                text-align: center;
+                background: #3B5BDB;
+                color: #fff;
+                font-size: 15px;
+                font-weight: 700;
+                padding: 13px;
+                border-radius: 12px;
+                text-decoration: none;
+                margin-top: 4px;
+                transition: background 0.15s;
+            }
+            .mobile-cta:hover { background: #2f4ac0; }
+
+            @media (max-width: 768px) {
+                .nav-center { display: none; }
+                .nav-right  { display: none; }
+                .hamburger  { display: flex; }
+            }
+        </style>
     </head>
     <body>
         <nav id="mainNav">
             <a href="/" class="logo">Brand<span>bae</span></a>
-            <div class="nav-right">
+
+            <!-- Desktop nav links (center) -->
+            <div class="nav-center">
                 <a href="#how" class="nav-link">How it Works</a>
                 <a href="#pricing" class="nav-link">Pricing</a>
                 <a href="#faq" class="nav-link">FAQ</a>
-                <a href="/join" class="btn btn-ghost-dark">Join as Creator</a>
-                <a href="/marketplace" class="btn btn-primary"
-                    >Browse Creators →</a
-                >
             </div>
+
+            <!-- Desktop nav actions (right) -->
+            <div class="nav-right">
+                <a href="/join" class="btn btn-ghost-dark">Join as Creator</a>
+                <div class="nav-login-wrap">
+                    <button class="btn btn-ghost-dark nav-login-btn" onclick="toggleLoginMenu(event)">
+                        Login
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="nav-login-menu" id="loginMenu">
+                        <a href="/login/creator" class="login-menu-item">
+                            <div class="login-menu-icon">🎬</div>
+                            <div>
+                                <div class="login-menu-label">I'm a Creator</div>
+                                <div class="login-menu-sub">Access your dashboard</div>
+                            </div>
+                        </a>
+                        <a href="/login/brand" class="login-menu-item">
+                            <div class="login-menu-icon">🏢</div>
+                            <div>
+                                <div class="login-menu-label">I'm a Brand</div>
+                                <div class="login-menu-sub">Find & message creators</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <a href="/marketplace" class="btn btn-primary">Browse Creators →</a>
+            </div>
+
+            <!-- Hamburger -->
+            <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
         </nav>
+
+        <!-- Mobile menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="#how" class="mobile-link" onclick="closeMobileMenu()">How it Works</a>
+            <a href="#pricing" class="mobile-link" onclick="closeMobileMenu()">Pricing</a>
+            <a href="#faq" class="mobile-link" onclick="closeMobileMenu()">FAQ</a>
+            <div class="mobile-divider"></div>
+            <a href="/join" class="mobile-link">Join as Creator</a>
+            <a href="/login/creator" class="mobile-link">
+                🎬 Creator Login
+            </a>
+            <a href="/login/brand" class="mobile-link">
+                🏢 Brand Login
+            </a>
+            <div class="mobile-divider"></div>
+            <a href="/marketplace" class="mobile-cta">Browse Creators →</a>
+        </div>
 
         <!-- HERO -->
         <section class="hero-section">
@@ -2121,5 +2326,28 @@
         </footer>
 
         <script src="/js/main.js"></script>
+        <script>
+            function toggleLoginMenu(e) {
+                e.stopPropagation();
+                document.getElementById("loginMenu").classList.toggle("open");
+            }
+
+            function toggleMobileMenu() {
+                const menu = document.getElementById("mobileMenu");
+                const btn  = document.getElementById("hamburger");
+                menu.classList.toggle("open");
+                btn.classList.toggle("open");
+            }
+
+            function closeMobileMenu() {
+                document.getElementById("mobileMenu").classList.remove("open");
+                document.getElementById("hamburger").classList.remove("open");
+            }
+
+            document.addEventListener("click", (e) => {
+                if (!e.target.closest(".nav-login-wrap"))
+                    document.getElementById("loginMenu").classList.remove("open");
+            });
+        </script>
     </body>
 </html>

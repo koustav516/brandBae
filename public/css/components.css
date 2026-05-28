@@ -36,10 +36,20 @@ nav.scrolled {
     color: var(--blue);
 }
 
-.nav-right {
+.nav-center {
     display: flex;
     align-items: center;
     gap: 32px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
 }
 
 .nav-link {
