@@ -38,8 +38,6 @@ function renderCreators(data) {
         const cover      = coverGradients[c.niche] || coverGradients.Food;
         const profileUrl = `/creator/${c.instagramHandle}`;
         const loading    = i < 4 ? `fetchpriority="high"` : `loading="lazy"`;
-        const engVal     = c.engagement > 0 ? c.engagement + "%" : "—";
-        const engClass   = c.engagement > 0 ? "cs-val eng" : "cs-val";
 
         const photoHtml = c.photoUrl
             ? `<img src="${cdnCard(c.photoUrl)}" class="card-cover-img" ${loading} onerror="this.style.display='none'" />`
@@ -47,31 +45,32 @@ function renderCreators(data) {
                    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                </div>`;
 
+        const verifiedBadge = c.verified
+            ? `<span class="card-verified-check" title="Verified">
+                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+               </span>`
+            : "";
+
         return `
         <div class="creator-card" onclick="window.location='${profileUrl}'">
             <div class="card-cover" style="background:${cover}">
                 ${photoHtml}
                 <span class="cover-niche-badge">${c.niche}</span>
             </div>
-            <div class="card-body">
-                <div class="card-identity">
-                    <span class="card-handle">${c.instagramHandle ? "@" + c.instagramHandle : c.fullName || "Creator"}</span>
-                    ${c.city ? `<span class="card-city">📍 ${c.city}</span>` : ""}
+            <div class="card-info">
+                <div class="card-name-row">
+                    <span class="card-fullname">${c.fullName || c.instagramHandle || "Creator"}</span>
+                    ${verifiedBadge}
                 </div>
-                <div class="card-stats">
-                    <div class="card-stat">
-                        <div class="cs-val">${fmt(c.followers)}</div>
-                        <div class="cs-key">Followers</div>
+                ${c.city ? `<div class="card-location">📍 ${c.city}</div>` : ""}
+                <div class="card-bottom-row">
+                    <div class="card-stats-inline">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        <span>${fmt(c.followers)}</span>
+                        ${c.engagement > 0 ? `<span class="stat-dot">·</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#3B5BDB" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span class="eng-val">${c.engagement}%</span>` : ""}
                     </div>
-                    <div class="card-stat">
-                        <div class="${engClass}">${engVal}</div>
-                        <div class="cs-key">Engagement</div>
-                    </div>
+                    <span class="view-profile-btn">View Profile</span>
                 </div>
-            </div>
-            <div class="card-footer-link">
-                View Profile
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
             </div>
         </div>`;
     }).join("");
