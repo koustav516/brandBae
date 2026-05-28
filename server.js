@@ -38,6 +38,7 @@ app.get("/creator/dashboard", page("creator-dashboard.html"));
 app.get("/forgot-password",   page("forgot-password.html"));
 app.get("/reset-password",    page("reset-password.html"));
 app.get("/admin",             page("admin.html"));
+app.get("/creator/:handle",   page("creator-profile.html"));
 
 // ── API ROUTES ──
 app.use("/auth",         authRouter);

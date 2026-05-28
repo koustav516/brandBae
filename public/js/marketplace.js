@@ -99,43 +99,12 @@ function renderCreators(data) {
             const cover = coverGradients[c.niche] || coverGradients.Food;
             const nColor = nicheColors[c.niche] || nicheColors.Food;
             const ec = engClass(c.engagement);
-
-            const pricingHTML = c.barter
-                ? `<div class="barter-note">
-                    <div class="barter-note-top">
-                        <span>🤝 Open to barter</span>
-                        <span style="font-weight:700">${c.niche} brands</span>
-                    </div>
-                    <div class="barter-note-body">
-                        ${c.barterNote || `Reach out after unlocking to discuss collaboration terms.`}
-                    </div>
-               </div>`
-                : `<div class="pricing-wrap">
-                    <div class="price-row">
-                        <span>🎬 Reel</span>
-                        <strong>${inr(c.reelPrice)}</strong>
-                    </div>
-                    <div class="price-row">
-                        <span>📸 Story</span>
-                        <strong>${inr(c.storyPrice)}</strong>
-                    </div>
-                    <div class="price-row">
-                        <span>🖼️ Static Post</span>
-                        <strong>${inr(c.postPrice)}</strong>
-                    </div>
-               </div>`;
-
-            const handleHTML = c.instagramHandle
-                ? `<a class="ig-btn" href="https://instagram.com/${c.instagramHandle}" target="_blank" rel="noopener">
-                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-                       @${c.instagramHandle}
-                   </a>`
-                : "";
+            const profileUrl = `/creator/${c.instagramHandle}`;
 
             return `
-        <div class="creator-card">
+        <div class="creator-card" onclick="window.location='${profileUrl}'">
 
-            <div class="card-photo" style="background:${cover}" id="cover-${c.id}">
+            <div class="card-photo" style="background:${cover}">
                 ${c.photoUrl
                     ? `<img src="${c.photoUrl}" class="card-photo-img" onerror="this.style.display='none'" />`
                     : `<div class="card-photo-placeholder"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>`
@@ -143,70 +112,33 @@ function renderCreators(data) {
             </div>
 
             <div class="card-body">
-
-                <div class="creator-identity">
-                    <div class="creator-name-row">
-                        ${c.fullName ? `<span class="creator-name">${c.fullName}</span>` : ""}
-                        <span class="cover-niche" style="background:${nColor.bg};color:${nColor.color};border:1px solid ${nColor.color}33">${c.niche}</span>
-                    </div>
-                    ${c.city ? `<div class="creator-city">📍 ${c.city}</div>` : ""}
+                <div class="creator-name-row">
+                    ${c.fullName ? `<span class="creator-name">${c.fullName}</span>` : ""}
+                    <span class="cover-niche" style="background:${nColor.bg};color:${nColor.color};border:1px solid ${nColor.color}33">${c.niche}</span>
                 </div>
-
-                <div class="sec-label">Performance</div>
-                <div class="perf-grid">
-                    <div class="perf-cell">
-                        <div class="pv">${fmt(c.followers)}</div>
-                        <div class="pk">Followers</div>
+                ${c.city ? `<div class="creator-city">📍 ${c.city}</div>` : ""}
+                <div class="card-stats-row">
+                    <div class="stat-item">
+                        <span class="stat-val">${fmt(c.followers)}</span>
+                        <span class="stat-key">Followers</span>
                     </div>
-                    <div class="perf-cell">
-                        <div class="pv ${ec}">${c.engagement > 0 ? c.engagement + "%" : "—"}</div>
-                        <div class="pk">Engagement Rate</div>
-                    </div>
-                    <div class="perf-cell">
-                        <div class="pv">${c.avgLikes > 0 ? c.avgLikes.toLocaleString("en-IN") : "—"}</div>
-                        <div class="pk">Avg Likes</div>
-                    </div>
-                    <div class="perf-cell">
-                        <div class="pv">${c.avgComments > 0 ? c.avgComments : "—"}</div>
-                        <div class="pk">Avg Comments</div>
-                    </div>
-                    <div class="perf-cell full">
-                        <div class="pv">${c.avgReelViews > 0 ? fmt(c.avgReelViews) : "—"}</div>
-                        <div class="pk">Avg Reel Views</div>
-                    </div>
+                    ${c.engagement > 0 ? `<div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-val ${ec}">${c.engagement}%</span>
+                        <span class="stat-key">Engagement</span>
+                    </div>` : ""}
+                    ${c.avgReelViews > 0 ? `<div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-val">${fmt(c.avgReelViews)}</span>
+                        <span class="stat-key">Avg Views</span>
+                    </div>` : ""}
                 </div>
-
-                <div class="card-audience">
-                    <div class="sec-label">Audience</div>
-                    <div class="audience-wrap">
-                        <div class="age-gender-row">
-                            <div class="age-block">
-                                <div class="aud-val">${c.ageRange} yrs</div>
-                                <div class="aud-key">Age Range</div>
-                            </div>
-                            <div class="gender-block">
-                                <div class="gender-bar-wrap">
-                                    <div class="gb-f" style="width:${c.femaleP}%"></div>
-                                    <div class="gb-m" style="width:${c.maleP}%"></div>
-                                </div>
-                                <div class="gender-labels">
-                                    <span class="gl-f">♀ ${c.femaleP}% Female</span>
-                                    <span class="gl-m">♂ ${c.maleP}% Male</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="locations-row">
-                            ${c.locations.map((l) => `<span class="loc-pill">📍 ${l}</span>`).join("")}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="sec-label">Pricing</div>
-                ${pricingHTML}
-
             </div>
 
-            ${handleHTML}
+            <div class="card-footer">
+                View Profile
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </div>
 
         </div>`;
         })

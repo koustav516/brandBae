@@ -1,0 +1,1024 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/jpeg" href="/assets/images/favicon.JPG" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Creator Profile — Brandbae</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --blue: #3B5BDB;
+            --blue-dark: #2f4ac0;
+            --blue-light: #EEF1FF;
+            --ink: #0F0F12;
+            --ink-mid: #3A3A4A;
+            --ink-soft: #5A5A72;
+            --ink-faint: #9898AA;
+            --border: #EBEBEF;
+            --border-mid: #D8D8E0;
+            --bg: #FFFFFF;
+            --bg-soft: #F7F7FA;
+            --green: #16a34a;
+            --green-bg: rgba(22,163,74,0.09);
+            --amber: #D97706;
+            --amber-bg: #FFFBEB;
+            --amber-border: rgba(217,119,6,0.2);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+            background: var(--bg-soft);
+            color: var(--ink);
+            line-height: 1.6;
+        }
+
+        /* ── NAV ── */
+        .nav {
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 12px rgba(59,91,219,0.05);
+        }
+
+        .nav-logo {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--ink);
+            text-decoration: none;
+        }
+        .nav-logo span { color: var(--blue); }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--ink-soft);
+            text-decoration: none;
+            border: 1px solid var(--border-mid);
+            border-radius: 8px;
+            padding: 7px 14px;
+            transition: background 0.15s, color 0.15s;
+        }
+        .back-btn:hover { background: var(--bg-soft); color: var(--ink); }
+
+        /* ── LOADING / ERROR ── */
+        .state-wrap {
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 14px;
+            color: var(--ink-faint);
+            font-size: 14px;
+        }
+        .spinner {
+            width: 32px; height: 32px;
+            border: 2.5px solid var(--border);
+            border-top-color: var(--blue);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── PAGE WRAPPER ── */
+        .profile-outer {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 28px 5% 80px;
+            display: grid;
+            grid-template-columns: 1fr 308px;
+            gap: 24px;
+            align-items: start;
+        }
+
+        /* ── LEFT COLUMN ── */
+        .profile-main {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            min-width: 0;
+        }
+
+        /* ── RIGHT SIDEBAR ── */
+        .profile-sidebar {
+            position: sticky;
+            top: 76px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        /* ── BASE CARD ── */
+        .pcard {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .pcard-head {
+            padding: 16px 20px 0;
+        }
+
+        .pcard-title {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.3px;
+            color: var(--ink-faint);
+            margin-bottom: 14px;
+        }
+
+        .pcard-body {
+            padding: 16px 20px 20px;
+        }
+
+        /* ── HERO CARD ── */
+        .hero-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .cover-banner {
+            height: 260px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cover-banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .cover-pattern {
+            position: absolute;
+            inset: 0;
+            opacity: 0.08;
+            background-image: repeating-linear-gradient(
+                45deg,
+                rgba(255,255,255,0.3) 0,
+                rgba(255,255,255,0.3) 1px,
+                transparent 0,
+                transparent 50%
+            );
+            background-size: 18px 18px;
+        }
+
+        /* dark gradient at bottom of cover so identity text is readable */
+        .cover-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 55%);
+            pointer-events: none;
+        }
+
+        .hero-body {
+            padding: 16px 22px 22px;
+        }
+
+        .hero-top-row {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-bottom: 16px;
+        }
+
+        .ig-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 9px 18px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+            background: linear-gradient(90deg, #f09433, #e6683c 30%, #dc2743 55%, #cc2366 80%, #bc1888);
+            transition: opacity 0.15s, transform 0.15s;
+            flex-shrink: 0;
+        }
+        .ig-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+
+        .creator-name {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.6px;
+            color: var(--ink);
+            line-height: 1.2;
+            margin-bottom: 4px;
+        }
+
+        .followers-line {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--ink-soft);
+            margin-bottom: 10px;
+        }
+
+        .followers-line strong {
+            color: var(--ink);
+            font-weight: 700;
+        }
+
+        .identity-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .niche-badge {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 11px;
+            border-radius: 100px;
+        }
+
+        .city-tag {
+            font-size: 12px;
+            color: var(--ink-soft);
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            font-weight: 500;
+        }
+
+        .verified-tag {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--green);
+            background: var(--green-bg);
+            padding: 3px 10px;
+            border-radius: 100px;
+        }
+
+        /* ── STATS GRID ── */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5px;
+            background: var(--border);
+            border-top: 1px solid var(--border);
+        }
+
+        .stat-cell {
+            background: var(--bg);
+            padding: 16px 12px;
+            text-align: center;
+        }
+
+        .stat-cell:hover { background: var(--bg-soft); }
+
+        .stat-val {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--ink);
+            line-height: 1.1;
+            margin-bottom: 4px;
+        }
+
+        .stat-val.amber { color: var(--amber); }
+
+        .stat-key {
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            color: var(--ink-faint);
+        }
+
+        /* ── AUDIENCE ── */
+        .gender-bar {
+            height: 8px;
+            border-radius: 100px;
+            overflow: hidden;
+            background: var(--bg-soft);
+            display: flex;
+            margin: 8px 0 6px;
+        }
+
+        .gb-f { background: #f472b6; }
+        .gb-m { background: #60a5fa; }
+
+        .gender-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .gl-f { font-size: 12px; font-weight: 700; color: #db2777; }
+        .gl-m { font-size: 12px; font-weight: 700; color: #2563eb; }
+
+        .aud-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-top: 1px solid var(--border);
+            font-size: 13px;
+        }
+
+        .aud-lbl { color: var(--ink-soft); font-weight: 500; }
+        .aud-val { font-weight: 700; color: var(--ink); }
+
+        .loc-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            margin-top: 2px;
+        }
+
+        .loc-pill {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--ink-soft);
+            background: var(--bg-soft);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            padding: 4px 11px;
+        }
+
+        /* ── BIO ── */
+        .bio-text {
+            font-size: 14px;
+            color: var(--ink-soft);
+            line-height: 1.75;
+        }
+
+        /* ── COLLABS ── */
+        .collab-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .collab-pill {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--ink-mid);
+            background: var(--bg-soft);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 5px 14px;
+            transition: border-color 0.15s;
+        }
+
+        .collab-pill:hover { border-color: var(--border-mid); }
+
+        /* ── CONTENT LINKS ── */
+        .links-list { display: flex; flex-direction: column; gap: 10px; }
+
+        .content-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--blue);
+            text-decoration: none;
+            background: var(--blue-light);
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(59,91,219,0.15);
+            word-break: break-all;
+            transition: background 0.15s;
+        }
+
+        .content-link:hover { background: #e0e7ff; }
+
+        .link-icon {
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            background: rgba(59,91,219,0.1);
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--blue);
+        }
+
+        /* ── SIDEBAR PRICING ── */
+        .pricing-card .pcard-body { padding: 0; }
+
+        .price-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+
+        .price-row:last-child { border-bottom: none; }
+
+        .price-lbl {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--ink-soft);
+            font-weight: 500;
+        }
+
+        .price-lbl-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            background: var(--bg-soft);
+            flex-shrink: 0;
+        }
+
+        .price-val {
+            font-weight: 800;
+            color: var(--ink);
+            font-size: 15px;
+            letter-spacing: -0.3px;
+        }
+
+        /* bundle deal row */
+        .bundle-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 13px 20px;
+            background: var(--blue-light);
+            border-top: 1px solid rgba(59,91,219,0.12);
+        }
+
+        .bundle-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--blue);
+            white-space: nowrap;
+            padding-top: 1px;
+        }
+
+        .bundle-text {
+            font-size: 13px;
+            color: var(--ink-soft);
+            line-height: 1.55;
+        }
+
+        /* barter in sidebar */
+        .barter-box {
+            margin: 0;
+            background: var(--amber-bg);
+            border-radius: 0;
+        }
+        .barter-top {
+            padding: 14px 20px 8px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--amber);
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+        .barter-note-text {
+            padding: 0 20px 16px;
+            font-size: 13px;
+            color: var(--ink-soft);
+            line-height: 1.6;
+        }
+
+        /* ── ENQUIRY BUTTON ── */
+        .enquiry-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            background: var(--blue);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background 0.18s, transform 0.15s, box-shadow 0.15s;
+            letter-spacing: -0.1px;
+        }
+
+        .enquiry-btn:hover {
+            background: var(--blue-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(59,91,219,0.28);
+        }
+
+        .sidebar-trust {
+            text-align: center;
+            font-size: 11px;
+            color: var(--ink-faint);
+            line-height: 1.5;
+        }
+
+        /* ── MODAL ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15,15,18,0.5);
+            backdrop-filter: blur(6px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.open { display: flex; }
+
+        .modal {
+            background: var(--bg);
+            border-radius: 20px;
+            padding: 36px 32px;
+            width: 100%;
+            max-width: 420px;
+            position: relative;
+            animation: modalIn 0.2s ease;
+            box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+        }
+
+        @keyframes modalIn {
+            from { opacity:0; transform: scale(0.96) translateY(10px); }
+            to   { opacity:1; transform: scale(1) translateY(0); }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 14px; right: 14px;
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            background: var(--bg-soft);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--ink-soft);
+            font-size: 16px;
+            transition: background 0.15s;
+        }
+        .modal-close:hover { background: var(--border); }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 4px;
+        }
+
+        .modal-sub {
+            font-size: 13px;
+            color: var(--ink-soft);
+            margin-bottom: 22px;
+        }
+
+        .form-group { margin-bottom: 14px; }
+
+        .form-label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--ink-faint);
+            margin-bottom: 6px;
+        }
+
+        .form-input {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            font-family: inherit;
+            font-size: 14px;
+            color: var(--ink);
+            outline: none;
+            transition: border-color 0.15s;
+            background: var(--bg);
+        }
+
+        .form-input::placeholder { color: var(--ink-faint); }
+        .form-input:focus { border-color: var(--blue); }
+
+        .form-submit {
+            width: 100%;
+            background: var(--blue);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            margin-top: 4px;
+            transition: background 0.15s;
+        }
+
+        .form-submit:hover { background: var(--blue-dark); }
+        .form-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        .modal-success { display: none; text-align: center; }
+        .modal-success .success-icon {
+            width: 56px; height: 56px;
+            background: var(--green-bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 14px;
+            color: var(--green);
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 780px) {
+            .profile-outer {
+                grid-template-columns: 1fr;
+                padding-top: 20px;
+            }
+
+            .profile-sidebar {
+                position: static;
+                order: -1;
+            }
+
+            .cover-banner { height: 200px; }
+
+            .creator-name { font-size: 20px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 480px) {
+            .modal { padding: 28px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="nav">
+    <a href="/" class="nav-logo">Brand<span>bae</span></a>
+    <a href="/marketplace" class="back-btn">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Marketplace
+    </a>
+</nav>
+
+<div id="loadingState" class="state-wrap">
+    <div class="spinner"></div>
+    Loading profile…
+</div>
+
+<div id="errorState" class="state-wrap" style="display:none">
+    <div style="font-size:36px">😕</div>
+    <div style="font-size:16px;font-weight:700;color:var(--ink)">Creator not found</div>
+    <a href="/marketplace" style="font-size:13px;color:var(--blue);margin-top:4px">← Back to marketplace</a>
+</div>
+
+<div id="profileContent" class="profile-outer" style="display:none"></div>
+
+<!-- Enquiry Modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+    <div class="modal">
+        <button class="modal-close" onclick="closeModal()">✕</button>
+
+        <div id="modalForm">
+            <div class="modal-title" id="modalTitle">Send Enquiry</div>
+            <div class="modal-sub" id="modalSub">We'll share your details with the creator's team.</div>
+
+            <div class="form-group">
+                <label class="form-label">Your Name / Brand</label>
+                <input class="form-input" id="enquiryName" type="text" placeholder="e.g. Nykaa Marketing Team" />
+            </div>
+            <div class="form-group">
+                <label class="form-label">Phone Number</label>
+                <input class="form-input" id="enquiryPhone" type="tel" placeholder="10-digit mobile number" maxlength="10" />
+            </div>
+            <div class="form-group">
+                <label class="form-label">Your City</label>
+                <input class="form-input" id="enquiryCity" type="text" placeholder="e.g. Mumbai" />
+            </div>
+
+            <div id="enquiryError" style="font-size:13px;color:#e05252;margin-bottom:10px;display:none"></div>
+
+            <button class="form-submit" id="enquirySubmit" onclick="submitEnquiry()">Send Enquiry</button>
+        </div>
+
+        <div class="modal-success" id="modalSuccess">
+            <div class="success-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div style="font-size:20px;font-weight:800;margin-bottom:6px">Enquiry sent!</div>
+            <div style="font-size:13px;color:var(--ink-soft);line-height:1.6">Our team will reach out to you within 24 hours to connect you with this creator.</div>
+            <button class="form-submit" onclick="closeModal()" style="margin-top:20px">Done</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const nicheColors = {
+        Food:      { bg:"rgba(59,91,219,0.1)",   color:"#3B5BDB" },
+        Fashion:   { bg:"rgba(180,60,100,0.1)",  color:"#b43c64" },
+        Fitness:   { bg:"rgba(26,122,69,0.1)",   color:"#1a7a45" },
+        Travel:    { bg:"rgba(0,131,143,0.1)",   color:"#00838f" },
+        Beauty:    { bg:"rgba(173,20,87,0.1)",   color:"#ad1457" },
+        Tech:      { bg:"rgba(48,63,159,0.1)",   color:"#303f9f" },
+        Lifestyle: { bg:"rgba(245,127,23,0.1)",  color:"#f57f17" },
+        Gaming:    { bg:"rgba(94,53,177,0.1)",   color:"#5e35b1" },
+        Finance:   { bg:"rgba(46,125,50,0.1)",   color:"#2e7d32" },
+        Comedy:    { bg:"rgba(230,81,0,0.1)",    color:"#e65100" },
+    };
+
+    const coverGradients = {
+        Food:      "linear-gradient(135deg, #667eea, #764ba2)",
+        Fashion:   "linear-gradient(135deg, #f093fb, #f5576c)",
+        Fitness:   "linear-gradient(135deg, #4facfe, #00f2fe)",
+        Travel:    "linear-gradient(135deg, #43e97b, #38f9d7)",
+        Beauty:    "linear-gradient(135deg, #fa709a, #fee140)",
+        Tech:      "linear-gradient(135deg, #30cfd0, #667eea)",
+        Lifestyle: "linear-gradient(135deg, #f6d365, #fda085)",
+        Gaming:    "linear-gradient(135deg, #6a11cb, #2575fc)",
+        Finance:   "linear-gradient(135deg, #11998e, #38ef7d)",
+        Comedy:    "linear-gradient(135deg, #f7971e, #ffd200)",
+    };
+
+    function fmt(n) { return n >= 1000 ? (n/1000).toFixed(1).replace(/\.0$/,"")+"K" : String(n); }
+    function inr(n) { return "₹" + Number(n).toLocaleString("en-IN"); }
+
+    let _creatorHandle = "";
+    let _creatorName   = "";
+
+    async function loadProfile() {
+        const handle = window.location.pathname.split("/creator/")[1];
+        if (!handle) { showError(); return; }
+        _creatorHandle = handle;
+
+        try {
+            const res = await fetch(`/api/creator/handle/${encodeURIComponent(handle)}`);
+            if (!res.ok) { showError(); return; }
+            render(await res.json());
+        } catch { showError(); }
+    }
+
+    function showError() {
+        document.getElementById("loadingState").style.display = "none";
+        document.getElementById("errorState").style.display   = "flex";
+    }
+
+    function render(c) {
+        _creatorName = c.fullName || "@" + c.instagramHandle;
+
+        const nc     = nicheColors[c.niche]    || nicheColors.Food;
+        const cover  = coverGradients[c.niche] || coverGradients.Food;
+
+        const coverPhotoHtml = c.photoUrl
+            ? `<img src="${c.photoUrl}" alt="${_creatorName}" onerror="this.style.display='none'" />`
+            : "";
+
+        // Performance stats
+        const engClass = c.engagement >= 5 ? "amber" : c.engagement >= 3 ? "amber" : "";
+
+        // Audience section
+        const genderHtml = (c.femaleP != null && c.maleP != null) ? `
+            <div class="gender-bar">
+                <div class="gb-f" style="width:${c.femaleP}%"></div>
+                <div class="gb-m" style="width:${c.maleP}%"></div>
+            </div>
+            <div class="gender-labels">
+                <span class="gl-f">♀ ${c.femaleP}% Female</span>
+                <span class="gl-m">♂ ${c.maleP}% Male</span>
+            </div>` : "";
+
+        const langHtml = c.languages
+            ? `<div class="aud-row"><span class="aud-lbl">Languages</span><span class="aud-val">${c.languages}</span></div>` : "";
+
+        const ageHtml = c.ageRange
+            ? `<div class="aud-row"><span class="aud-lbl">Age range</span><span class="aud-val">${c.ageRange} yrs</span></div>` : "";
+
+        const locHtml = (c.locations || []).length
+            ? `<div class="loc-pills">${c.locations.map(l => `<span class="loc-pill">📍 ${l}</span>`).join("")}</div>` : "";
+
+        // Pricing
+        const pricingHtml = c.barter
+            ? `<div class="barter-box">
+                   <div class="barter-top">🤝 Open to barter with ${c.niche} brands</div>
+                   ${c.barterNote ? `<div class="barter-note-text">${c.barterNote}</div>` : ""}
+               </div>`
+            : `<div class="price-row">
+                   <span class="price-lbl"><span class="price-lbl-icon">🎬</span>Reel</span>
+                   <span class="price-val">${inr(c.reelPrice)}</span>
+               </div>
+               <div class="price-row">
+                   <span class="price-lbl"><span class="price-lbl-icon">📸</span>Story</span>
+                   <span class="price-val">${inr(c.storyPrice)}</span>
+               </div>
+               <div class="price-row">
+                   <span class="price-lbl"><span class="price-lbl-icon">🖼️</span>Static Post</span>
+                   <span class="price-val">${inr(c.postPrice)}</span>
+               </div>
+               ${c.bundlePricing ? `<div class="bundle-row"><span class="bundle-label">📦 Bundle</span><span class="bundle-text">${c.bundlePricing}</span></div>` : ""}`;
+
+        // Past collabs
+        const collabsHtml = c.pastCollabs
+            ? c.pastCollabs.split(/[,\n]+/).map(b=>b.trim()).filter(Boolean)
+                .map(b => `<span class="collab-pill">${b}</span>`).join("") : "";
+
+        // Content links
+        const linksHtml = c.contentLinks
+            ? c.contentLinks.split(/\n+/).map(l=>l.trim()).filter(Boolean)
+                .map(l => `<a class="content-link" href="${l}" target="_blank" rel="noopener">
+                    <span class="link-icon">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                    </span>${l}</a>`).join("") : "";
+
+        const igBtnHtml = c.instagramHandle
+            ? `<a class="ig-btn" href="https://instagram.com/${c.instagramHandle}" target="_blank" rel="noopener">
+                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                   @${c.instagramHandle}
+               </a>` : "";
+
+        const audienceSection = (genderHtml || langHtml || ageHtml || locHtml) ? `
+            <div class="pcard">
+                <div class="pcard-head"><div class="pcard-title">Audience</div></div>
+                <div class="pcard-body" style="padding-top:0">
+                    ${genderHtml}
+                    ${ageHtml}${langHtml}
+                    ${locHtml}
+                </div>
+            </div>` : "";
+
+        document.getElementById("profileContent").innerHTML = `
+            <!-- LEFT COLUMN -->
+            <div class="profile-main">
+
+                <!-- HERO CARD -->
+                <div class="hero-card">
+                    <div class="cover-banner" style="background:${cover}">
+                        ${coverPhotoHtml}
+                        ${!c.photoUrl ? '<div class="cover-pattern"></div>' : ""}
+                        <div class="cover-overlay"></div>
+                    </div>
+                    <div class="hero-body">
+                        <div class="hero-top-row">${igBtnHtml}</div>
+                        <div class="creator-name">${_creatorName}</div>
+                        <div class="followers-line"><strong>${fmt(c.followers)}</strong> followers on Instagram</div>
+                        <div class="identity-meta">
+                            <span class="niche-badge" style="background:${nc.bg};color:${nc.color}">${c.niche}</span>
+                            ${c.city ? `<span class="city-tag">📍 ${c.city}${c.state ? ", " + c.state : ""}</span>` : ""}
+                            ${c.verified ? `<span class="verified-tag"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Verified</span>` : ""}
+                        </div>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-cell">
+                            <div class="stat-val ${engClass}">${c.engagement > 0 ? c.engagement + "%" : "—"}</div>
+                            <div class="stat-key">Engagement</div>
+                        </div>
+                        <div class="stat-cell">
+                            <div class="stat-val">${c.avgReelViews > 0 ? fmt(c.avgReelViews) : "—"}</div>
+                            <div class="stat-key">Avg Reel Views</div>
+                        </div>
+                        <div class="stat-cell">
+                            <div class="stat-val">${c.avgLikes > 0 ? fmt(c.avgLikes) : "—"}</div>
+                            <div class="stat-key">Avg Likes</div>
+                        </div>
+                    </div>
+                </div>
+
+                ${audienceSection}
+
+                ${c.bio ? `
+                <div class="pcard">
+                    <div class="pcard-head"><div class="pcard-title">About</div></div>
+                    <div class="pcard-body" style="padding-top:0"><div class="bio-text">${c.bio}</div></div>
+                </div>` : ""}
+
+                ${collabsHtml ? `
+                <div class="pcard">
+                    <div class="pcard-head"><div class="pcard-title">Past Collaborations</div></div>
+                    <div class="pcard-body" style="padding-top:0"><div class="collab-pills">${collabsHtml}</div></div>
+                </div>` : ""}
+
+                ${linksHtml ? `
+                <div class="pcard">
+                    <div class="pcard-head"><div class="pcard-title">Content</div></div>
+                    <div class="pcard-body" style="padding-top:0"><div class="links-list">${linksHtml}</div></div>
+                </div>` : ""}
+
+            </div>
+
+            <!-- RIGHT SIDEBAR -->
+            <div class="profile-sidebar">
+                <div class="pcard pricing-card">
+                    <div class="pcard-head"><div class="pcard-title">Pricing</div></div>
+                    <div class="pcard-body">${pricingHtml}</div>
+                </div>
+
+                <button class="enquiry-btn" onclick="openModal()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    Send Enquiry
+                </button>
+
+                <div class="sidebar-trust">Brandbae connects you directly with this creator's team. Response within 24 hrs.</div>
+            </div>
+        `;
+
+        document.getElementById("loadingState").style.display   = "none";
+        document.getElementById("profileContent").style.display = "grid";
+        document.title = `${_creatorName} — Brandbae`;
+    }
+
+    function openModal() {
+        document.getElementById("modalTitle").textContent = `Enquire about ${_creatorName}`;
+        document.getElementById("modalSub").textContent   = "We'll connect you with this creator within 24 hours.";
+        document.getElementById("modalForm").style.display    = "block";
+        document.getElementById("modalSuccess").style.display = "none";
+        document.getElementById("enquiryError").style.display = "none";
+        document.getElementById("modalOverlay").classList.add("open");
+    }
+
+    function closeModal() {
+        document.getElementById("modalOverlay").classList.remove("open");
+    }
+
+    async function submitEnquiry() {
+        const name  = document.getElementById("enquiryName").value.trim();
+        const phone = document.getElementById("enquiryPhone").value.trim();
+        const city  = document.getElementById("enquiryCity").value.trim();
+        const errEl = document.getElementById("enquiryError");
+        const btn   = document.getElementById("enquirySubmit");
+
+        errEl.style.display = "none";
+
+        if (!name || !phone || !city) {
+            errEl.textContent = "Please fill in all fields.";
+            errEl.style.display = "block";
+            return;
+        }
+        if (!/^\d{10}$/.test(phone.replace(/\s/g, ""))) {
+            errEl.textContent = "Enter a valid 10-digit phone number.";
+            errEl.style.display = "block";
+            return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = "Sending…";
+
+        try {
+            const res = await fetch("/api/leads", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name: `${name} (interested in ${_creatorName})`, phone, city }),
+            });
+
+            if (!res.ok) {
+                const { error } = await res.json().catch(() => ({}));
+                throw new Error(error || "Something went wrong.");
+            }
+
+            document.getElementById("modalForm").style.display    = "none";
+            document.getElementById("modalSuccess").style.display = "block";
+        } catch (err) {
+            errEl.textContent = err.message;
+            errEl.style.display = "block";
+        } finally {
+            btn.disabled = false;
+            btn.textContent = "Send Enquiry";
+        }
+    }
+
+    loadProfile();
+</script>
+</body>
+</html>

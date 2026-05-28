@@ -35,6 +35,43 @@ router.get("/", async (_req, res) => {
     }
 });
 
+// ── GET /api/creator/handle/:handle ──
+router.get("/handle/:handle", async (req, res) => {
+    try {
+        const { rows: [creator] } = await pool.query(`
+            SELECT c.id, c.niche, c.followers, c.engagement, c.city,
+                c.avg_likes      AS "avgLikes",
+                c.avg_comments   AS "avgComments",
+                c.avg_reel_views AS "avgReelViews",
+                c.age_range      AS "ageRange",
+                c.female_p       AS "femaleP",
+                c.male_p         AS "maleP",
+                c.locations,
+                c.reel_price     AS "reelPrice",
+                c.story_price    AS "storyPrice",
+                c.post_price     AS "postPrice",
+                c.verified, c.barter,
+                c.barter_note    AS "barterNote",
+                ca.instagram_handle AS "instagramHandle",
+                ca.full_name        AS "fullName",
+                ca.photo_url        AS "photoUrl",
+                ca.bio, ca.past_collabs AS "pastCollabs",
+                ca.content_links AS "contentLinks",
+                ca.languages, ca.state,
+                ca.bundle_pricing AS "bundlePricing"
+            FROM creators c
+            LEFT JOIN creator_applications ca ON ca.user_id = c.user_id
+            WHERE LOWER(ca.instagram_handle) = LOWER($1)
+        `, [req.params.handle]);
+
+        if (!creator) return res.status(404).json({ error: "Creator not found" });
+        res.json(creator);
+    } catch (err) {
+        console.error("GET /api/creator/handle error:", err.message);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
 // ── GET /api/creator/me ──
 router.get("/me", requireAuth, async (req, res) => {
     if (req.user.role !== "creator") return res.status(403).json({ error: "Forbidden" });
