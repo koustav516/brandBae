@@ -438,142 +438,311 @@
             line-height: 1.75;
         }
 
-        /* ── COLLABS ── */
-        .collab-pills {
+        /* ── COLLABS TICKER ── */
+        .collabs-ticker {
+            overflow: hidden;
+            -webkit-mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+            mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+            margin: 0 -20px;
+            padding: 4px 0;
+        }
+
+        .collabs-ticker:hover .ticker-track { animation-play-state: paused; }
+
+        .ticker-track {
             display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
+            gap: 10px;
+            width: max-content;
+            animation: ticker 35s linear infinite;
         }
 
-        .collab-pill {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--ink-mid);
-            background: var(--bg-soft);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 5px 14px;
-            transition: border-color 0.15s;
+        @keyframes ticker {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-50%); }
         }
 
-        .collab-pill:hover { border-color: var(--border-mid); }
-
-        /* ── CONTENT LINKS ── */
-        .links-list { display: flex; flex-direction: column; gap: 10px; }
-
-        .content-link {
+        .ticker-item {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            background: var(--bg-soft);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            padding: 8px 18px;
             font-size: 13px;
-            font-weight: 600;
-            color: var(--blue);
-            text-decoration: none;
-            background: var(--blue-light);
-            padding: 10px 14px;
-            border-radius: 10px;
-            border: 1px solid rgba(59,91,219,0.15);
-            word-break: break-all;
-            transition: background 0.15s;
+            font-weight: 700;
+            color: var(--ink-mid);
+            white-space: nowrap;
+            cursor: default;
         }
 
-        .content-link:hover { background: #e0e7ff; }
-
-        .link-icon {
+        .ticker-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--blue);
             flex-shrink: 0;
-            width: 28px;
-            height: 28px;
-            background: rgba(59,91,219,0.1);
-            border-radius: 7px;
+            opacity: 0.5;
+        }
+
+        /* ── CONTENT LINKS ── */
+        /* ── CONTENT GRID ── */
+        .content-section-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .content-section-title {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+            color: var(--ink);
+        }
+
+        .content-section-title em {
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-style: italic;
+            font-weight: 400;
+            color: var(--blue);
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .content-card {
+            position: relative;
+            border-radius: 14px;
+            overflow: hidden;
+            aspect-ratio: 9 / 14;
+            text-decoration: none;
+            display: block;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .content-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 28px rgba(0,0,0,0.18);
+        }
+
+        .content-card-bg {
+            position: absolute;
+            inset: 0;
+        }
+
+        .content-card-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.1) 50%, transparent 100%);
+        }
+
+        .content-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.55);
+            backdrop-filter: blur(4px);
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 9px;
+            border-radius: 100px;
+            letter-spacing: 0.4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .content-card-center {
+            position: absolute;
+            inset: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--blue);
+            color: rgba(255,255,255,0.7);
+            transition: color 0.15s;
+        }
+
+        .content-card:hover .content-card-center { color: rgba(255,255,255,1); }
+
+        .content-card-footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 24px 12px 12px;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            opacity: 0.85;
         }
 
         /* ── SIDEBAR PRICING ── */
-        .pricing-card .pcard-body { padding: 0; }
+        .pricing-card { overflow: hidden; }
+
+        .pricing-card-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .pricing-label {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+        }
+
+        .pricing-badge {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--green);
+        }
+
+        .pricing-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--green);
+            flex-shrink: 0;
+        }
 
         .price-row {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 14px 20px;
+            gap: 12px;
+            padding: 12px 16px;
             border-bottom: 1px solid var(--border);
-            font-size: 14px;
         }
 
         .price-row:last-child { border-bottom: none; }
 
-        .price-lbl {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--ink-soft);
-            font-weight: 500;
-        }
-
-        .price-lbl-icon {
-            width: 28px;
-            height: 28px;
-            border-radius: 7px;
+        .price-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--blue-light);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
-            background: var(--bg-soft);
             flex-shrink: 0;
+            font-size: 16px;
+        }
+
+        .price-info { flex: 1; min-width: 0; }
+
+        .price-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1.2;
+        }
+
+        .price-sub {
+            font-size: 11px;
+            color: var(--ink-faint);
+            margin-top: 2px;
         }
 
         .price-val {
             font-weight: 800;
             color: var(--ink);
             font-size: 15px;
-            letter-spacing: -0.3px;
+            letter-spacing: -0.4px;
+            flex-shrink: 0;
         }
 
-        /* bundle deal row */
+        /* bundle row */
         .bundle-row {
             display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            padding: 13px 20px;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
             background: var(--blue-light);
             border-top: 1px solid rgba(59,91,219,0.12);
         }
 
-        .bundle-label {
-            font-size: 12px;
+        .bundle-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 16px;
+        }
+
+        .bundle-info { flex: 1; min-width: 0; }
+
+        .bundle-name-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 2px;
+        }
+
+        .bundle-name {
+            font-size: 13px;
             font-weight: 700;
             color: var(--blue);
-            white-space: nowrap;
-            padding-top: 1px;
         }
 
-        .bundle-text {
-            font-size: 13px;
-            color: var(--ink-soft);
-            line-height: 1.55;
+        .bundle-save-badge {
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            color: #fff;
+            background: var(--blue);
+            padding: 2px 6px;
+            border-radius: 100px;
         }
 
-        /* barter in sidebar */
+        .bundle-sub {
+            font-size: 11px;
+            color: var(--blue);
+            opacity: 0.7;
+        }
+
+        .bundle-val {
+            font-weight: 800;
+            color: var(--blue);
+            font-size: 15px;
+            letter-spacing: -0.4px;
+            flex-shrink: 0;
+        }
+
+        /* barter */
         .barter-box {
-            margin: 0;
-            background: var(--amber-bg);
-            border-radius: 0;
+            padding: 14px 16px;
+            background: var(--blue-light);
         }
         .barter-top {
-            padding: 14px 20px 8px;
             font-size: 13px;
             font-weight: 700;
-            color: var(--amber);
+            color: var(--blue);
             display: flex;
             align-items: center;
             gap: 7px;
+            margin-bottom: 6px;
         }
         .barter-note-text {
-            padding: 0 20px 16px;
-            font-size: 13px;
+            font-size: 12px;
             color: var(--ink-soft);
             line-height: 1.6;
         }
@@ -748,6 +917,7 @@
 
             .creator-name { font-size: 20px; }
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .content-grid { grid-template-columns: repeat(2, 1fr); }
         }
 
         @media (max-width: 480px) {
@@ -923,37 +1093,128 @@
             ? `<div class="loc-pills">${c.locations.map(l => `<span class="loc-pill">📍 ${l}</span>`).join("")}</div>` : "";
 
         // Pricing
-        const pricingHtml = c.barter
+        const pricingBody = c.barter
             ? `<div class="barter-box">
                    <div class="barter-top">🤝 Open to barter with ${c.niche} brands</div>
                    ${c.barterNote ? `<div class="barter-note-text">${c.barterNote}</div>` : ""}
                </div>`
             : `<div class="price-row">
-                   <span class="price-lbl"><span class="price-lbl-icon">🎬</span>Reel</span>
-                   <span class="price-val">${inr(c.reelPrice)}</span>
+                   <div class="price-icon">🎬</div>
+                   <div class="price-info">
+                       <div class="price-name">Instagram Reel</div>
+                   </div>
+                   <div class="price-val">${inr(c.reelPrice)}</div>
                </div>
                <div class="price-row">
-                   <span class="price-lbl"><span class="price-lbl-icon">📸</span>Story</span>
-                   <span class="price-val">${inr(c.storyPrice)}</span>
+                   <div class="price-icon">📸</div>
+                   <div class="price-info">
+                       <div class="price-name">Instagram Story</div>
+                   </div>
+                   <div class="price-val">${inr(c.storyPrice)}</div>
                </div>
                <div class="price-row">
-                   <span class="price-lbl"><span class="price-lbl-icon">🖼️</span>Static Post</span>
-                   <span class="price-val">${inr(c.postPrice)}</span>
+                   <div class="price-icon">🖼️</div>
+                   <div class="price-info">
+                       <div class="price-name">Static Post</div>
+                   </div>
+                   <div class="price-val">${inr(c.postPrice)}</div>
                </div>
-               ${c.bundlePricing ? `<div class="bundle-row"><span class="bundle-label">📦 Bundle</span><span class="bundle-text">${c.bundlePricing}</span></div>` : ""}`;
+               ${c.bundlePricing ? `
+               <div class="bundle-row">
+                   <div class="bundle-icon">📦</div>
+                   <div class="bundle-info">
+                       <div class="bundle-name-row">
+                           <span class="bundle-name">Campaign Bundle</span>
+                           <span class="bundle-save-badge">SAVE</span>
+                       </div>
+                       <div class="bundle-sub">${c.bundlePricing}</div>
+                   </div>
+               </div>` : ""}`;
 
-        // Past collabs
-        const collabsHtml = c.pastCollabs
-            ? c.pastCollabs.split(/[,\n]+/).map(b=>b.trim()).filter(Boolean)
-                .map(b => `<span class="collab-pill">${b}</span>`).join("") : "";
+        const pricingHtml = `
+            <div class="pricing-card-head">
+                <span class="pricing-label">Pricing</span>
+                <span class="pricing-badge">Upfront · GST inclusive</span>
+            </div>
+            ${pricingBody}`;
 
-        // Content links
-        const linksHtml = c.contentLinks
-            ? c.contentLinks.split(/\n+/).map(l=>l.trim()).filter(Boolean)
-                .map(l => `<a class="content-link" href="${l}" target="_blank" rel="noopener">
-                    <span class="link-icon">
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                    </span>${l}</a>`).join("") : "";
+        // Past collabs — scrolling ticker
+        const collabBrands = c.pastCollabs
+            ? c.pastCollabs.split(/[,\n]+/).map(b => b.trim()).filter(Boolean)
+            : [];
+
+        const tickerColors = [
+            { bg: "#EEF1FF", color: "#3B5BDB", dot: "#3B5BDB" },
+            { bg: "#FFF0F6", color: "#C2255C", dot: "#C2255C" },
+            { bg: "#F0FFF4", color: "#1a7a45", dot: "#1a7a45" },
+            { bg: "#FFF8E1", color: "#c27c00", dot: "#c27c00" },
+            { bg: "#F3F0FF", color: "#6741d9", dot: "#6741d9" },
+            { bg: "#E6FCF5", color: "#087f5b", dot: "#087f5b" },
+            { bg: "#FFF5F5", color: "#c92a2a", dot: "#c92a2a" },
+            { bg: "#E8F4FD", color: "#1971c2", dot: "#1971c2" },
+        ];
+
+        const tickerItem = (b, i) => {
+            const c = tickerColors[i % tickerColors.length];
+            return `<span class="ticker-item" style="background:${c.bg};color:${c.color};border-color:${c.bg}">
+                <span class="ticker-dot" style="background:${c.dot}"></span>${b}
+            </span>`;
+        };
+
+        const collabsHtml = collabBrands.length >= 4
+            ? `<div class="collabs-ticker"><div class="ticker-track">
+                   ${collabBrands.map((b, i) => tickerItem(b, i)).join("")}
+                   ${collabBrands.map((b, i) => tickerItem(b, i)).join("")}
+               </div></div>`
+            : collabBrands.length > 0
+            ? `<div style="display:flex;flex-wrap:wrap;gap:8px">
+                   ${collabBrands.map((b, i) => tickerItem(b, i)).join("")}
+               </div>`
+            : "";
+
+        // Content links — only show valid Instagram URLs as cards
+        const igGradients = [
+            "linear-gradient(145deg, #833ab4, #fd1d1d, #fcb045)",
+            "linear-gradient(145deg, #405de6, #5851db, #833ab4)",
+            "linear-gradient(145deg, #fd1d1d, #fcb045, #f77737)",
+            "linear-gradient(145deg, #c13584, #833ab4, #405de6)",
+            "linear-gradient(145deg, #f77737, #fd1d1d, #c13584)",
+            "linear-gradient(145deg, #fcb045, #fd1d1d, #833ab4)",
+        ];
+
+        function parseIgLink(url) {
+            try {
+                const u = new URL(url.trim());
+                if (!u.hostname.includes("instagram.com")) return null;
+                const isReel = u.pathname.includes("/reel/");
+                const isPost = u.pathname.includes("/p/");
+                return { url: url.trim(), type: isReel ? "REEL" : isPost ? "POST" : "LINK" };
+            } catch { return null; }
+        }
+
+        const igLinks = (c.contentLinks || "")
+            .split(/\n+/)
+            .map(l => parseIgLink(l))
+            .filter(Boolean);
+
+        const linksHtml = igLinks.length
+            ? igLinks.map((link, i) => {
+                const grad = igGradients[i % igGradients.length];
+                const typeIcon = link.type === "REEL" ? "▶" : "⊡";
+                return `
+                <a class="content-card" href="${link.url}" target="_blank" rel="noopener">
+                    <div class="content-card-bg" style="background:${grad}"></div>
+                    <div class="content-card-overlay"></div>
+                    <div class="content-badge">${typeIcon} ${link.type}</div>
+                    <div class="content-card-center">
+                        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                    </div>
+                    <div class="content-card-footer">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069z"/></svg>
+                        View on Instagram
+                    </div>
+                </a>`;
+            }).join("") : "";
 
 
         const audienceSection = (genderHtml || langHtml || ageHtml || locHtml) ? `
@@ -1027,13 +1288,19 @@
                 ${collabsHtml ? `
                 <div class="pcard">
                     <div class="pcard-head"><div class="pcard-title">Past Collaborations</div></div>
-                    <div class="pcard-body" style="padding-top:0"><div class="collab-pills">${collabsHtml}</div></div>
+                    <div class="pcard-body" style="padding-top:0">
+                        ${collabsHtml}
+                    </div>
                 </div>` : ""}
 
                 ${linksHtml ? `
                 <div class="pcard">
-                    <div class="pcard-head"><div class="pcard-title">Content</div></div>
-                    <div class="pcard-body" style="padding-top:0"><div class="links-list">${linksHtml}</div></div>
+                    <div class="pcard-body">
+                        <div class="content-section-head">
+                            <div class="content-section-title">Recent <em>reels</em></div>
+                        </div>
+                        <div class="content-grid">${linksHtml}</div>
+                    </div>
                 </div>` : ""}
 
             </div>
@@ -1041,8 +1308,7 @@
             <!-- RIGHT SIDEBAR -->
             <div class="profile-sidebar">
                 <div class="pcard pricing-card">
-                    <div class="pcard-head"><div class="pcard-title">Pricing</div></div>
-                    <div class="pcard-body">${pricingHtml}</div>
+                    ${pricingHtml}
                 </div>
 
                 <button class="enquiry-btn" onclick="openModal()">
