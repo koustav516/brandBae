@@ -7,7 +7,7 @@
     <title>Creator Profile — Brandbae</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet" />
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -158,7 +158,7 @@
         }
 
         .cover-banner {
-            height: 260px;
+            height: 320px;
             position: relative;
             overflow: hidden;
         }
@@ -184,23 +184,59 @@
             background-size: 18px 18px;
         }
 
-        /* dark gradient at bottom of cover so identity text is readable */
         .cover-overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 55%);
+            background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.1) 50%, transparent 100%);
             pointer-events: none;
         }
 
+        /* Name + bio sit inside the cover at the bottom */
+        .cover-identity {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 22px 24px;
+            z-index: 2;
+        }
+
+        .cover-name {
+            font-size: 26px;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.6px;
+            line-height: 1.2;
+            margin-bottom: 5px;
+            text-shadow: 0 1px 8px rgba(0,0,0,0.3);
+        }
+
+        .cover-ig-handle {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            margin-top: 8px;
+            padding: 6px 14px 6px 10px;
+            border-radius: 100px;
+            background: linear-gradient(90deg, #f09433, #e6683c 30%, #dc2743 55%, #cc2366 80%, #bc1888);
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+            width: fit-content;
+            transition: opacity 0.15s;
+        }
+        .cover-ig-handle:hover { opacity: 0.88; }
+
         .hero-body {
-            padding: 16px 22px 22px;
+            padding: 16px 22px 20px;
         }
 
         .hero-top-row {
             display: flex;
             align-items: center;
-            justify-content: flex-end;
-            margin-bottom: 16px;
+            justify-content: space-between;
+            margin-bottom: 0;
         }
 
         .ig-btn {
@@ -219,20 +255,11 @@
         }
         .ig-btn:hover { opacity: 0.88; transform: translateY(-1px); }
 
-        .creator-name {
-            font-size: 24px;
-            font-weight: 800;
-            letter-spacing: -0.6px;
-            color: var(--ink);
-            line-height: 1.2;
-            margin-bottom: 4px;
-        }
 
         .followers-line {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             color: var(--ink-soft);
-            margin-bottom: 10px;
         }
 
         .followers-line strong {
@@ -364,8 +391,48 @@
             padding: 4px 11px;
         }
 
-        /* ── BIO ── */
-        .bio-text {
+        /* ── ABOUT SECTION ── */
+        .about-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .about-title {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+            color: var(--ink);
+            line-height: 1.2;
+        }
+
+        .about-title em {
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-style: italic;
+            font-weight: 400;
+            color: var(--blue);
+        }
+
+        .about-meta {
+            font-size: 11px;
+            color: var(--ink-faint);
+            white-space: nowrap;
+            padding-top: 3px;
+            flex-shrink: 0;
+        }
+
+        .bio-quote {
+            font-size: 15px;
+            font-style: italic;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1.65;
+            margin-bottom: 12px;
+        }
+
+        .bio-body {
             font-size: 14px;
             color: var(--ink-soft);
             line-height: 1.75;
@@ -675,7 +742,9 @@
                 order: -1;
             }
 
-            .cover-banner { height: 200px; }
+            .cover-banner { height: 260px; }
+            .cover-name { font-size: 22px; }
+            .cover-identity { padding: 16px 18px; }
 
             .creator-name { font-size: 20px; }
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
@@ -733,7 +802,7 @@
 
             <div id="enquiryError" style="font-size:13px;color:#e05252;margin-bottom:10px;display:none"></div>
 
-            <button class="form-submit" id="enquirySubmit" onclick="submitEnquiry()">Send Enquiry</button>
+            <button class="form-submit" id="enquirySubmit" onclick="submitEnquiry()">Connect</button>
         </div>
 
         <div class="modal-success" id="modalSuccess">
@@ -776,6 +845,29 @@
 
     function fmt(n) { return n >= 1000 ? (n/1000).toFixed(1).replace(/\.0$/,"")+"K" : String(n); }
     function inr(n) { return "₹" + Number(n).toLocaleString("en-IN"); }
+    function bioHtml(bio) {
+        if (!bio) return "";
+        // If bio starts with a quote, split into quoted headline + body
+        const quoted = bio.match(/^[""](.+?)[""]\s*([\s\S]*)/);
+        if (quoted) {
+            const headline = quoted[1].trim();
+            const body     = quoted[2].trim();
+            return `<div class="bio-quote">"${headline}"</div>${body ? `<div class="bio-body">${body}</div>` : ""}`;
+        }
+        // Otherwise first sentence bold italic, rest regular
+        const dot = bio.indexOf(". ");
+        if (dot > 0 && dot < 120) {
+            const first = bio.slice(0, dot + 1).trim();
+            const rest  = bio.slice(dot + 1).trim();
+            return `<div class="bio-quote">${first}</div>${rest ? `<div class="bio-body">${rest}</div>` : ""}`;
+        }
+        return `<div class="bio-body">${bio}</div>`;
+    }
+
+    function cdnFull(url) {
+        if (!url || !url.includes("cloudinary.com")) return url;
+        return url.replace("/upload/", "/upload/q_auto,f_auto/");
+    }
 
     let _creatorHandle = "";
     let _creatorName   = "";
@@ -804,7 +896,7 @@
         const cover  = coverGradients[c.niche] || coverGradients.Food;
 
         const coverPhotoHtml = c.photoUrl
-            ? `<img src="${c.photoUrl}" alt="${_creatorName}" onerror="this.style.display='none'" />`
+            ? `<img src="${cdnFull(c.photoUrl)}" alt="${_creatorName}" onerror="this.style.display='none'" />`
             : "";
 
         // Performance stats
@@ -863,11 +955,6 @@
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
                     </span>${l}</a>`).join("") : "";
 
-        const igBtnHtml = c.instagramHandle
-            ? `<a class="ig-btn" href="https://instagram.com/${c.instagramHandle}" target="_blank" rel="noopener">
-                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-                   @${c.instagramHandle}
-               </a>` : "";
 
         const audienceSection = (genderHtml || langHtml || ageHtml || locHtml) ? `
             <div class="pcard">
@@ -889,15 +976,23 @@
                         ${coverPhotoHtml}
                         ${!c.photoUrl ? '<div class="cover-pattern"></div>' : ""}
                         <div class="cover-overlay"></div>
+                        <div class="cover-identity">
+                            <div class="cover-name">${_creatorName}</div>
+                            ${c.instagramHandle ? `
+                            <a class="cover-ig-handle" href="https://instagram.com/${c.instagramHandle}" target="_blank" rel="noopener">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                                @${c.instagramHandle}
+                            </a>` : ""}
+                        </div>
                     </div>
                     <div class="hero-body">
-                        <div class="hero-top-row">${igBtnHtml}</div>
-                        <div class="creator-name">${_creatorName}</div>
-                        <div class="followers-line"><strong>${fmt(c.followers)}</strong> followers on Instagram</div>
-                        <div class="identity-meta">
-                            <span class="niche-badge" style="background:${nc.bg};color:${nc.color}">${c.niche}</span>
-                            ${c.city ? `<span class="city-tag">📍 ${c.city}${c.state ? ", " + c.state : ""}</span>` : ""}
-                            ${c.verified ? `<span class="verified-tag"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Verified</span>` : ""}
+                        <div class="hero-top-row">
+                            <div class="identity-meta">
+                                <span class="niche-badge" style="background:${nc.bg};color:${nc.color}">${c.niche}</span>
+                                ${c.city ? `<span class="city-tag">📍 ${c.city}${c.state ? ", " + c.state : ""}</span>` : ""}
+                                ${c.verified ? `<span class="verified-tag"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Verified</span>` : ""}
+                                <span class="followers-line"><strong>${fmt(c.followers)}</strong> followers</span>
+                            </div>
                         </div>
                     </div>
                     <div class="stats-grid">
@@ -920,8 +1015,13 @@
 
                 ${c.bio ? `
                 <div class="pcard">
-                    <div class="pcard-head"><div class="pcard-title">About</div></div>
-                    <div class="pcard-body" style="padding-top:0"><div class="bio-text">${c.bio}</div></div>
+                    <div class="pcard-body">
+                        <div class="about-header">
+                            <div class="about-title">About the <em>creator</em></div>
+                            <div class="about-meta">Self-described · verified by Brandbae</div>
+                        </div>
+                        ${bioHtml(c.bio)}
+                    </div>
                 </div>` : ""}
 
                 ${collabsHtml ? `
@@ -947,7 +1047,7 @@
 
                 <button class="enquiry-btn" onclick="openModal()">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                    Send Enquiry
+                    Connect with Creator
                 </button>
 
                 <div class="sidebar-trust">Brandbae connects you directly with this creator's team. Response within 24 hrs.</div>
@@ -1014,7 +1114,7 @@
             errEl.style.display = "block";
         } finally {
             btn.disabled = false;
-            btn.textContent = "Send Enquiry";
+            btn.textContent = "Connect";
         }
     }
 
