@@ -848,7 +848,6 @@ body {
 
     .profile-sidebar {
         position: static;
-        order: -1;
     }
 
     .cover-banner { height: 260px; }
