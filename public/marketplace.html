@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/jpeg" href="/assets/images/favicon.JPG" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Discover and connect with verified Instagram creators across India. Browse by niche, engagement, and city." />
+    <meta name="description" content="Discover verified Instagram creators across India. Browse by niche, engagement, and city." />
     <title>Browse Creators — Brandbae</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -15,61 +15,110 @@
 
     <nav>
         <a href="/" class="logo">Brand<span>bae.</span></a>
-        <div class="nav-search">
-            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                <circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" />
-            </svg>
-            <input type="text" id="searchInput" placeholder="Search by niche, city, name…" oninput="applyFilters()" autocomplete="off" />
+        <div class="nav-links">
+            <a href="/" class="nav-link">Home</a>
+            <a href="/marketplace" class="nav-link nav-link--active">Creators</a>
+            <a href="/join" class="nav-link">Join</a>
         </div>
-        <div class="nav-right">
-            <a href="/" class="btn btn-ghost">← Home</a>
+        <div class="nav-actions">
+            <button class="nav-icon-btn" onclick="document.querySelector('.nav-search-wrap').classList.toggle('open')" aria-label="Search">
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            </button>
+            <a href="/login/creator" class="nav-icon-btn" aria-label="Account">
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </a>
         </div>
     </nav>
 
-    <div class="page-header">
-        <div class="page-header-inner">
-            <div class="breadcrumb">
-                <a href="/" style="color:inherit;text-decoration:none">Brandbae</a>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg>
-                Creators
-            </div>
-            <h1 class="page-title">Find your next <em>creator.</em></h1>
-            <p class="results-count" id="resultsCount">Loading creators…</p>
+    <div class="nav-search-wrap">
+        <div class="nav-search-inner">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input type="text" id="searchInput" placeholder="Search by name, niche, city…" oninput="applyFilters()" autocomplete="off" />
         </div>
     </div>
 
-    <div class="filters-bar" role="search" aria-label="Filter creators">
-        <div class="filters-inner">
-            <div class="filters-left">
-                <span class="filter-label" aria-hidden="true">Niche</span>
-                <div class="filter-group" id="nicheFilters" role="group" aria-label="Filter by niche">
-                    <button class="niche-chip active" data-niche="All"  onclick="setNiche(this)">All</button>
-                    <button class="niche-chip" data-niche="Food"        onclick="setNiche(this)">Food</button>
-                    <button class="niche-chip" data-niche="Fashion"     onclick="setNiche(this)">Fashion</button>
-                    <button class="niche-chip" data-niche="Fitness"     onclick="setNiche(this)">Fitness</button>
-                    <button class="niche-chip" data-niche="Travel"      onclick="setNiche(this)">Travel</button>
-                    <button class="niche-chip" data-niche="Beauty"      onclick="setNiche(this)">Beauty</button>
-                    <button class="niche-chip" data-niche="Tech"        onclick="setNiche(this)">Tech</button>
-                    <button class="niche-chip" data-niche="Lifestyle"   onclick="setNiche(this)">Lifestyle</button>
-                    <button class="niche-chip" data-niche="Gaming"      onclick="setNiche(this)">Gaming</button>
-                    <button class="niche-chip" data-niche="Finance"     onclick="setNiche(this)">Finance</button>
-                    <button class="niche-chip" data-niche="Comedy"      onclick="setNiche(this)">Comedy</button>
+    <div class="page-bar">
+        <nav class="breadcrumb" aria-label="breadcrumb">
+            <a href="/">Home</a>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+            <span>Browse Creators</span>
+        </nav>
+        <div class="page-bar-right">
+            <span class="results-label" id="resultsCount">Loading…</span>
+            <select class="sort-select" id="sortFilter" onchange="applyFilters()" aria-label="Sort">
+                <option value="default">Best Match</option>
+                <option value="engagement">Highest Engagement</option>
+                <option value="followers-high">Most Followers</option>
+                <option value="views">Most Reel Views</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="marketplace-layout">
+
+        <!-- SIDEBAR -->
+        <aside class="filter-sidebar" aria-label="Filters">
+
+            <div class="sidebar-head">
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+                Filter
+            </div>
+
+            <div class="filter-section" id="nicheSection">
+                <div class="filter-section-head" onclick="toggleSection('nicheSection')">
+                    Niche
+                    <svg class="section-chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m18 15-6-6-6 6"/></svg>
+                </div>
+                <div class="filter-section-body" id="nicheBody">
+                    <label class="filter-option"><input type="checkbox" class="filter-cb niche-cb" value="Food" onchange="applyFilters()"><span>Food</span></label>
+                    <label class="filter-option"><input type="checkbox" class="filter-cb niche-cb" value="Fashion" onchange="applyFilters()"><span>Fashion</span></label>
+                    <label class="filter-option"><input type="checkbox" class="filter-cb niche-cb" value="Fitness" onchange="applyFilters()"><span>Fitness</span></label>
+                    <label class="filter-option"><input type="checkbox" class="filter-cb niche-cb" value="Travel" onchange="applyFilters()"><span>Travel</span></label>
+                    <label class="filter-option"><input type="checkbox" class="filter-cb niche-cb" value="Beauty" onchange="applyFilters()"><span>Beauty</span></label>
+                    <label class="filter-option"><input type="checkbox" class="filter-cb niche-cb" value="Tech" onchange="applyFilters()"><span>Tech</span></label>
+                    <label class="filter-option"><input type="checkbox" class="filter-cb niche-cb" value="Lifestyle" onchange="applyFilters()"><span>Lifestyle</span></label>
+                    <label class="filter-option"><input type="checkbox" class="filter-cb niche-cb" value="Gaming" onchange="applyFilters()"><span>Gaming</span></label>
+                    <label class="filter-option"><input type="checkbox" class="filter-cb niche-cb" value="Finance" onchange="applyFilters()"><span>Finance</span></label>
+                    <label class="filter-option"><input type="checkbox" class="filter-cb niche-cb" value="Comedy" onchange="applyFilters()"><span>Comedy</span></label>
                 </div>
             </div>
-            <div class="filters-right">
-                <select class="sort-select" id="sortFilter" onchange="applyFilters()" aria-label="Sort creators">
-                    <option value="default">Sort: Trending</option>
-                    <option value="engagement">Highest Engagement</option>
-                    <option value="followers-high">Most Followers</option>
-                    <option value="views">Most Reel Views</option>
-                </select>
-            </div>
-        </div>
-    </div>
 
-    <main class="grid-wrap">
-        <div class="creators-grid" id="creatorsGrid" role="list" aria-label="Creators"></div>
-    </main>
+            <div class="filter-section" id="sizeSection">
+                <div class="filter-section-head" onclick="toggleSection('sizeSection')">
+                    Followers
+                    <svg class="section-chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m18 15-6-6-6 6"/></svg>
+                </div>
+                <div class="filter-section-body" id="sizeBody">
+                    <label class="filter-option"><input type="radio" name="size" class="filter-cb" value="all" checked onchange="applyFilters()"><span>All sizes</span></label>
+                    <label class="filter-option"><input type="radio" name="size" class="filter-cb" value="1000-5000" onchange="applyFilters()"><span>1K – 5K</span></label>
+                    <label class="filter-option"><input type="radio" name="size" class="filter-cb" value="5000-10000" onchange="applyFilters()"><span>5K – 10K</span></label>
+                    <label class="filter-option"><input type="radio" name="size" class="filter-cb" value="10000-50000" onchange="applyFilters()"><span>10K – 50K</span></label>
+                    <label class="filter-option"><input type="radio" name="size" class="filter-cb" value="50000-999999" onchange="applyFilters()"><span>50K+</span></label>
+                </div>
+            </div>
+
+            <div class="filter-section" id="collabSection">
+                <div class="filter-section-head" onclick="toggleSection('collabSection')">
+                    Collab Type
+                    <svg class="section-chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m18 15-6-6-6 6"/></svg>
+                </div>
+                <div class="filter-section-body" id="collabBody">
+                    <label class="filter-option"><input type="radio" name="collab" class="filter-cb" value="all" checked onchange="applyFilters()"><span>All types</span></label>
+                    <label class="filter-option"><input type="radio" name="collab" class="filter-cb" value="paid" onchange="applyFilters()"><span>Paid only</span></label>
+                    <label class="filter-option"><input type="radio" name="collab" class="filter-cb" value="barter" onchange="applyFilters()"><span>Open to barter</span></label>
+                </div>
+            </div>
+
+            <button class="clear-filters-btn" onclick="clearFilters()">Clear all filters</button>
+
+        </aside>
+
+        <!-- GRID -->
+        <main>
+            <div class="creators-grid" id="creatorsGrid" role="list"></div>
+        </main>
+
+    </div>
 
     <script src="/js/marketplace.js"></script>
 </body>

@@ -1,43 +1,62 @@
 const coverGradients = {
-    Food:      "linear-gradient(145deg, #5046e5 0%, #7c3aed 100%)",
-    Fashion:   "linear-gradient(145deg, #db2777 0%, #9d174d 100%)",
-    Fitness:   "linear-gradient(145deg, #0284c7 0%, #0369a1 100%)",
-    Travel:    "linear-gradient(145deg, #059669 0%, #0f766e 100%)",
-    Beauty:    "linear-gradient(145deg, #c026d3 0%, #9333ea 100%)",
-    Tech:      "linear-gradient(145deg, #1d4ed8 0%, #1e3a8a 100%)",
-    Lifestyle: "linear-gradient(145deg, #d97706 0%, #b45309 100%)",
-    Gaming:    "linear-gradient(145deg, #6d28d9 0%, #4c1d95 100%)",
-    Finance:   "linear-gradient(145deg, #0f766e 0%, #134e4a 100%)",
-    Comedy:    "linear-gradient(145deg, #ea580c 0%, #c2410c 100%)",
+    Food:      "linear-gradient(145deg, #ede9fe, #c4b5fd)",
+    Fashion:   "linear-gradient(145deg, #fce7f3, #fbcfe8)",
+    Fitness:   "linear-gradient(145deg, #dbeafe, #bfdbfe)",
+    Travel:    "linear-gradient(145deg, #dcfce7, #bbf7d0)",
+    Beauty:    "linear-gradient(145deg, #fdf2f8, #f9a8d4)",
+    Tech:      "linear-gradient(145deg, #e0f2fe, #bae6fd)",
+    Lifestyle: "linear-gradient(145deg, #fef3c7, #fde68a)",
+    Gaming:    "linear-gradient(145deg, #ede9fe, #a78bfa)",
+    Finance:   "linear-gradient(145deg, #dcfce7, #6ee7b7)",
+    Comedy:    "linear-gradient(145deg, #ffedd5, #fed7aa)",
 };
 
-let creators    = [];
-let activeNiche = "All";
+let creators = [];
 
 function fmt(n) {
     if (n >= 1000000) return (n / 1000000).toFixed(1).replace(/\.0$/, "") + "M";
-    if (n >= 1000) return (n / 1000).toFixed(1).replace(/\.0$/, "") + "K";
+    if (n >= 1000)    return (n / 1000).toFixed(1).replace(/\.0$/, "") + "K";
     return n.toString();
 }
+
+function inr(n) { return "₹" + Number(n).toLocaleString("en-IN"); }
 
 function cdnCard(url) {
     if (!url || !url.includes("cloudinary.com")) return url;
     return url.replace("/upload/", "/upload/q_auto,f_auto/");
 }
 
-/* ── SKELETON LOADING ── */
-function renderSkeletons(count = 8) {
+/* Engagement → star rating (0–5 scale) */
+function engToStars(eng) {
+    if (!eng || eng <= 0) return 0;
+    if (eng >= 6)  return 5;
+    if (eng >= 4)  return 4;
+    if (eng >= 2.5) return 3;
+    if (eng >= 1.5) return 2;
+    return 1;
+}
+
+function renderStars(eng) {
+    const filled = engToStars(eng);
+    return Array.from({ length: 5 }, (_, i) =>
+        `<svg width="11" height="11" viewBox="0 0 24 24" fill="${i < filled ? "currentColor" : "none"}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`
+    ).join("");
+}
+
+/* ── SKELETON ── */
+function renderSkeletons(count = 6) {
     const grid = document.getElementById("creatorsGrid");
     grid.innerHTML = Array.from({ length: count }, () => `
         <div class="creator-card skeleton-card" aria-hidden="true">
-            <div class="skeleton-cover skeleton"></div>
-            <div class="card-body">
-                <div class="skeleton skeleton-line w-70" style="height:18px;margin-bottom:6px"></div>
-                <div class="skeleton skeleton-line w-45" style="height:13px;margin-bottom:14px"></div>
-                <div class="skeleton skeleton-line w-55" style="height:26px;border-radius:100px;margin-bottom:14px"></div>
-                <div class="skeleton skeleton-stats"></div>
-                <div class="skeleton skeleton-btn"></div>
+            <div class="skeleton skeleton-image"></div>
+            <div class="card-content">
+                <div class="skeleton skeleton-line" style="width:40%;height:9px;margin-bottom:8px"></div>
+                <div class="skeleton skeleton-line" style="width:75%;height:14px;margin-bottom:5px"></div>
+                <div class="skeleton skeleton-line" style="width:50%;height:11px;margin-bottom:12px"></div>
+                <div class="skeleton skeleton-line" style="width:90%;height:11px;margin-bottom:14px"></div>
+                <div class="skeleton skeleton-line" style="width:60%;height:17px;margin-bottom:12px"></div>
             </div>
+            <div class="skeleton skeleton-btn"></div>
         </div>`
     ).join("");
 }
@@ -46,19 +65,15 @@ function renderSkeletons(count = 8) {
 function renderCreators(data) {
     const grid  = document.getElementById("creatorsGrid");
     const count = document.getElementById("resultsCount");
-    count.innerHTML = `<strong>${data.length} creator${data.length !== 1 ? "s" : ""}</strong> <span>in India</span>`;
+    count.textContent = `${data.length} Result${data.length !== 1 ? "s" : ""}`;
 
     if (!data.length) {
-        const nicheLabel = activeNiche !== "All" ? ` in <strong>${activeNiche}</strong>` : "";
         grid.innerHTML = `
             <div class="empty-state">
                 <div class="ei">🔍</div>
-                <h3>No creators found${nicheLabel ? " " + nicheLabel.replace(/<[^>]+>/g, "") : ""}</h3>
-                <p>Try a different niche or search term.</p>
-                <button onclick="resetFilters()" class="empty-state-cta">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-                    Show all creators
-                </button>
+                <h3>No creators found</h3>
+                <p>Try adjusting your filters.</p>
+                <button onclick="clearFilters()" class="empty-state-cta">Clear filters</button>
             </div>`;
         return;
     }
@@ -66,23 +81,18 @@ function renderCreators(data) {
     grid.innerHTML = data.map((c, i) => {
         const cover   = coverGradients[c.niche] || coverGradients.Food;
         const url     = `/creator/${c.instagramHandle}`;
-        const loading = i < 4 ? `fetchpriority="high"` : `loading="lazy"`;
+        const loading = i < 6 ? `fetchpriority="high"` : `loading="lazy"`;
 
         const photo = c.photoUrl
             ? `<img src="${cdnCard(c.photoUrl)}" class="card-cover-img" ${loading} alt="${c.fullName || c.instagramHandle}" onerror="this.style.display='none'" />`
-            : `<div class="card-cover-placeholder">
-                   <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-               </div>`;
+            : `<div class="card-cover-placeholder"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>`;
 
         const verified = c.verified
-            ? `<span class="card-verified-check" title="Verified creator">
-                   <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-               </span>`
+            ? `<span class="card-verified-check" title="Verified"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>`
             : "";
 
         const engVal   = c.engagement > 0 ? c.engagement + "%" : "—";
         const engClass = c.engagement > 0 ? "stat-val stat-val--eng" : "stat-val";
-        const viewsVal = c.avgReelViews > 0 ? fmt(c.avgReelViews) : "—";
 
         const cityTag = c.city
             ? `<span class="card-tag card-tag--location">
@@ -91,8 +101,9 @@ function renderCreators(data) {
                </span>` : "";
 
         return `
-        <article class="creator-card" onclick="window.location='${url}'" role="button" tabindex="0"
-            onkeydown="if(event.key==='Enter'||event.key===' ')window.location='${url}'"
+        <article class="creator-card" onclick="window.location='${url}'"
+            role="button" tabindex="0"
+            onkeydown="if(event.key==='Enter')window.location='${url}'"
             aria-label="View ${c.fullName || c.instagramHandle} profile">
 
             <div class="card-cover" style="background:${cover}">
@@ -118,26 +129,20 @@ function renderCreators(data) {
 
                 <div class="card-stats-row">
                     <div class="stat-col">
-                        <div class="stat-icon">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                        </div>
+                        <div class="stat-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
                         <span class="stat-val">${fmt(c.followers)}</span>
                         <span class="stat-key">Followers</span>
                     </div>
                     <div class="stat-sep"></div>
                     <div class="stat-col">
-                        <div class="stat-icon">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                        </div>
+                        <div class="stat-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
                         <span class="${engClass}">${engVal}</span>
                         <span class="stat-key">Engagement</span>
                     </div>
                     <div class="stat-sep"></div>
                     <div class="stat-col">
-                        <div class="stat-icon">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                        </div>
-                        <span class="stat-val">${viewsVal}</span>
+                        <div class="stat-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+                        <span class="stat-val">${c.avgReelViews > 0 ? fmt(c.avgReelViews) : "—"}</span>
                         <span class="stat-key">Reel Views</span>
                     </div>
                 </div>
@@ -150,25 +155,35 @@ function renderCreators(data) {
 }
 
 /* ── FILTERS ── */
-function setNiche(btn) {
-    document.querySelectorAll(".niche-chip").forEach(c => c.classList.remove("active"));
-    btn.classList.add("active");
-    activeNiche = btn.dataset.niche;
-    applyFilters();
+function getActiveNiches() {
+    return Array.from(document.querySelectorAll(".niche-cb:checked")).map(cb => cb.value);
 }
 
-function resetFilters() {
-    document.getElementById("searchInput").value = "";
-    const allBtn = document.querySelector(".niche-chip[data-niche='All']");
-    if (allBtn) setNiche(allBtn);
+function getActiveSize() {
+    const cb = document.querySelector('input[name="size"]:checked');
+    return cb ? cb.value : "all";
+}
+
+function getActiveCollab() {
+    const cb = document.querySelector('input[name="collab"]:checked');
+    return cb ? cb.value : "all";
 }
 
 function applyFilters() {
-    const sort = document.getElementById("sortFilter").value;
-    const q    = document.getElementById("searchInput").value.toLowerCase().trim();
+    const sort    = document.getElementById("sortFilter").value;
+    const q       = document.getElementById("searchInput").value.toLowerCase().trim();
+    const niches  = getActiveNiches();
+    const size    = getActiveSize();
+    const collab  = getActiveCollab();
 
     let filtered = creators.filter(c => {
-        if (activeNiche !== "All" && c.niche !== activeNiche) return false;
+        if (niches.length && !niches.includes(c.niche)) return false;
+        if (size !== "all") {
+            const [min, max] = size.split("-").map(Number);
+            if (c.followers < min || c.followers > max) return false;
+        }
+        if (collab === "barter" && !c.barter) return false;
+        if (collab === "paid" && c.barter) return false;
         if (q && !`${c.niche} ${c.city} ${c.instagramHandle} ${c.fullName}`.toLowerCase().includes(q)) return false;
         return true;
     });
@@ -180,31 +195,45 @@ function applyFilters() {
     renderCreators(filtered);
 }
 
+function clearFilters() {
+    document.querySelectorAll(".niche-cb").forEach(cb => cb.checked = false);
+    const allSize  = document.querySelector('input[name="size"][value="all"]');
+    const allCollab = document.querySelector('input[name="collab"][value="all"]');
+    if (allSize)  allSize.checked  = true;
+    if (allCollab) allCollab.checked = true;
+    document.getElementById("searchInput").value = "";
+    applyFilters();
+}
+
+function toggleSection(sectionId) {
+    document.getElementById(sectionId).classList.toggle("collapsed");
+}
+
 /* ── BOOT ── */
 function loadCreators() {
-    renderSkeletons(8);
-    document.getElementById("resultsCount").innerHTML = "Loading creators…";
+    renderSkeletons(6);
+    document.getElementById("resultsCount").textContent = "Loading…";
 
     fetch("/api/creators")
-        .then(r => { if (!r.ok) throw new Error("Server error"); return r.json(); })
+        .then(r => { if (!r.ok) throw new Error(); return r.json(); })
         .then(data => {
             creators = data;
             const preNiche = new URLSearchParams(window.location.search).get("niche");
             if (preNiche) {
-                const btn = document.querySelector(`.niche-chip[data-niche="${preNiche}"]`);
-                if (btn) { setNiche(btn); return; }
+                const cb = document.querySelector(`.niche-cb[value="${preNiche}"]`);
+                if (cb) { cb.checked = true; }
             }
-            renderCreators(creators);
+            applyFilters();
         })
         .catch(() => {
             document.getElementById("creatorsGrid").innerHTML = `
                 <div class="empty-state">
                     <div class="ei">⚠️</div>
-                    <h3>Something went wrong</h3>
-                    <p>Could not load creators. Check your connection.</p>
+                    <h3>Could not load creators</h3>
+                    <p>Check your connection and try again.</p>
                     <button onclick="loadCreators()" class="empty-state-cta">Try again</button>
                 </div>`;
-            document.getElementById("resultsCount").innerHTML = "";
+            document.getElementById("resultsCount").textContent = "";
         });
 }
 
