@@ -20,10 +20,11 @@ router.get("/", async (_req, res) => {
                 c.story_price    AS "storyPrice",
                 c.post_price     AS "postPrice",
                 c.verified, c.barter,
-                c.barter_note       AS "barterNote",
-                ca.instagram_handle AS "instagramHandle",
-                ca.full_name        AS "fullName",
-                ca.photo_url        AS "photoUrl"
+                c.barter_note           AS "barterNote",
+                ca.instagram_handle     AS "instagramHandle",
+                ca.full_name            AS "fullName",
+                ca.photo_url            AS "photoUrl",
+                ca.niche_subcategories  AS "nicheSubcategories"
             FROM creators c
             LEFT JOIN creator_applications ca ON ca.user_id = c.user_id
             ORDER BY c.id

@@ -177,14 +177,18 @@ function applyFilters() {
     const collab  = getActiveCollab();
 
     let filtered = creators.filter(c => {
-        if (niches.length && !niches.includes(c.niche)) return false;
+        if (niches.length) {
+            const sub = c.nicheSubcategories ? c.nicheSubcategories.split(",").map(s => s.trim()) : [];
+            const allNiches = [c.niche, ...sub];
+            if (!niches.some(n => allNiches.includes(n))) return false;
+        }
         if (size !== "all") {
             const [min, max] = size.split("-").map(Number);
             if (c.followers < min || c.followers > max) return false;
         }
         if (collab === "barter" && !c.barter) return false;
         if (collab === "paid" && c.barter) return false;
-        if (q && !`${c.niche} ${c.city} ${c.instagramHandle} ${c.fullName}`.toLowerCase().includes(q)) return false;
+        if (q && !`${c.niche} ${c.nicheSubcategories || ""} ${c.city} ${c.instagramHandle} ${c.fullName}`.toLowerCase().includes(q)) return false;
         return true;
     });
 

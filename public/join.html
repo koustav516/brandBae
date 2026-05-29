@@ -224,26 +224,54 @@
                 <div class="form-step" id="step-3" style="display:none">
                     <div class="field">
                         <div class="label-row">
-                            <label>Primary niche <span class="req">*</span></label>
+                            <label>Your niches <span class="req">*</span></label>
+                            <span class="label-hint">Pick up to 3</span>
                         </div>
+                        <div class="niche-count" id="nicheCount"><span>0</span> / 3 selected</div>
                         <div class="niche-grid" id="nicheGrid">
-                            <label class="niche-opt"><input type="radio" name="niche" value="Food" /><span>🍜 Food &amp; Beverages</span></label>
-                            <label class="niche-opt"><input type="radio" name="niche" value="Fashion" /><span>👗 Fashion &amp; Lifestyle</span></label>
-                            <label class="niche-opt"><input type="radio" name="niche" value="Fitness" /><span>🏋️ Fitness &amp; Health</span></label>
-                            <label class="niche-opt"><input type="radio" name="niche" value="Beauty" /><span>💄 Beauty &amp; Skincare</span></label>
-                            <label class="niche-opt"><input type="radio" name="niche" value="Travel" /><span>✈️ Travel</span></label>
-                            <label class="niche-opt"><input type="radio" name="niche" value="Tech" /><span>💻 Tech</span></label>
-                            <label class="niche-opt"><input type="radio" name="niche" value="Finance" /><span>📈 Business &amp; Finance</span></label>
-                            <label class="niche-opt"><input type="radio" name="niche" value="Lifestyle" /><span>🌿 Lifestyle</span></label>
-                            <label class="niche-opt"><input type="radio" name="niche" value="Gaming" /><span>🎮 Entertainment</span></label>
-                            <label class="niche-opt"><input type="radio" name="niche" value="Comedy" /><span>😂 Comedy</span></label>
+                            <label class="niche-opt"><input type="checkbox" class="niche-cb" value="Food" />
+                                <span class="niche-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/></svg></span>
+                                <span class="niche-label">Food &amp; Beverages</span>
+                            </label>
+                            <label class="niche-opt"><input type="checkbox" class="niche-cb" value="Fashion" />
+                                <span class="niche-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.23z"/></svg></span>
+                                <span class="niche-label">Fashion &amp; Lifestyle</span>
+                            </label>
+                            <label class="niche-opt"><input type="checkbox" class="niche-cb" value="Fitness" />
+                                <span class="niche-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+                                <span class="niche-label">Fitness &amp; Health</span>
+                            </label>
+                            <label class="niche-opt"><input type="checkbox" class="niche-cb" value="Beauty" />
+                                <span class="niche-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c-1 2.5-4 4-4 8a4 4 0 0 0 8 0c0-4-3-5.5-4-8z"/><path d="M12 15v6"/><path d="M9 18h6"/></svg></span>
+                                <span class="niche-label">Beauty &amp; Skincare</span>
+                            </label>
+                            <label class="niche-opt"><input type="checkbox" class="niche-cb" value="Travel" />
+                                <span class="niche-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span>
+                                <span class="niche-label">Travel</span>
+                            </label>
+                            <label class="niche-opt"><input type="checkbox" class="niche-cb" value="Tech" />
+                                <span class="niche-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span>
+                                <span class="niche-label">Tech</span>
+                            </label>
+                            <label class="niche-opt"><input type="checkbox" class="niche-cb" value="Finance" />
+                                <span class="niche-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span>
+                                <span class="niche-label">Business &amp; Finance</span>
+                            </label>
+                            <label class="niche-opt"><input type="checkbox" class="niche-cb" value="Lifestyle" />
+                                <span class="niche-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span>
+                                <span class="niche-label">Lifestyle</span>
+                            </label>
+                            <label class="niche-opt"><input type="checkbox" class="niche-cb" value="Gaming" />
+                                <span class="niche-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4"/><path d="M8 10v4"/><circle cx="16" cy="11" r=".5" fill="currentColor"/><circle cx="19" cy="13" r=".5" fill="currentColor"/></svg></span>
+                                <span class="niche-label">Entertainment</span>
+                            </label>
+                            <label class="niche-opt"><input type="checkbox" class="niche-cb" value="Comedy" />
+                                <span class="niche-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></span>
+                                <span class="niche-label">Comedy</span>
+                            </label>
                         </div>
-                    </div>
-                    <div class="field">
-                        <div class="label-row">
-                            <label for="nicheSubcategories">Subcategories <span class="optional">(optional)</span></label>
-                        </div>
-                        <input type="text" id="nicheSubcategories" name="niche_subcategories" placeholder="e.g. Street food, Café reviews, Home cooking" />
+                        <input type="hidden" id="primaryNiche" name="niche" />
+                        <input type="hidden" id="nicheSubcategories" name="niche_subcategories" />
                     </div>
                     <div class="field">
                         <div class="label-row">
@@ -539,9 +567,9 @@
                 if (femaleP + maleP !== 100) return showError(2, "Female % and Male % must add up to 100.");
             }
             if (step === 3) {
-                const niche = document.querySelector('input[name="niche"]:checked');
-                const links = document.getElementById("contentLinks").value.trim();
-                if (!niche) return showError(3, "Please select your primary niche.");
+                const niches = document.querySelectorAll(".niche-cb:checked");
+                const links  = document.getElementById("contentLinks").value.trim();
+                if (!niches.length) return showError(3, "Please select at least one niche.");
                 if (!links) return showError(3, "Please add at least one content link.");
             }
             showStep(step + 1);
@@ -571,8 +599,8 @@
                 city:                document.getElementById("city").value.trim(),
                 state:               document.getElementById("state").value,
                 languages:           document.getElementById("languages").value.trim(),
-                niche:               document.querySelector('input[name="niche"]:checked')?.value || "",
-                niche_subcategories: document.getElementById("nicheSubcategories").value.trim(),
+                niche:               document.getElementById("primaryNiche").value,
+                niche_subcategories: document.getElementById("nicheSubcategories").value,
                 followers:           parseInt(document.getElementById("followers").value) || 0,
                 avg_reel_views:      parseInt(document.getElementById("avgReelViews").value) || 0,
                 account_age:         document.getElementById("accountAge").value.trim(),
@@ -621,11 +649,25 @@
             }
         }
 
-        // Niche radio visual toggle
-        document.querySelectorAll(".niche-opt input").forEach(radio => {
-            radio.addEventListener("change", () => {
-                document.querySelectorAll(".niche-opt").forEach(l => l.classList.remove("selected"));
-                radio.closest(".niche-opt").classList.add("selected");
+        // Niche checkboxes — max 3 total, first = primary niche, rest = subcategories
+        function syncNicheCount() {
+            const n = document.querySelectorAll(".niche-cb:checked").length;
+            const counter = document.getElementById("nicheCount");
+            if (counter) counter.querySelector("span").textContent = n;
+        }
+
+        document.querySelectorAll(".niche-cb").forEach(cb => {
+            cb.addEventListener("change", () => {
+                const checked = Array.from(document.querySelectorAll(".niche-cb:checked"));
+                if (checked.length > 3) {
+                    cb.checked = false;
+                    return;
+                }
+                cb.closest(".niche-opt").classList.toggle("selected", cb.checked);
+                const values = checked.map(c => c.value);
+                document.getElementById("primaryNiche").value       = values[0] || "";
+                document.getElementById("nicheSubcategories").value = values.slice(1).join(",");
+                syncNicheCount();
             });
         });
 
