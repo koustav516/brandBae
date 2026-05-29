@@ -95,80 +95,82 @@ function renderFeatured(creators) {
     const grid = document.getElementById("featuredGrid");
     if (!grid) return;
 
-    // Pick top engagement but ensure 3 different niches
-    const sorted = [...creators].sort((a, b) => b.engagement - a.engagement);
-    const seen = new Set();
-    const featured = [];
-    for (const c of sorted) {
-        if (!seen.has(c.niche)) {
-            seen.add(c.niche);
-            featured.push(c);
-        }
-        if (featured.length === 3) break;
-    }
+    // Top 3 by followers
+    const featured = [...creators]
+        .sort((a, b) => b.followers - a.followers)
+        .slice(0, 3);
 
     grid.innerHTML = featured.map((c) => {
-        const cover = coverGradients[c.niche] || coverGradients.Food;
-        const nc    = nicheColors[c.niche]    || nicheColors.Food;
+        const cover    = coverGradients[c.niche] || coverGradients.Food;
+        const url      = `/creator/${c.instagramHandle}`;
+        const engVal   = c.engagement > 0 ? c.engagement + "%" : "—";
+        const engClass = c.engagement > 0 ? "stat-val stat-val--eng" : "stat-val";
 
-        const ratesHTML = c.barter
-            ? `<div class="fc-barter">🤝 Open to brand barter &nbsp;·&nbsp; ${c.niche} brands</div>`
-            : `<div class="fc-rates-row">
-                <div class="fc-rate"><span>Reel</span><strong>₹${c.reelPrice.toLocaleString("en-IN")}</strong></div>
-                <div class="fc-rate"><span>Story</span><strong>₹${c.storyPrice.toLocaleString("en-IN")}</strong></div>
-                <div class="fc-rate"><span>Post</span><strong>₹${c.postPrice.toLocaleString("en-IN")}</strong></div>
-               </div>`;
+        const photo = c.photoUrl
+            ? `<img src="${c.photoUrl}" class="card-cover-img" loading="lazy" alt="${c.fullName || c.instagramHandle}" onerror="this.style.display='none'" />`
+            : `<div class="card-cover-placeholder"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>`;
+
+        const verified = c.verified
+            ? `<span class="card-verified-check" title="Verified"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>`
+            : "";
+
+        const cityTag = c.city
+            ? `<span class="card-tag card-tag--location">
+                   <svg width="12" height="12" viewBox="0 0 24 24" fill="#ef4444" stroke="none"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                   ${c.city}
+               </span>` : "";
 
         return `
-        <div class="fc">
-            <div class="fc-cover" style="background:${cover}">
-                <div class="fc-avatar-wrap">
-                    <div class="fc-avatar"></div>
-                </div>
-                <span class="fc-niche" style="background:${nc.bg};color:${nc.color}">${c.niche}</span>
+        <article class="creator-card" onclick="window.location='${url}'"
+            role="button" tabindex="0"
+            onkeydown="if(event.key==='Enter')window.location='${url}'"
+            aria-label="View ${c.fullName || c.instagramHandle} profile">
+
+            <div class="card-cover" style="background:${cover}">
+                ${photo}
+                <div class="card-cover-scrim"></div>
+                <span class="cover-niche-badge">${c.niche}</span>
+                ${c.barter ? `<span class="cover-barter-badge"><span class="barter-dot"></span>Barter</span>` : ""}
             </div>
-            <div class="fc-body">
-                <div class="fc-identity">
-                    <div class="fc-handle-locked">
-                        <span class="fc-lock-badge">🔒 Handle locked</span>
+
+            <div class="card-body">
+                <div class="card-identity">
+                    <div class="card-name-row">
+                        <span class="card-fullname">${c.fullName || c.instagramHandle || "Creator"}</span>
+                        ${verified}
                     </div>
-                    <div class="fc-badges">
-                        ${c.verified ? '<span class="fc-badge-v">✓ Verified</span>' : ""}
-                        <span class="fc-badge-city">📍 ${c.city}</span>
+                    <div class="card-role">${c.niche} Creator</div>
+                </div>
+
+                <div class="card-tags">
+                    ${cityTag}
+                    ${c.barter ? `<span class="card-tag card-tag--barter"><span class="barter-dot"></span>Open to Barter</span>` : ""}
+                </div>
+
+                <div class="card-stats-row">
+                    <div class="stat-col">
+                        <div class="stat-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+                        <span class="stat-val">${fmtNum(c.followers)}</span>
+                        <span class="stat-key">Followers</span>
+                    </div>
+                    <div class="stat-sep"></div>
+                    <div class="stat-col">
+                        <div class="stat-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+                        <span class="${engClass}">${engVal}</span>
+                        <span class="stat-key">Engagement</span>
+                    </div>
+                    <div class="stat-sep"></div>
+                    <div class="stat-col">
+                        <div class="stat-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+                        <span class="stat-val">${c.avgReelViews > 0 ? fmtNum(c.avgReelViews) : "—"}</span>
+                        <span class="stat-key">Reel Views</span>
                     </div>
                 </div>
-                <div class="fc-section-label">Performance</div>
-                <div class="fc-metrics">
-                    <div class="fc-metric">
-                        <div class="fc-mv">${fmtNum(c.followers)}</div>
-                        <div class="fc-mk">Followers</div>
-                    </div>
-                    <div class="fc-metric">
-                        <div class="fc-mv" style="color:${nc.color}">${c.engagement}%</div>
-                        <div class="fc-mk">Engagement</div>
-                    </div>
-                    <div class="fc-metric">
-                        <div class="fc-mv">${fmtNum(c.avgReelViews)}</div>
-                        <div class="fc-mk">Reel Views</div>
-                    </div>
-                </div>
-                <div class="fc-section-label">Audience</div>
-                <div class="fc-aud">
-                    <div class="fc-aud-top">
-                        <span>${c.femaleP}% women</span>
-                        <span>${c.maleP}% men</span>
-                        <span>${c.ageRange} yrs</span>
-                    </div>
-                    <div class="fc-gender-bar">
-                        <div class="fc-gb-f" style="width:${c.femaleP}%"></div>
-                        <div class="fc-gb-m" style="width:${c.maleP}%"></div>
-                    </div>
-                </div>
-                <div class="fc-section-label">Rates</div>
-                ${ratesHTML}
-                <a href="/marketplace" class="fc-unlock">🔒 Unlock Profile &nbsp;·&nbsp; <strong>₹149</strong></a>
+
+                <div class="card-cta-btn">View Profile →</div>
             </div>
-        </div>`;
+
+        </article>`;
     }).join("");
 
     // wire newly added cards into the scroll-reveal observer
