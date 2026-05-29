@@ -199,7 +199,7 @@ router.post("/forgot-password", async (req, res) => {
             return res.json({ success: true });
         }
         await resend.emails.send({
-            from:    process.env.RESEND_FROM || "Brandbae <onboarding@resend.dev>",
+            from:    process.env.RESEND_FROM || "Brandbae <noreply@brandbae.co.in>",
             to:      email.toLowerCase().trim(),
             subject: "Reset your Brandbae password",
             html: `
