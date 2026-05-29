@@ -3872,3 +3872,9 @@ footer {
         max-width: 100%;
     }
 }
+/* ── MOBILE: hide heavy sections ── */
+@media (max-width: 640px) {
+    #pricing { display: none; }
+    .cvt-section { display: none; }
+    .who-its-for-section { display: none; }
+}
