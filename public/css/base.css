@@ -15,9 +15,9 @@
     --amber: #E8902A;
     --amber-light: #FFF5E6;
     --ink: #111111;
-    --ink-mid: #555555;
-    --ink-soft: #888888;
-    --ink-faint: #bbbbbb;
+    --ink-mid: #444444;
+    --ink-soft: #666666;
+    --ink-faint: #767676;
     --border: #eef0f8;
     --border-mid: #dde3f5;
     --bg: #ffffff;
@@ -31,7 +31,7 @@ html {
 }
 
 body {
-    font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+    font-family: 'DM Sans', system-ui, sans-serif;
     color: var(--ink);
     background: var(--bg);
     line-height: 1.6;

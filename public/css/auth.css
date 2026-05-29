@@ -9,7 +9,7 @@
 }
 
 body {
-    font-family: 'Bricolage Grotesque', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     background: var(--bg-soft);
     color: var(--ink);
     min-height: 100vh;
@@ -124,3 +124,9 @@ input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(59,91,219,0.
     align-items: center;
 }
 .pw-toggle:hover { color: var(--ink); }
+
+@media (max-width: 480px) {
+    body { padding: 16px; }
+    .card { padding: 28px 20px; border-radius: 14px; }
+    h1 { font-size: 20px; }
+}

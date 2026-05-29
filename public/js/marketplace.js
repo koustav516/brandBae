@@ -30,7 +30,14 @@ function renderCreators(data) {
     count.innerHTML = `<strong>${data.length} creator${data.length !== 1 ? "s" : ""}</strong> <span>· India</span>`;
 
     if (!data.length) {
-        grid.innerHTML = `<div class="empty-state"><div class="ei">🔍</div><h3>No creators found</h3><p>Try adjusting your filters.</p></div>`;
+        const activeNicheLabel = activeNiche !== "All" ? ` in <strong>${activeNiche}</strong>` : "";
+        grid.innerHTML = `
+            <div class="empty-state">
+                <div class="ei">🔍</div>
+                <h3>No creators found${activeNicheLabel ? " " + activeNicheLabel.replace(/<[^>]+>/g, "") : ""}</h3>
+                <p>Try a different niche or clear your filters.</p>
+                <button onclick="document.querySelector('.niche-chip[data-niche=\\'All\\']').click()" class="empty-state-cta">Show all creators</button>
+            </div>`;
         return;
     }
 
@@ -62,7 +69,7 @@ function renderCreators(data) {
                     <span class="card-fullname">${c.fullName || c.instagramHandle || "Creator"}</span>
                     ${verifiedBadge}
                 </div>
-                ${c.city ? `<div class="card-location">📍 ${c.city}</div>` : ""}
+                ${c.city ? `<div class="card-location"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${c.city}</div>` : ""}
                 <div class="card-bottom-row">
                     <div class="card-stats-inline">
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
@@ -100,15 +107,31 @@ function applyFilters() {
     renderCreators(filtered);
 }
 
-fetch("/api/creators")
-    .then(r => r.json())
-    .then(data => {
-        creators = data;
-        const preNiche = new URLSearchParams(window.location.search).get("niche");
-        if (preNiche) {
-            const btn = document.querySelector(`.niche-chip[data-niche="${preNiche}"]`);
-            if (btn) { setNiche(btn); return; }
-        }
-        renderCreators(creators);
-    })
-    .catch(err => console.error("Failed to load creators:", err));
+function loadCreators() {
+    const grid = document.getElementById("creatorsGrid");
+    grid.innerHTML = `<div class="loading-state"><div class="loading-spinner"></div><p>Finding creators for you…</p></div>`;
+
+    fetch("/api/creators")
+        .then(r => { if (!r.ok) throw new Error("Server error"); return r.json(); })
+        .then(data => {
+            creators = data;
+            const preNiche = new URLSearchParams(window.location.search).get("niche");
+            if (preNiche) {
+                const btn = document.querySelector(`.niche-chip[data-niche="${preNiche}"]`);
+                if (btn) { setNiche(btn); return; }
+            }
+            renderCreators(creators);
+        })
+        .catch(() => {
+            grid.innerHTML = `
+                <div class="empty-state">
+                    <div class="ei">⚠️</div>
+                    <h3>Could not load creators</h3>
+                    <p>Check your connection and try again.</p>
+                    <button onclick="loadCreators()" class="empty-state-cta">Try again</button>
+                </div>`;
+            document.getElementById("resultsCount").innerHTML = "";
+        });
+}
+
+loadCreators();

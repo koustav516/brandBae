@@ -2868,7 +2868,7 @@ footer {
     font-weight: 700;
     color: #fff;
     text-shadow: 0 1px 4px rgba(0,0,0,0.4);
-    font-family: 'Bricolage Grotesque', sans-serif;
+    font-family: 'DM Sans', sans-serif;
 }
 
 .lp-cat-count {
@@ -3816,7 +3816,7 @@ footer {
     font-size: 13px;
     font-weight: 700;
     color: var(--ink);
-    font-family: 'Bricolage Grotesque', sans-serif;
+    font-family: 'DM Sans', sans-serif;
 }
 
 .fc-barter {
@@ -3852,7 +3852,7 @@ footer {
 }
 
 .fc-unlock strong {
-    font-family: 'Bricolage Grotesque', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     font-weight: 700;
 }
 
