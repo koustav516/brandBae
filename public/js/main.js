@@ -144,7 +144,6 @@ function renderFeatured(creators) {
 
                 <div class="card-tags">
                     ${cityTag}
-                    ${c.barter ? `<span class="card-tag card-tag--barter"><span class="barter-dot"></span>Open to Barter</span>` : ""}
                 </div>
 
                 <div class="card-stats-row">

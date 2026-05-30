@@ -124,7 +124,6 @@ function renderCreators(data) {
 
                 <div class="card-tags">
                     ${cityTag}
-                    ${c.barter ? `<span class="card-tag card-tag--barter card-tag--barter-desktop"><span class="barter-dot"></span>Open to Barter</span>` : ""}
                 </div>
 
                 <div class="card-stats-row">
