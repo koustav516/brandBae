@@ -405,6 +405,15 @@ body {
 }
 .btn-reject:hover { opacity: 0.8; transform: translateY(-1px); }
 
+.btn-delete {
+    background: transparent;
+    color: var(--red);
+    border: 1px solid var(--red-bg);
+    font-size: 11px;
+    padding: 5px 11px;
+}
+.btn-delete:hover { background: var(--red-bg); transform: translateY(-1px); }
+
 .app-status-tag {
     display: inline-block;
     font-size: 11px;

@@ -242,10 +242,14 @@
                         <div class="app-actions">
                             <button class="btn-approve" onclick="review(${a.id}, 'approved')">✓ Approve</button>
                             <button class="btn-reject"  onclick="review(${a.id}, 'rejected')">✕ Reject</button>
+                            <button class="btn-delete"  onclick="deleteUser('${a.user_id}', '${a.full_name}', ${a.id})">🗑 Delete</button>
                         </div>`
                     : a.status === "approved" ? `
                         <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;">
-                            <div class="app-status-tag approved">approved</div>
+                            <div style="display:flex;align-items:center;gap:8px;">
+                                <div class="app-status-tag approved">approved</div>
+                                <button class="btn-delete" onclick="deleteUser('${a.user_id}', '${a.full_name}', ${a.id})">🗑 Delete</button>
+                            </div>
                             <button class="btn-edit-stats" onclick="toggleStats('${a.user_id}')">✏️ Edit Stats</button>
                         </div>
                         <div class="stats-edit-form" id="stats-${a.user_id}" style="display:none">
@@ -303,7 +307,10 @@
                                 <span class="stats-save-msg" id="msg-${a.user_id}"></span>
                             </div>
                         </div>`
-                    : `<div class="app-status-tag ${a.status}">${a.status}</div>`}
+                    : `<div style="display:flex;align-items:center;gap:8px;margin-top:12px;">
+                            <div class="app-status-tag ${a.status}">${a.status}</div>
+                            <button class="btn-delete" onclick="deleteUser('${a.user_id}', '${a.full_name}', ${a.id})">🗑 Delete</button>
+                       </div>`}
                 </div>
             `).join("");
         }
@@ -460,6 +467,35 @@
             } catch {
                 msg.textContent = "Failed. Try again.";
                 msg.style.color = "#dc2626";
+            }
+        }
+
+        async function deleteUser(userId, name, appId) {
+            if (!confirm(`Delete ${name}? This permanently removes the user, their application, and their marketplace profile. This cannot be undone.`)) return;
+
+            const card = document.getElementById("app-" + appId);
+            card.style.opacity       = "0.5";
+            card.style.pointerEvents = "none";
+
+            try {
+                const res = await fetch(`/api/admin/users/${userId}`, {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" },
+                });
+                if (!res.ok) throw new Error((await res.json()).error || "Failed");
+
+                card.style.transition = "opacity 0.25s, transform 0.25s";
+                card.style.transform  = "scale(0.97)";
+                card.style.opacity    = "0";
+                setTimeout(() => {
+                    allApps = allApps.filter(a => a.id !== appId);
+                    card.remove();
+                    updatePendingBadge();
+                }, 250);
+            } catch (err) {
+                card.style.opacity       = "1";
+                card.style.pointerEvents = "auto";
+                alert("Delete failed: " + err.message);
             }
         }
 

@@ -430,6 +430,27 @@ app.patch("/api/admin/creator-stats/:userId", requireAdmin, async (req, res) => 
     }
 });
 
+// ── ADMIN — delete user ──
+app.delete("/api/admin/users/:userId", requireAdmin, async (req, res) => {
+    const { userId } = req.params;
+    const client = await pool.connect();
+    try {
+        await client.query("BEGIN");
+        await client.query("DELETE FROM creators             WHERE user_id = $1", [userId]);
+        await client.query("DELETE FROM creator_applications WHERE user_id = $1", [userId]);
+        await client.query("DELETE FROM users                WHERE id      = $1", [userId]);
+        await client.query("COMMIT");
+        console.log(`[ADMIN] User #${userId} deleted`);
+        res.json({ success: true });
+    } catch (err) {
+        await client.query("ROLLBACK");
+        console.error("DELETE /api/admin/users error:", err.message);
+        res.status(500).json({ error: "Internal server error" });
+    } finally {
+        client.release();
+    }
+});
+
 // ── START ──
 initDB()
     .then(() => {
