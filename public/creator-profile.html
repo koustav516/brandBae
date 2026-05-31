@@ -12,50 +12,133 @@
 </head>
 <body>
 
-<nav class="nav">
+<!-- NAV — nav-profile-pill is hidden until hero scrolls out -->
+<nav class="nav" id="mainNav" style="position:sticky">
     <a href="/" class="nav-logo">Brand<span>bae</span></a>
+
+    <div class="nav-profile-pill" id="navProfilePill" aria-hidden="true">
+        <div class="nav-profile-avatar" id="navProfileAvatar"></div>
+        <span class="nav-profile-name" id="navProfileName"></span>
+    </div>
+
     <a href="/marketplace" class="back-btn">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
         Marketplace
     </a>
 </nav>
 
-<div id="loadingState" class="state-wrap">
-    <div class="spinner"></div>
-    Loading profile…
+<!-- SKELETON loading state — matches actual 2-column layout -->
+<div id="loadingState" class="skeleton-wrap">
+    <div class="skeleton-col">
+        <!-- Hero skeleton -->
+        <div class="skeleton-hero-card">
+            <div class="skel" style="height:380px;border-radius:0"></div>
+            <div class="skeleton-hero-body">
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                    <div class="skel" style="width:64px;height:22px;border-radius:100px"></div>
+                    <div class="skel" style="width:88px;height:16px"></div>
+                    <div class="skel" style="width:72px;height:16px"></div>
+                </div>
+            </div>
+            <div class="skeleton-stats-row">
+                <div class="skeleton-stat-cell">
+                    <div class="skel" style="width:56px;height:28px;margin:0 auto 8px"></div>
+                    <div class="skel" style="width:76px;height:10px;margin:0 auto"></div>
+                </div>
+                <div class="skeleton-stat-cell">
+                    <div class="skel" style="width:56px;height:28px;margin:0 auto 8px"></div>
+                    <div class="skel" style="width:76px;height:10px;margin:0 auto"></div>
+                </div>
+                <div class="skeleton-stat-cell">
+                    <div class="skel" style="width:56px;height:28px;margin:0 auto 8px"></div>
+                    <div class="skel" style="width:76px;height:10px;margin:0 auto"></div>
+                </div>
+            </div>
+        </div>
+        <!-- Bio skeleton -->
+        <div class="skeleton-card">
+            <div class="skel" style="width:140px;height:13px;margin-bottom:20px"></div>
+            <div class="skel" style="height:16px;margin-bottom:10px"></div>
+            <div class="skel" style="height:16px;width:85%;margin-bottom:10px"></div>
+            <div class="skel" style="height:16px;width:65%"></div>
+        </div>
+        <!-- Collabs skeleton -->
+        <div class="skeleton-card">
+            <div class="skel" style="width:110px;height:13px;margin-bottom:20px"></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <div class="skel" style="width:90px;height:32px;border-radius:100px"></div>
+                <div class="skel" style="width:70px;height:32px;border-radius:100px"></div>
+                <div class="skel" style="width:110px;height:32px;border-radius:100px"></div>
+                <div class="skel" style="width:80px;height:32px;border-radius:100px"></div>
+            </div>
+        </div>
+    </div>
+    <!-- Sidebar skeleton -->
+    <div class="skeleton-side">
+        <div class="skeleton-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+                <div class="skel" style="width:60px;height:11px"></div>
+                <div class="skel" style="width:80px;height:11px"></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+                <div class="skel" style="width:36px;height:36px;border-radius:10px;flex-shrink:0"></div>
+                <div style="flex:1"><div class="skel" style="height:13px;width:80%;margin-bottom:6px"></div></div>
+                <div class="skel" style="width:52px;height:15px"></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+                <div class="skel" style="width:36px;height:36px;border-radius:10px;flex-shrink:0"></div>
+                <div style="flex:1"><div class="skel" style="height:13px;width:70%;margin-bottom:6px"></div></div>
+                <div class="skel" style="width:52px;height:15px"></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px">
+                <div class="skel" style="width:36px;height:36px;border-radius:10px;flex-shrink:0"></div>
+                <div style="flex:1"><div class="skel" style="height:13px;width:60%;margin-bottom:6px"></div></div>
+                <div class="skel" style="width:52px;height:15px"></div>
+            </div>
+        </div>
+        <div class="skel" style="height:52px;border-radius:14px"></div>
+    </div>
 </div>
 
 <div id="errorState" class="state-wrap" style="display:none">
-    <div style="font-size:36px">😕</div>
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink-faint)"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
     <div style="font-size:16px;font-weight:700;color:var(--ink)">Creator not found</div>
     <a href="/marketplace" style="font-size:13px;color:var(--blue);margin-top:4px">← Back to marketplace</a>
 </div>
 
 <div id="profileContent" class="profile-outer" style="display:none"></div>
 
+<!-- Mobile sticky CTA — CSS media query controls visibility -->
+<div class="mobile-cta-bar" id="mobileCta" style="display:none">
+    <button class="enquiry-btn" onclick="openModal()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Connect with Creator
+    </button>
+</div>
+
 <!-- Enquiry Modal -->
 <div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
     <div class="modal">
-        <button class="modal-close" onclick="closeModal()">✕</button>
+        <button class="modal-close" onclick="closeModal()" aria-label="Close">✕</button>
 
         <div id="modalForm">
             <div class="modal-title" id="modalTitle">Send Enquiry</div>
             <div class="modal-sub" id="modalSub">We'll share your details with the creator's team.</div>
 
             <div class="form-group">
-                <label class="form-label">Your Name / Brand</label>
-                <input class="form-input" id="enquiryName" type="text" placeholder="e.g. Nykaa Marketing Team" />
+                <label class="form-label" for="enquiryName">Your Name / Brand</label>
+                <input class="form-input" id="enquiryName" type="text" placeholder="e.g. Nykaa Marketing Team" autocomplete="organization" />
             </div>
             <div class="form-group">
-                <label class="form-label">Phone Number</label>
-                <input class="form-input" id="enquiryPhone" type="tel" placeholder="10-digit mobile number" maxlength="10" />
+                <label class="form-label" for="enquiryPhone">Phone Number</label>
+                <input class="form-input" id="enquiryPhone" type="tel" placeholder="10-digit mobile number" maxlength="10" autocomplete="tel" inputmode="numeric" />
             </div>
             <div class="form-group">
-                <label class="form-label">Your City</label>
-                <input class="form-input" id="enquiryCity" type="text" placeholder="e.g. Mumbai" />
+                <label class="form-label" for="enquiryCity">Your City</label>
+                <input class="form-input" id="enquiryCity" type="text" placeholder="e.g. Mumbai" autocomplete="address-level2" />
             </div>
 
-            <div id="enquiryError" style="font-size:13px;color:#e05252;margin-bottom:10px;display:none"></div>
+            <div id="enquiryError" role="alert" style="font-size:13px;color:#e05252;margin-bottom:10px;display:none"></div>
 
             <button class="form-submit" id="enquirySubmit" onclick="submitEnquiry()">Connect</button>
         </div>
@@ -98,18 +181,31 @@
         Comedy:    "linear-gradient(135deg, #f7971e, #ffd200)",
     };
 
+    const SVG = {
+        reel:   `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>`,
+        story:  `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>`,
+        post:   `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`,
+        bundle: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>`,
+        barter: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>`,
+        pin:    `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
+        play:   `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>`,
+        ig:     `<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069z"/></svg>`,
+        igBox:  `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>`,
+        share:  `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>`,
+        check:  `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`,
+    };
+
     function fmt(n) { return n >= 1000 ? (n/1000).toFixed(1).replace(/\.0$/,"")+"K" : String(n); }
     function inr(n) { return "₹" + Number(n).toLocaleString("en-IN"); }
+
     function bioHtml(bio) {
         if (!bio) return "";
-        // If bio starts with a quote, split into quoted headline + body
         const quoted = bio.match(/^[""](.+?)[""]\s*([\s\S]*)/);
         if (quoted) {
             const headline = quoted[1].trim();
             const body     = quoted[2].trim();
             return `<div class="bio-quote">"${headline}"</div>${body ? `<div class="bio-body">${body}</div>` : ""}`;
         }
-        // Otherwise first sentence bold italic, rest regular
         const dot = bio.indexOf(". ");
         if (dot > 0 && dot < 120) {
             const first = bio.slice(0, dot + 1).trim();
@@ -124,8 +220,19 @@
         return url.replace("/upload/", "/upload/q_auto,f_auto/");
     }
 
+    // Engagement quality label based on industry benchmarks
+    function engQualityHtml(rate) {
+        if (!rate || rate <= 0) return "";
+        if (rate >= 6)  return `<span class="eng-quality excellent">Excellent · Top 5%</span>`;
+        if (rate >= 4)  return `<span class="eng-quality excellent">Excellent · Top 15%</span>`;
+        if (rate >= 3)  return `<span class="eng-quality good">Good · Above avg</span>`;
+        if (rate >= 1.5) return `<span class="eng-quality avg">Average</span>`;
+        return "";
+    }
+
     let _creatorHandle = "";
     let _creatorName   = "";
+    let _creatorPhoto  = "";
 
     async function loadProfile() {
         const handle = window.location.pathname.split("/creator/")[1];
@@ -145,27 +252,27 @@
     }
 
     function render(c) {
-        _creatorName = c.fullName || "@" + c.instagramHandle;
+        _creatorName  = c.fullName || "@" + c.instagramHandle;
+        _creatorPhoto = c.photoUrl ? cdnFull(c.photoUrl) : "";
 
-        const nc     = nicheColors[c.niche]    || nicheColors.Food;
-        const cover  = coverGradients[c.niche] || coverGradients.Food;
+        const nc    = nicheColors[c.niche]    || nicheColors.Food;
+        const cover = coverGradients[c.niche] || coverGradients.Food;
 
-        const coverPhotoHtml = c.photoUrl
-            ? `<img src="${cdnFull(c.photoUrl)}" alt="${_creatorName}" onerror="this.style.display='none'" />`
+        const coverPhotoHtml = _creatorPhoto
+            ? `<img src="${_creatorPhoto}" alt="${_creatorName}" loading="eager" onerror="this.style.display='none'" />`
             : "";
 
-        // Performance stats
-        const engClass = c.engagement >= 5 ? "amber" : c.engagement >= 3 ? "amber" : "";
+        const engClass = c.engagement >= 4 ? "high-eng" : c.engagement >= 3 ? "amber" : "";
 
-        // Audience section
+        // Gender split
         const genderHtml = (c.femaleP != null && c.maleP != null) ? `
             <div class="gender-bar">
                 <div class="gb-f" style="width:${c.femaleP}%"></div>
                 <div class="gb-m" style="width:${c.maleP}%"></div>
             </div>
             <div class="gender-labels">
-                <span class="gl-f">♀ ${c.femaleP}% Female</span>
-                <span class="gl-m">♂ ${c.maleP}% Male</span>
+                <span class="gl-f">Female ${c.femaleP}%</span>
+                <span class="gl-m">${c.maleP}% Male</span>
             </div>` : "";
 
         const langHtml = c.languages
@@ -175,38 +282,41 @@
             ? `<div class="aud-row"><span class="aud-lbl">Age range</span><span class="aud-val">${c.ageRange} yrs</span></div>` : "";
 
         const locHtml = (c.locations || []).length
-            ? `<div class="loc-pills">${c.locations.map(l => `<span class="loc-pill">📍 ${l}</span>`).join("")}</div>` : "";
+            ? `<div class="loc-pills">${c.locations.map(l =>
+                `<span class="loc-pill">${SVG.pin} ${l}</span>`
+              ).join("")}</div>` : "";
 
-        // Pricing
+        // Minimum price teaser for sidebar header
+        const prices    = [c.reelPrice, c.storyPrice, c.postPrice].filter(p => p > 0);
+        const minPrice  = prices.length ? Math.min(...prices) : null;
+        const fromTeaser = (!c.barter && minPrice)
+            ? `<span class="price-from">from ${inr(minPrice)}</span>`
+            : "";
+
+        // Pricing body — SVG icons
         const pricingBody = c.barter
             ? `<div class="barter-box">
-                   <div class="barter-top">🤝 Open to barter with ${c.niche} brands</div>
+                   <div class="barter-top">${SVG.barter} Open to barter with ${c.niche} brands</div>
                    ${c.barterNote ? `<div class="barter-note-text">${c.barterNote}</div>` : ""}
                </div>`
             : `<div class="price-row">
-                   <div class="price-icon">🎬</div>
-                   <div class="price-info">
-                       <div class="price-name">Instagram Reel</div>
-                   </div>
+                   <div class="price-icon">${SVG.reel}</div>
+                   <div class="price-info"><div class="price-name">Instagram Reel</div></div>
                    <div class="price-val">${inr(c.reelPrice)}</div>
                </div>
                <div class="price-row">
-                   <div class="price-icon">📸</div>
-                   <div class="price-info">
-                       <div class="price-name">Instagram Story</div>
-                   </div>
+                   <div class="price-icon">${SVG.story}</div>
+                   <div class="price-info"><div class="price-name">Instagram Story</div></div>
                    <div class="price-val">${inr(c.storyPrice)}</div>
                </div>
                <div class="price-row">
-                   <div class="price-icon">🖼️</div>
-                   <div class="price-info">
-                       <div class="price-name">Static Post</div>
-                   </div>
+                   <div class="price-icon">${SVG.post}</div>
+                   <div class="price-info"><div class="price-name">Static Post</div></div>
                    <div class="price-val">${inr(c.postPrice)}</div>
                </div>
                ${c.bundlePricing ? `
                <div class="bundle-row">
-                   <div class="bundle-icon">📦</div>
+                   <div class="bundle-icon">${SVG.bundle}</div>
                    <div class="bundle-info">
                        <div class="bundle-name-row">
                            <span class="bundle-name">Campaign Bundle</span>
@@ -219,11 +329,14 @@
         const pricingHtml = `
             <div class="pricing-card-head">
                 <span class="pricing-label">Pricing</span>
-                <span class="pricing-badge">Upfront · GST inclusive</span>
+                <div style="display:flex;align-items:center;gap:8px">
+                    ${fromTeaser}
+                    <span class="pricing-badge">GST inclusive</span>
+                </div>
             </div>
             ${pricingBody}`;
 
-        // Past collabs — scrolling ticker
+        // Past collabs ticker
         const collabBrands = c.pastCollabs
             ? c.pastCollabs.split(/[,\n]+/).map(b => b.trim()).filter(Boolean)
             : [];
@@ -240,9 +353,9 @@
         ];
 
         const tickerItem = (b, i) => {
-            const c = tickerColors[i % tickerColors.length];
-            return `<span class="ticker-item" style="background:${c.bg};color:${c.color};border-color:${c.bg}">
-                <span class="ticker-dot" style="background:${c.dot}"></span>${b}
+            const tc = tickerColors[i % tickerColors.length];
+            return `<span class="ticker-item" style="background:${tc.bg};color:${tc.color};border-color:${tc.bg}">
+                <span class="ticker-dot" style="background:${tc.dot}"></span>${b}
             </span>`;
         };
 
@@ -257,7 +370,7 @@
                </div>`
             : "";
 
-        // Content links — only show valid Instagram URLs as cards
+        // Content links
         const igGradients = [
             "linear-gradient(145deg, #833ab4, #fd1d1d, #fcb045)",
             "linear-gradient(145deg, #405de6, #5851db, #833ab4)",
@@ -285,25 +398,23 @@
         const linksHtml = igLinks.length
             ? igLinks.map((link, i) => {
                 const grad = igGradients[i % igGradients.length];
-                const typeIcon = link.type === "REEL" ? "▶" : "⊡";
                 return `
-                <a class="content-card" href="${link.url}" target="_blank" rel="noopener">
+                <a class="content-card" href="${link.url}" target="_blank" rel="noopener" aria-label="View ${link.type.toLowerCase()} on Instagram">
                     <div class="content-card-bg" style="background:${grad}"></div>
                     <div class="content-card-overlay"></div>
-                    <div class="content-badge">${typeIcon} ${link.type}</div>
+                    <div class="content-badge">${link.type === "REEL" ? "▶" : "⊡"} ${link.type}</div>
                     <div class="content-card-center">
-                        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                        <div class="content-card-play">${SVG.play}</div>
                     </div>
                     <div class="content-card-footer">
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069z"/></svg>
+                        ${SVG.ig}
                         View on Instagram
                     </div>
                 </a>`;
             }).join("") : "";
 
-
         const audienceSection = (genderHtml || langHtml || ageHtml || locHtml) ? `
-            <div class="pcard">
+            <div class="pcard reveal-up">
                 <div class="pcard-head"><div class="pcard-title">Audience</div></div>
                 <div class="pcard-body" style="padding-top:0">
                     ${genderHtml}
@@ -312,21 +423,36 @@
                 </div>
             </div>` : "";
 
+        // Stat values for count-up
+        const engVal  = c.engagement > 0  ? c.engagement  : null;
+        const viewVal = c.avgReelViews > 0 ? c.avgReelViews : null;
+        const likeVal = c.avgLikes > 0    ? c.avgLikes    : null;
+
+        const engDisplay  = engVal  ? c.engagement + "%" : "—";
+        const viewDisplay = viewVal ? fmt(c.avgReelViews) : "—";
+        const likeDisplay = likeVal ? fmt(c.avgLikes) : "—";
+
         document.getElementById("profileContent").innerHTML = `
             <!-- LEFT COLUMN -->
             <div class="profile-main">
 
                 <!-- HERO CARD -->
-                <div class="hero-card">
+                <div class="hero-card reveal-up">
                     <div class="cover-banner" style="background:${cover}">
+                        <div class="cover-aurora">
+                            <div class="aurora-blob b1"></div>
+                            <div class="aurora-blob b2"></div>
+                            <div class="aurora-blob b3"></div>
+                        </div>
                         ${coverPhotoHtml}
                         ${!c.photoUrl ? '<div class="cover-pattern"></div>' : ""}
+                        <div class="cover-noise"></div>
                         <div class="cover-overlay"></div>
                         <div class="cover-identity">
                             <div class="cover-name">${_creatorName}</div>
                             ${c.instagramHandle ? `
-                            <a class="cover-ig-handle" href="https://instagram.com/${c.instagramHandle}" target="_blank" rel="noopener">
-                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                            <a class="cover-ig-handle" href="https://instagram.com/${c.instagramHandle}" target="_blank" rel="noopener" aria-label="Visit @${c.instagramHandle} on Instagram">
+                                ${SVG.igBox}
                                 @${c.instagramHandle}
                             </a>` : ""}
                         </div>
@@ -335,23 +461,33 @@
                         <div class="hero-top-row">
                             <div class="identity-meta">
                                 <span class="niche-badge" style="background:${nc.bg};color:${nc.color}">${c.niche}</span>
-                                ${c.city ? `<span class="city-tag">📍 ${c.city}${c.state ? ", " + c.state : ""}</span>` : ""}
+                                ${c.city ? `<span class="city-tag">${SVG.pin} ${c.city}${c.state ? ", " + c.state : ""}</span>` : ""}
                                 ${c.verified ? `<span class="verified-tag"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Verified</span>` : ""}
                                 <span class="followers-line"><strong>${fmt(c.followers)}</strong> followers</span>
                             </div>
+                            <button class="share-btn" onclick="copyProfileLink()" aria-label="Copy profile link" title="Share profile">
+                                ${SVG.share}
+                            </button>
                         </div>
                     </div>
                     <div class="stats-grid">
                         <div class="stat-cell">
-                            <div class="stat-val ${engClass}">${c.engagement > 0 ? c.engagement + "%" : "—"}</div>
+                            <span class="stat-val ${engClass}"
+                                  ${engVal ? `data-countup="${engVal}" data-suffix="%" data-display="${engDisplay}"` : ""}
+                            >${engDisplay}</span>
                             <div class="stat-key">Engagement</div>
+                            ${engQualityHtml(c.engagement)}
                         </div>
                         <div class="stat-cell">
-                            <div class="stat-val">${c.avgReelViews > 0 ? fmt(c.avgReelViews) : "—"}</div>
+                            <span class="stat-val"
+                                  ${viewVal ? `data-countup="${viewVal}" data-display="${viewDisplay}"` : ""}
+                            >${viewDisplay}</span>
                             <div class="stat-key">Avg Reel Views</div>
                         </div>
                         <div class="stat-cell">
-                            <div class="stat-val">${c.avgLikes > 0 ? fmt(c.avgLikes) : "—"}</div>
+                            <span class="stat-val"
+                                  ${likeVal ? `data-countup="${likeVal}" data-display="${likeDisplay}"` : ""}
+                            >${likeDisplay}</span>
                             <div class="stat-key">Avg Likes</div>
                         </div>
                     </div>
@@ -360,7 +496,7 @@
                 ${audienceSection}
 
                 ${c.bio ? `
-                <div class="pcard">
+                <div class="pcard reveal-up">
                     <div class="pcard-body">
                         <div class="about-header">
                             <div class="about-title">About the <em>creator</em></div>
@@ -371,7 +507,7 @@
                 </div>` : ""}
 
                 ${collabsHtml ? `
-                <div class="pcard">
+                <div class="pcard reveal-up">
                     <div class="pcard-head"><div class="pcard-title">Past Collaborations</div></div>
                     <div class="pcard-body" style="padding-top:0">
                         ${collabsHtml}
@@ -379,7 +515,7 @@
                 </div>` : ""}
 
                 ${linksHtml ? `
-                <div class="pcard">
+                <div class="pcard reveal-up">
                     <div class="pcard-body">
                         <div class="content-section-head">
                             <div class="content-section-title">Recent <em>reels</em></div>
@@ -392,11 +528,11 @@
 
             <!-- RIGHT SIDEBAR -->
             <div class="profile-sidebar">
-                <div class="pcard pricing-card">
+                <div class="pcard pricing-card reveal-up">
                     ${pricingHtml}
                 </div>
 
-                <button class="enquiry-btn" onclick="openModal()">
+                <button class="enquiry-btn" onclick="openModal()" aria-label="Connect with ${_creatorName}">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                     Connect with Creator
                 </button>
@@ -408,8 +544,172 @@
         document.getElementById("loadingState").style.display   = "none";
         document.getElementById("profileContent").style.display = "grid";
         document.title = `${_creatorName} — Brandbae`;
+
+        // Remove inline display:none so CSS media query controls mobile CTA
+        const mobileBar = document.getElementById("mobileCta");
+        if (mobileBar) mobileBar.style.display = "";
+
+        // Initialize all effects after a microtask
+        requestAnimationFrame(() => {
+            initReveal();
+            initCountUp();
+            initScrollSpy();
+        });
     }
 
+    // ── Scroll reveal ──
+    function initReveal() {
+        const els = document.querySelectorAll(".reveal-up");
+        if (!els.length) return;
+
+        const observer = new IntersectionObserver((entries) => {
+            let delay = 0;
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    setTimeout(() => el.classList.add("visible"), delay);
+                    delay += 60;
+                    observer.unobserve(el);
+                }
+            });
+        }, { threshold: 0.08, rootMargin: "0px 0px -40px 0px" });
+
+        els.forEach(el => observer.observe(el));
+    }
+
+    // ── Count-up animation for stats ──
+    function initCountUp() {
+        const statEls = document.querySelectorAll(".stat-val[data-countup]");
+        if (!statEls.length) return;
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    runCountUp(entry.target);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        statEls.forEach(el => observer.observe(el));
+    }
+
+    function runCountUp(el) {
+        const target  = parseFloat(el.dataset.countup);
+        const suffix  = el.dataset.suffix || "";
+        const display = el.dataset.display || "";
+        if (isNaN(target)) return;
+
+        el.classList.add("counting");
+
+        const isDecimal = target < 10;
+        const duration  = 1200;
+        const startTime = performance.now();
+
+        function tick(now) {
+            const elapsed  = now - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased    = 1 - Math.pow(1 - progress, 3);
+            const current  = target * eased;
+
+            if (target >= 1000) {
+                el.textContent = (current / 1000).toFixed(1).replace(/\.0$/, "") + "K" + suffix;
+            } else if (isDecimal) {
+                el.textContent = current.toFixed(1) + suffix;
+            } else {
+                el.textContent = Math.round(current) + suffix;
+            }
+
+            if (progress < 1) {
+                requestAnimationFrame(tick);
+            } else {
+                el.textContent = display;
+                el.classList.remove("counting");
+            }
+        }
+
+        requestAnimationFrame(tick);
+    }
+
+    // ── Scroll spy: creator name appears in nav when hero scrolls out ──
+    function initScrollSpy() {
+        const hero    = document.querySelector(".hero-card");
+        const nav     = document.getElementById("mainNav");
+        const pill    = document.getElementById("navProfilePill");
+        const nameEl  = document.getElementById("navProfileName");
+        const avatarEl = document.getElementById("navProfileAvatar");
+
+        if (!hero || !nav) return;
+
+        nameEl.textContent = _creatorName;
+
+        // Avatar: photo or initial
+        if (_creatorPhoto) {
+            const img = document.createElement("img");
+            img.src = _creatorPhoto;
+            img.alt = _creatorName;
+            img.onerror = () => {
+                avatarEl.textContent = _creatorName.trim()[0].toUpperCase();
+            };
+            avatarEl.appendChild(img);
+        } else {
+            avatarEl.textContent = _creatorName.trim()[0].toUpperCase();
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                nav.classList.toggle("nav--scrolled", !entry.isIntersecting);
+                pill.setAttribute("aria-hidden", String(entry.isIntersecting));
+            });
+        }, {
+            threshold: 0,
+            rootMargin: "-60px 0px 0px 0px",
+        });
+
+        observer.observe(hero);
+    }
+
+    // ── Share / copy link ──
+    function copyProfileLink() {
+        const url = window.location.href;
+        const copy = () => showToast("Link copied!");
+
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(url).then(copy).catch(() => fallbackCopy(url, copy));
+        } else {
+            fallbackCopy(url, copy);
+        }
+    }
+
+    function fallbackCopy(text, cb) {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        Object.assign(ta.style, { position: "fixed", opacity: "0", top: "0", left: "0" });
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand("copy"); cb(); } catch {}
+        document.body.removeChild(ta);
+    }
+
+    function showToast(msg) {
+        document.querySelectorAll(".toast").forEach(t => t.remove());
+
+        const t = document.createElement("div");
+        t.className = "toast";
+        t.setAttribute("role", "status");
+        t.setAttribute("aria-live", "polite");
+        t.innerHTML = SVG.check + msg;
+        document.body.appendChild(t);
+
+        requestAnimationFrame(() => requestAnimationFrame(() => t.classList.add("toast--show")));
+
+        setTimeout(() => {
+            t.classList.remove("toast--show");
+            setTimeout(() => t.remove(), 250);
+        }, 2500);
+    }
+
+    // ── Modal ──
     function openModal() {
         document.getElementById("modalTitle").textContent = `Enquire about ${_creatorName}`;
         document.getElementById("modalSub").textContent   = "We'll connect you with this creator within 24 hours.";
@@ -417,11 +717,16 @@
         document.getElementById("modalSuccess").style.display = "none";
         document.getElementById("enquiryError").style.display = "none";
         document.getElementById("modalOverlay").classList.add("open");
+        setTimeout(() => document.getElementById("enquiryName").focus(), 50);
     }
 
     function closeModal() {
         document.getElementById("modalOverlay").classList.remove("open");
     }
+
+    document.addEventListener("keydown", e => {
+        if (e.key === "Escape") closeModal();
+    });
 
     async function submitEnquiry() {
         const name  = document.getElementById("enquiryName").value.trim();
@@ -435,11 +740,13 @@
         if (!name || !phone || !city) {
             errEl.textContent = "Please fill in all fields.";
             errEl.style.display = "block";
+            document.getElementById("enquiryName").focus();
             return;
         }
         if (!/^\d{10}$/.test(phone.replace(/\s/g, ""))) {
             errEl.textContent = "Enter a valid 10-digit phone number.";
             errEl.style.display = "block";
+            document.getElementById("enquiryPhone").focus();
             return;
         }
 
