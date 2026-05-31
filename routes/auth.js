@@ -33,7 +33,7 @@ function requireAdmin(req, res, next) {
 // ── CREATOR REGISTER ──
 router.post("/creator/register", async (req, res) => {
     const {
-        email, password, full_name, instagram_handle,
+        email, password, full_name, instagram_handle, phone,
         niche, niche_subcategories, city, state, languages,
         followers, avg_reel_views, account_age,
         audience_age_group, female_p, male_p, top_locations,
@@ -66,16 +66,16 @@ router.post("/creator/register", async (req, res) => {
 
         await pool.query(
             `INSERT INTO creator_applications
-             (user_id, full_name, instagram_handle,
+             (user_id, full_name, instagram_handle, phone,
               niche, niche_subcategories, city, state, languages,
               followers, avg_reel_views, account_age,
               audience_age_group, female_p, male_p, top_locations,
               reel_price, story_price, post_price, bundle_pricing, min_deal_size,
               barter, barter_note,
               content_links, past_collabs, bio, photo_url)
-             VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26)`,
+             VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27)`,
             [
-                user.id, full_name, instagram_handle,
+                user.id, full_name, instagram_handle, phone || null,
                 niche, niche_subcategories || null, city, state || null, languages || null,
                 parseInt(followers), avg_reel_views ? parseInt(avg_reel_views) : null, account_age || null,
                 audience_age_group || null,

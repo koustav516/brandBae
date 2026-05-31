@@ -48,15 +48,22 @@ function renderSkeletons(count = 6) {
     const grid = document.getElementById("creatorsGrid");
     grid.innerHTML = Array.from({ length: count }, () => `
         <div class="creator-card skeleton-card" aria-hidden="true">
-            <div class="skeleton skeleton-image"></div>
-            <div class="card-content">
-                <div class="skeleton skeleton-line" style="width:40%;height:9px;margin-bottom:8px"></div>
-                <div class="skeleton skeleton-line" style="width:75%;height:14px;margin-bottom:5px"></div>
-                <div class="skeleton skeleton-line" style="width:50%;height:11px;margin-bottom:12px"></div>
-                <div class="skeleton skeleton-line" style="width:90%;height:11px;margin-bottom:14px"></div>
-                <div class="skeleton skeleton-line" style="width:60%;height:17px;margin-bottom:12px"></div>
+            <div class="skel-block" style="aspect-ratio:3/4;border-radius:0"></div>
+            <div class="card-body">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                    <div class="skel-block" style="height:20px;width:55%;border-radius:5px"></div>
+                    <div class="skel-block" style="width:18px;height:18px;border-radius:50%;flex-shrink:0"></div>
+                </div>
+                <div class="skel-block" style="height:11px;width:48%;border-radius:5px;margin-bottom:14px"></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+                    <div class="skel-block" style="height:58px;border-radius:10px"></div>
+                    <div class="skel-block" style="height:58px;border-radius:10px"></div>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                    <div class="skel-block" style="height:18px;width:80px;border-radius:5px"></div>
+                    <div class="skel-block" style="height:36px;width:108px;border-radius:100px"></div>
+                </div>
             </div>
-            <div class="skeleton skeleton-btn"></div>
         </div>`
     ).join("");
 }
@@ -70,7 +77,7 @@ function renderCreators(data) {
     if (!data.length) {
         grid.innerHTML = `
             <div class="empty-state">
-                <div class="ei">🔍</div>
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:12px;opacity:0.4"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                 <h3>No creators found</h3>
                 <p>Try adjusting your filters.</p>
                 <button onclick="clearFilters()" class="empty-state-cta">Clear filters</button>
@@ -84,21 +91,34 @@ function renderCreators(data) {
         const loading = i < 6 ? `fetchpriority="high"` : `loading="lazy"`;
 
         const photo = c.photoUrl
-            ? `<img src="${cdnCard(c.photoUrl)}" class="card-cover-img" ${loading} alt="${c.fullName || c.instagramHandle}" onerror="this.style.display='none'" />`
-            : `<div class="card-cover-placeholder"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>`;
+            ? `<img src="${cdnCard(c.photoUrl)}" class="card-photo-img" ${loading} alt="${c.fullName || c.instagramHandle}" onerror="this.style.display='none'" />`
+            : `<div class="card-photo-placeholder"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>`;
 
         const verified = c.verified
-            ? `<span class="card-verified-check" title="Verified"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>`
+            ? `<span class="card-verified" aria-label="Verified creator"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>`
             : "";
 
-        const engVal   = c.engagement > 0 ? c.engagement + "%" : "—";
-        const engClass = c.engagement > 0 ? "stat-val stat-val--eng" : "stat-val";
+        const engVal = c.engagement > 0 ? c.engagement + "%" : "—";
 
-        const cityTag = c.city
-            ? `<span class="card-tag card-tag--location">
-                   <svg width="12" height="12" viewBox="0 0 24 24" fill="#ef4444" stroke="none"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                   ${c.city}
-               </span>` : "";
+        const handleParts = [
+            c.instagramHandle ? `@${c.instagramHandle}` : null,
+            c.city || null
+        ].filter(Boolean);
+        const handleLine = handleParts.join(" · ");
+
+        // Lowest price with its natural label (varies per creator)
+        const priceOptions = [
+            { val: c.reelPrice,  label: "reel" },
+            { val: c.storyPrice, label: "story" },
+            { val: c.postPrice,  label: "post" },
+        ].filter(p => p.val > 0);
+        const minP = priceOptions.length ? priceOptions.reduce((a, b) => a.val <= b.val ? a : b) : null;
+
+        const priceChips = c.barter
+            ? `<div class="card-price-barter"><span class="barter-dot"></span>Open to barter</div>`
+            : minP
+            ? `<div class="card-price-single"><span class="cps-amount">${inr(minP.val)}</span><span class="cps-label">/${minP.label}</span></div>`
+            : `<div class="card-price-single"><span class="cps-na">Inquire</span></div>`;
 
         return `
         <article class="creator-card" onclick="window.location='${url}'"
@@ -106,51 +126,59 @@ function renderCreators(data) {
             onkeydown="if(event.key==='Enter')window.location='${url}'"
             aria-label="View ${c.fullName || c.instagramHandle} profile">
 
-            <div class="card-cover" style="background:${cover}">
-                ${photo}
-                <div class="card-cover-scrim"></div>
-                <span class="cover-niche-badge">${c.niche}</span>
-                ${c.barter ? `<span class="cover-barter-badge"><span class="barter-dot"></span>Barter</span>` : ""}
+            <div class="card-photo-outer">
+                <div class="card-photo" style="background:${cover}">
+                    ${photo}
+                    <span class="card-niche-tag">${c.niche}</span>
+                    ${c.barter ? `<span class="cover-barter-badge"><span class="barter-dot"></span>Barter</span>` : ""}
+                </div>
             </div>
 
             <div class="card-body">
                 <div class="card-identity">
                     <div class="card-name-row">
-                        <span class="card-fullname">${c.fullName || c.instagramHandle || "Creator"}</span>
+                        <span class="card-name">${c.fullName || c.instagramHandle || "Creator"}</span>
                         ${verified}
                     </div>
-                    <div class="card-role">${c.niche} Creator</div>
+                    <div class="card-handle">${handleLine}</div>
                 </div>
 
-                <div class="card-tags">
-                    ${cityTag}
-                </div>
-
-                <div class="card-stats-row">
-                    <div class="stat-col">
-                        <div class="stat-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-                        <span class="stat-val">${fmt(c.followers)}</span>
-                        <span class="stat-key">Followers</span>
+                <div class="card-stats">
+                    <div class="stat-pill">
+                        <span class="pill-label">Followers</span>
+                        <span class="pill-val">${fmt(c.followers)}</span>
                     </div>
-                    <div class="stat-sep"></div>
-                    <div class="stat-col">
-                        <div class="stat-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
-                        <span class="${engClass}">${engVal}</span>
-                        <span class="stat-key">Engagement</span>
-                    </div>
-                    <div class="stat-sep"></div>
-                    <div class="stat-col">
-                        <div class="stat-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
-                        <span class="stat-val">${c.avgReelViews > 0 ? fmt(c.avgReelViews) : "—"}</span>
-                        <span class="stat-key">Reel Views</span>
+                    <div class="stat-pill">
+                        <span class="pill-label">Engagement</span>
+                        <span class="pill-val">${engVal}</span>
                     </div>
                 </div>
 
-                <div class="card-cta-btn">View Profile</div>
+                <div class="card-footer">
+                    ${priceChips}
+                    <div class="card-cta-btn">View →</div>
+                </div>
             </div>
 
         </article>`;
     }).join("");
+
+    // Stagger card reveal
+    requestAnimationFrame(() => {
+        const cards = grid.querySelectorAll(".creator-card:not(.skeleton-card)");
+        const obs = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("card-visible");
+                    obs.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.06 });
+        cards.forEach((card, i) => {
+            card.style.transitionDelay = `${i * 40}ms`;
+            obs.observe(card);
+        });
+    });
 }
 
 /* ── FILTERS ── */
