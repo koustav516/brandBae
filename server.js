@@ -1,5 +1,6 @@
-const express = require("express");
-const path    = require("path");
+const express      = require("express");
+const path         = require("path");
+const { Resend }   = require("resend");
 
 require("dotenv").config();
 
@@ -7,6 +8,185 @@ const { initDB, pool } = require("./db/pool");
 const { router: authRouter, requireAdmin } = require("./routes/auth");
 const creatorsRouter = require("./routes/creators");
 const leadsRouter    = require("./routes/leads");
+
+const resend   = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+const FROM     = process.env.RESEND_FROM    || "Brandbae <noreply@brandbae.co.in>";
+const BASE_URL = process.env.BASE_URL       || "https://www.brandbae.co.in";
+
+async function sendStatusEmail(app, status) {
+    if (!resend) return;
+    const { rows: [user] } = await pool.query(
+        "SELECT email FROM users WHERE id = $1", [app.user_id]
+    );
+    if (!user?.email) return;
+
+    const firstName  = (app.full_name || "Creator").split(" ")[0];
+    const profileUrl = `${BASE_URL}/creator/${app.instagram_handle}`;
+
+    if (status === "approved") {
+        await resend.emails.send({
+            from: FROM, to: user.email,
+            replyTo: "adminbrandbae@gmail.com",
+            subject: `You're live on Brandbae, ${firstName} 🎉`,
+            html: `
+            <!DOCTYPE html>
+            <html><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/></head>
+            <body style="margin:0;padding:0;background:#f4f4f7;font-family:'Helvetica Neue',Arial,sans-serif">
+            <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f7;padding:40px 16px">
+              <tr><td align="center">
+                <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px">
+
+                  <!-- LOGO -->
+                  <tr><td style="padding-bottom:28px">
+                    <span style="font-size:22px;font-weight:800;letter-spacing:-0.5px;color:#111118">Brand<span style="color:#3B5BDB">bae</span></span>
+                  </td></tr>
+
+                  <!-- MAIN CARD -->
+                  <tr><td style="background:#ffffff;border-radius:20px;padding:40px 36px;box-shadow:0 2px 12px rgba(0,0,0,0.06)">
+
+                    <!-- HEADLINE -->
+                    <h1 style="margin:0 0 6px;font-size:28px;font-weight:800;letter-spacing:-0.6px;color:#111118;line-height:1.2">
+                      Hi ${firstName} 👋
+                    </h1>
+                    <p style="margin:0 0 24px;font-size:16px;font-weight:600;color:#3B5BDB;letter-spacing:-0.2px">
+                      Welcome to Brandbae — as one of our very first creators. 🙌
+                    </p>
+
+                    <!-- BODY -->
+                    <p style="margin:0 0 20px;font-size:15px;color:#3a3a4a;line-height:1.75">
+                      Your profile is now live and brands can already discover you and reach out to collaborate.
+                      You're part of something we're building from the ground up, and that genuinely means a lot to us.
+                    </p>
+
+                    <!-- PROFILE LINK CARD -->
+                    <table width="100%" cellpadding="0" cellspacing="0" style="background:#f7f8ff;border:1px solid #e0e4f8;border-radius:12px;margin-bottom:28px">
+                      <tr>
+                        <td style="padding:16px 20px">
+                          <div style="font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#9696aa;margin-bottom:8px">Your live profile</div>
+                          <a href="${profileUrl}" style="font-size:14px;font-weight:700;color:#3B5BDB;text-decoration:none;word-break:break-all">${profileUrl}</a>
+                        </td>
+                        <td style="padding:16px 20px 16px 0;white-space:nowrap">
+                          <a href="${profileUrl}" style="display:inline-block;background:#3B5BDB;color:#fff;text-decoration:none;font-size:13px;font-weight:700;padding:9px 18px;border-radius:8px">View →</a>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- WHAT HAPPENS NEXT -->
+                    <p style="margin:0 0 14px;font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#9696aa">What happens next</p>
+                    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px">
+                      <tr>
+                        <td style="padding:10px 0;border-top:1px solid #f0f0f4">
+                          <table cellpadding="0" cellspacing="0">
+                            <tr>
+                              <td style="padding-right:14px;vertical-align:top;padding-top:2px">
+                                <div style="width:6px;height:6px;background:#3B5BDB;border-radius:50%;margin-top:6px"></div>
+                              </td>
+                              <td style="font-size:14px;color:#3a3a4a;line-height:1.65">
+                                Brands browse creator profiles on Brandbae and can view your profile directly
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding:10px 0;border-top:1px solid #f0f0f4">
+                          <table cellpadding="0" cellspacing="0">
+                            <tr>
+                              <td style="padding-right:14px;vertical-align:top;padding-top:2px">
+                                <div style="width:6px;height:6px;background:#3B5BDB;border-radius:50%;margin-top:6px"></div>
+                              </td>
+                              <td style="font-size:14px;color:#3a3a4a;line-height:1.65">
+                                If they're interested, they'll reach out through our in-platform messaging
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding:10px 0;border-top:1px solid #f0f0f4;border-bottom:1px solid #f0f0f4">
+                          <table cellpadding="0" cellspacing="0">
+                            <tr>
+                              <td style="padding-right:14px;vertical-align:top;padding-top:2px">
+                                <div style="width:6px;height:6px;background:#3B5BDB;border-radius:50%;margin-top:6px"></div>
+                              </td>
+                              <td style="font-size:14px;color:#3a3a4a;line-height:1.65">
+                                No middlemen — the deal is yours to own
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- EARLY CREATOR NOTE -->
+                    <p style="margin:0 0 32px;font-size:14px;color:#3a3a4a;line-height:1.75;background:#fffbeb;border-left:3px solid #f59e0b;padding:14px 16px;border-radius:0 8px 8px 0">
+                      As an early creator, your feedback shapes how we build this platform. If anything feels off or you have ideas, just hit reply — we actually read these.
+                    </p>
+
+                    <!-- CLOSING -->
+                    <p style="margin:0 0 4px;font-size:15px;color:#3a3a4a;line-height:1.75">
+                      Thank you for trusting us early. Let's get you your first brand collab soon.
+                    </p>
+                    <p style="margin:0 0 24px;font-size:15px;color:#3a3a4a">Warm regards,</p>
+
+                    <!-- SIGNATURE -->
+                    <table cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td style="padding-right:14px;vertical-align:middle">
+                          <div style="width:44px;height:44px;background:#111118;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#fff;text-align:center;line-height:44px">K</div>
+                        </td>
+                        <td style="vertical-align:middle">
+                          <div style="font-size:14px;font-weight:700;color:#111118;margin-bottom:2px">Koustav Majumder</div>
+                          <div style="font-size:12px;color:#9696aa">Co-Founder, Brandbae · <a href="${BASE_URL}" style="color:#3B5BDB;text-decoration:none">brandbae.co.in</a></div>
+                        </td>
+                      </tr>
+                    </table>
+
+                  </td></tr>
+
+                  <!-- FOOTER -->
+                  <tr><td style="padding:24px 4px 0;text-align:center">
+                    <p style="margin:0;font-size:12px;color:#b0b0c0;line-height:1.6">
+                      You received this because you applied to Brandbae as @${app.instagram_handle}.<br/>
+                      <a href="${BASE_URL}" style="color:#9696aa;text-decoration:none">brandbae.co.in</a>
+                    </p>
+                  </td></tr>
+
+                </table>
+              </td></tr>
+            </table>
+            </body></html>`
+        });
+    } else {
+        await resend.emails.send({
+            from: FROM, to: user.email,
+            replyTo: "adminbrandbae@gmail.com",
+            subject: "Your Brandbae application — an update",
+            html: `
+            <div style="font-family:'DM Sans',sans-serif;max-width:520px;margin:0 auto;padding:40px 24px;color:#111118;background:#fff">
+                <div style="font-size:20px;font-weight:800;margin-bottom:32px;letter-spacing:-0.5px">
+                    Brand<span style="color:#3B5BDB">bae</span>
+                </div>
+                <h1 style="font-size:24px;font-weight:800;letter-spacing:-0.5px;margin-bottom:8px;line-height:1.2">
+                    Hi ${firstName}, thanks for applying.
+                </h1>
+                <p style="font-size:15px;color:#5a5a6e;line-height:1.7;margin-bottom:20px">
+                    After reviewing your application, we're not able to approve your Brandbae profile at this time.
+                    This is usually because of follower count, engagement level, or profile completeness — not the quality of your content.
+                </p>
+                <p style="font-size:15px;color:#5a5a6e;line-height:1.7;margin-bottom:28px">
+                    You're welcome to reapply in the future as your account grows. If you think this was a mistake, just reply to this email and we'll take another look.
+                </p>
+                <p style="font-size:12px;color:#9696aa;line-height:1.6;border-top:1px solid #f0f0f4;padding-top:20px">
+                    Brandbae — India's creator marketplace.<br/>
+                    This email was sent regarding your application for @${app.instagram_handle}.
+                </p>
+            </div>`
+        });
+    }
+
+    console.log(`[EMAIL] ${status} email sent to ${user.email} (@${app.instagram_handle})`);
+}
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
@@ -115,6 +295,12 @@ app.patch("/api/admin/applications/:id", requireAdmin, async (req, res) => {
 
         await client.query("COMMIT");
         console.log(`[ADMIN] Application #${app.id} (@${app.instagram_handle}) → ${status}`);
+
+        // Fire email non-blocking — failure must never break the approval
+        sendStatusEmail(app, status).catch(err =>
+            console.error("[EMAIL] Status email failed:", err.message)
+        );
+
         res.json({ success: true, application: app });
     } catch (err) {
         await client.query("ROLLBACK");
