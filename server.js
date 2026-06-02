@@ -27,7 +27,7 @@ async function sendStatusEmail(app, status) {
         await resend.emails.send({
             from: FROM, to: user.email,
             replyTo: "adminbrandbae@gmail.com",
-            subject: `You're live on Brandbae, ${firstName} 🎉`,
+            subject: `You're live on Brandbae, ${firstName}`,
             html: `
             <!DOCTYPE html>
             <html><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/></head>
@@ -58,18 +58,10 @@ async function sendStatusEmail(app, status) {
                       You're part of something we're building from the ground up, and that genuinely means a lot to us.
                     </p>
 
-                    <!-- PROFILE LINK CARD -->
-                    <table width="100%" cellpadding="0" cellspacing="0" style="background:#f7f8ff;border:1px solid #e0e4f8;border-radius:12px;margin-bottom:28px">
-                      <tr>
-                        <td style="padding:16px 20px">
-                          <div style="font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#9696aa;margin-bottom:8px">Your live profile</div>
-                          <a href="${profileUrl}" style="font-size:14px;font-weight:700;color:#3B5BDB;text-decoration:none;word-break:break-all">${profileUrl}</a>
-                        </td>
-                        <td style="padding:16px 20px 16px 0;white-space:nowrap">
-                          <a href="${profileUrl}" style="display:inline-block;background:#3B5BDB;color:#fff;text-decoration:none;font-size:13px;font-weight:700;padding:9px 18px;border-radius:8px">View →</a>
-                        </td>
-                      </tr>
-                    </table>
+                    <!-- PROFILE LINK -->
+                    <p style="margin:0 0 28px;font-size:14px;color:#3a3a4a;line-height:1.75">
+                      Your profile is live here: <a href="${profileUrl}" style="color:#3B5BDB;text-decoration:none;font-weight:600;word-break:break-all">${profileUrl}</a>
+                    </p>
 
                     <!-- WHAT HAPPENS NEXT -->
                     <p style="margin:0 0 14px;font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#9696aa">What happens next</p>
